@@ -7,6 +7,11 @@ $(document).ready(function(){
 	loader();
 });
 function loader(){
+	$("#gross_mass_uom_ , #tare_mass").keypress(function(){
+		return isNumberKey(event);
+		});
+		
+	$("#gross_mass_uom_ , #tare_mass").attr('maxlength','20');
 	setIcons(sections.weight.title,sections.weight.icon);
 	hideButton();
 	hideField("Pinbound_ticket");
@@ -19,8 +24,9 @@ function loader(){
 	$("td.left.xlarge.top:nth-child(1)").html("Inbound Ticket - Weighbridge").css("padding-top","25px");;
 	$("div[name='Page End'] > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr:nth-child(1)").html("");
 	setExistingValues("total_weight");
-	setExistingValuesDate("tare_date_and_time");
-	setExistingValuesDate("grossDateTime");
+	//setExistingValuesDate("tare_date_and_time");
+	//setExistingValuesDate("tareDateTime");
+	//setExistingValuesDate("grossDateTime");
 	showAllocated();
 	rbf_setFieldValue("isweighing",1);
 	hideField("isweighing");
@@ -35,24 +41,30 @@ function loader(){
 	}
 
 }
+
 function setDateTime(integ){
 	var currentdate = new Date(); 
-		var hours = currentdate.getHours();
+		var hours = currentdate.getHours();	//+3 for Australia Time Zone
 		var minutes = currentdate.getMinutes();
-		var ampm = hours >= 12 ? 'PM' : 'AM';
-		var hours = hours % 12;
-		hours = hours ? hours : 12;
+		//var ampm = hours >= 12 ? 'PM' : 'AM';
+		//var hours = hours % 12;
+		//hours = hours ? hours : 12;
 		minutes = minutes < 10 ? '0'+minutes : minutes;
-	var datetime = (currentdate.getMonth()+1) + "/"
-                + currentdate.getDate()  + "/" 
+	var datetime =  currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1) + "/" 
                 + currentdate.getFullYear() + " "  
                 + hours + ":"  
-                + minutes + " "
-				+ ampm;
+                + minutes; //+ " "
+				//+ ampm;
 	showField(integ);
 	toReadOnlyDP(integ,"rbi_F_"+integ);
 	rbf_setFieldValue(integ, datetime.toString());
 	showField("total_weight");
+	
+	if ($("#tare_mass").val() == "")
+		rbf_setFieldValue("tare_date_and_time", "");
+	if ($("#gross_mass_uom_").val() == "")
+		rbf_setFieldValue("gross_date_and_time", "");
 }
 
 var sections = {
@@ -189,4 +201,14 @@ function validateValues(){
 		}, 8000);
 	}
 }
+
+function isNumberKey(evt)
+       {
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+       }
 </script>
