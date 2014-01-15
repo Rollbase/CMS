@@ -114,6 +114,24 @@
 	input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
 	  color: rgb(152,152,152);
 	}
+	
+	.panel-holder{
+		text-align:center;
+	}
+	#panels{
+		margin: 20px auto;
+		width:950px;
+		display:box;
+		display:-o-box;
+		display:-ms-box;
+		display:-moz-box;
+		display:-webkit-box;
+		box-orient: horizontal;
+		box-orient: -o-horizontal;
+		box-orient: -ms-horizontal;
+		box-orient: -moz-horizontal;
+		box-orient: -webkit-horizontal;
+	}
 	</style>
 	<script>
 		$(document).ready(function(){
@@ -145,7 +163,11 @@
 				<button type="button" class="btn btn-default">Login</button>
 			</p>
 		</article>
-		<article>
-		
+		<article class="panel-holder">
+			<div id = "panels">
+				<div id = "panel1"></div>
+				<div id = "panel2"></div>
+				<div id = "panel3"></div>
+			</div>
 		</article>
 	</section>
