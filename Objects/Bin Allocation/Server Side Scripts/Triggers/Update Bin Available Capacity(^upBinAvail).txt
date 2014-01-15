@@ -1,0 +1,1 @@
+return parseFloat("{!available_capacity#value}");

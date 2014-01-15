@@ -1,0 +1,2450 @@
+@charset "utf-8";
+/* ROLLBASE DEFAULT CSS */
+
+#rbe_loading {
+	display:block; position:fixed;
+	vertical-align:middle;
+	text-align:center;
+	z-index: 999999;
+	left: 0; top: 0;
+	height:100% !important;
+	width:100% !important;
+	background: #FFF;
+}
+#rbe_loading_image {
+}
+
+/*
+=======================================================
+Sidebar Elements
+=======================================================
+*/ 
+#sidebarControlContainer {width:12px;height:100%;min-height:300px;margin-right:2px;background-color:#FFF;display:inline-block;}
+.sidebarControlRollover{width:6px;height:100%;min-height:300px;background-color:#CCC;margin-left:4px;cursor:pointer;display:inline-block;}
+.sidebarControl{width:6px;height:100%;min-height:300px;background-color:#FFF;margin-left:4px;cursor: pointer;display:inline-block;}
+#sidebarIndicator{margin-left:-1px;padding-bottom:8px;padding-top:2px;padding-left:1px;padding-right:1px;background:#EEE;
+-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;
+}
+
+/* 
+=======================================================
+Body Styles
+=======================================================
+*/
+
+body {line-height:20px;}
+.inline-block{display:inline-block;}
+
+hr{margin:3px 0; }
+
+html body {
+	font-family: "Helvetica W01 Roman", Helvetica, Arial, Tahoma, sans-serif; 
+	
+	/* with (Helvetica W01 Light/ Helvetica W01 Bold, )Helvetica W01 Roman, Helvetica, Arial, Tahoma, sans-serif 	 */
+}
+
+/* 
+=======================================================
+Dimensions and Alignment
+=======================================================
+*/
+
+.left{text-align: left;}
+.right{text-align: right;}
+.center{text-align: center;}
+.mozcenter{text-align: -moz-center;}
+.vcenter{vertical-align: middle;}
+.top{vertical-align: top;}
+.bottom{vertical-align: bottom;}
+.text-top{vertical-align: text-top;}
+.text-bottom{vertical-align: text-bottom;}
+.wide{width: 100%;}
+.tall{height: 100%;}
+.auto{width: auto;}
+.indent50{margin-left: 50px;}
+
+.bottommargin{margin-bottom:5px;}
+
+.full-iframe {width:100%;border:none;}
+
+/* 
+=======================================================
+Tabs and Tab Backgrounds
+=======================================================
+*/
+
+.rbs_menu {
+	font-weight:bold;
+	font-size:12px;
+}
+
+#rbe_tabs {
+	width: 100%;
+	border-bottom: 1px solid #DDD;
+	margin-bottom: 5px;
+}
+
+.rbs_tab {
+	padding-top: 4px;padding-bottom: 5px;padding-right: 2px;padding-left: 2px;
+	line-height: 20px;
+	/*-webkit-border-radius: 4px 4px 0 0;-moz-border-radius: 4px 4px 0 0;border-radius: 4px 4px 0 0;*/
+	display: block;
+	margin-bottom: -1px; margin-top: 1px;
+	border-left: 0; border-right: 1px solid #CCC; border-bottom: 0px !important; border-top: 3px solid #FFF;
+	white-space:nowrap;
+	font-weight:normal;
+}
+.rbs_tab_selected {
+	border-left: 0; border-right: 1px solid #CCC; border-bottom: 1px solid #FFF;border-top: 3px solid #0062E6;
+	padding-right: 0px;
+	font-weight:bold;
+}
+.rbs_tab_rollover {
+	margin-bottom: -1px;
+	border-left: 0; border-right: 1px solid #CCC;border-bottom: 1px solid #FFF;border-top: 3px solid #DDD;
+	font-weight:normal;
+}
+.rbs_pageTab {
+	line-height: 20px;
+	display: block;
+	white-space:nowrap;
+	-webkit-border-radius: 4px 4px 0 0;-moz-border-radius: 4px 4px 0 0;border-radius: 4px 4px 0 0;
+	cursor:pointer;padding:5px 7px 5px 7px;
+	border-left: 1px solid #FFF;border-top: 3px solid #FFF;border-right: 1px solid #FFF;border-bottom: 0px solid #CCC;
+	/*background-color:#FFF;*/
+	font-weight:normal;
+}
+.rbs_pageTabRollover {
+	line-height: 20px;
+	display: block;
+	white-space:nowrap;	
+	/*-webkit-border-radius: 4px 4px 0 0;-moz-border-radius: 4px 4px 0 0;border-radius: 4px 4px 0 0;*/
+	cursor:pointer;padding:5px 7px 5px 7px;
+	border-left: 0; border-top: 3px solid #DDD;border-right: 1px solid #CCC;border-bottom: 0px solid #FFF;
+	background-color:#FFF;
+	font-weight:normal;
+}
+.rbs_pageTabSelected {
+	line-height: 20px;
+	display: block;
+	white-space:nowrap;	
+	/*-webkit-border-radius: 5px 4px 0 0;-moz-border-radius: 4px 4px 0 0;border-radius: 4px 4px 0 0;*/
+	cursor:pointer;padding:5px 7px 5px 7px;
+	border-left: 1px solid #CCC;border-top: 3px solid #0062E6;border-right: 1px solid #CCC;border-bottom: 0px solid #FFF;
+	background-color:#FFF;
+	font-weight:bold;
+}
+.rbs_tabContainer {
+	width: 100%;
+	border: 1px solid #CCCCCC;
+	/*-webkit-border-radius: 0px 4px 4px 4px;-moz-border-radius: 0px 4px 4px 4px;border-radius: 0px 4px 4px 4px;*/
+}
+.rbs_tab_extension {
+	padding-top: 4px;padding-bottom: 5px;padding-right: 2px;padding-left: 2px;
+	line-height: 20px;
+	/*-webkit-border-radius: 4px 4px 0 0;-moz-border-radius: 4px 4px 0 0;border-radius: 4px 4px 0 0;*/
+	display: block;
+	margin-bottom: -1px;margin-top: 1px;
+	border-left: 0; border-right: 1px solid #FFF; border-bottom: 0px !important; border-top: 3px solid #FFF;
+	white-space:nowrap;
+	font-weight:normal;
+}
+
+/* 
+=======================================================
+Header & Footer Background
+=======================================================
+*/
+
+.rbs_header {
+vertical-align: top; 
+text-align: right;
+width: 100%;
+}
+
+.rbs_footer {
+vertical-align: bottom; 
+text-align: center;
+width: 100%;
+}
+
+/* 
+=======================================================
+Borders, Padding and Margins
+=======================================================
+*/
+
+.counter{
+	margin-left:2px;
+	padding-left: 3px;
+	padding-right: 3px;
+	background:#ececec;
+	border:1px solid #afafaf;
+	border-right-color:#ececec;
+	border-bottom-color:#ececec;
+	border-radius:10px;
+	font-weight:bold;
+	font-size:11px;
+	color:gray;
+} 
+
+.lookupItem{
+-moz-border-radius:5px;
+border-radius:5px;
+padding:1px 2px 1px 2px;
+margin-right:4px;
+margin-bottom:3px;
+border-style:solid;
+border-width:1px;
+border-color:#EEE;
+background-color:#F2F3FF;
+font-size:0.85em;
+}
+
+.rounding{
+-moz-border-radius:5px;
+border-radius:5px;
+padding:0px;
+border-style:solid;
+border-width:1px;
+border-color:#CCCCCC;
+}
+
+.roundedSectionBorder {
+-moz-border-radius:5px;
+border-radius:5px;
+border-style:solid;
+border-width:1px;
+border-color:#CCCCCC;
+padding:5px;
+}
+
+.noborder{border: 0px;}
+.nopadding{padding: 0px;}
+.nomargin{margin: 0px;}
+
+.itempadding{padding: 2px 12px 2px 5px;}
+.smallpadding{padding: 2px 4px 2px 4px;}
+.smallerpadding{padding: 2px 2px 2px 2px;}
+.mediumpadding{padding: 5px;}
+.bigpadding{padding: 10px;}
+
+.whitesidepadding{padding-left: 5px;padding-right: 5px;}
+.whitesideborder{border-left: 5px solid #FFFFFF;border-right: 5px solid #FFFFFF;}
+
+.lightsilversideborder{border-left: 5px solid #E8E8E8;border-right: 5px solid #E8E8E8;}
+
+.primarysideborder{border-left: 8px solid #E6EACC;border-right: 8px solid #E6EACC;}
+.primarysideborder2{border-left: 2px solid #E6EACC;border-right: 2px solid #E6EACC;}
+.primarybottomborder{border-bottom: 3px solid #E6EACC;}
+.primarytopborder{border-top: 3px solid #E6EACC;}
+.primarydoubleborder{border-left: 10px solid #E6EACC;border-right: 10px solid #E6EACC;border-top: 10px solid #E6EACC;border-bottom: 10px solid #E6EACC;}
+.primaryleftborder{border-left: 8px solid #E6EACC;}
+.primaryrightborder{border-right: 8px solid #E6EACC;}
+
+.sidebarsideborder{border-left: 8px solid #DCE1B6;border-right: 8px solid #DCE1B6;}
+.sidebarsideborder2{border-left: 2px solid #DCE1B6;border-right: 2px solid #DCE1B6;}
+.sidebarbottomborder{border-bottom: 3px solid #DCE1B6;}
+.sidebartopborder{border-top: 3px solid #DCE1B6;}
+.sidebardoubleborder{border-left: 10px solid #DCE1B6;border-right: 10px solid #E6EACC;border-top: 10px solid #DCE1B6;border-bottom: 10px solid #DCE1B6;}
+.sidebarleftborder{border-left: 8px solid #DCE1B6;}
+.sidebarrightborder{border-right: 8px solid #DCE1B6;}
+
+.seltabsideborder{border-left: 5px solid #5583BB;border-right: 5px solid #5583BB;}
+.seltabbottomborder{border-bottom: 3px solid #5583BB;}
+.seltabtopborder{border-top: 3px solid #5583BB;}
+
+.unseltabsideborder{border-left: 5px solid #EFEFF7;border-right: 5px solid #EFEFF7;}
+.unseltabbottomborder{border-bottom: 3px solid #EFEFF7;}
+.unseltabtopborder{border-top: 3px solid #EFEFF7;}
+
+.secondarysideborder{border-left: 8px solid #EFEFF7;border-right: 8px solid #EFEFF7;}
+.secondarybottomborder{border-bottom: 3px solid #EFEFF7;}
+.secondarytopborder{border-top: 3px solid #EFEFF7;}
+.secondarydoubleborder{border-left: 10px solid #EFEFF7;border-right: 10px solid #EFEFF7;border-top: 10px solid #EFEFF7;border-bottom: 10px solid #EFEFF7;}
+
+.setupprimarysideborder{border-left: 8px solid #E8E8E8;border-right: 8px solid #E8E8E8;}
+.setupprimarytopborder{border-top: 3px solid #E8E8E8;}
+.setupprimarysideborder2{border-left: 2px solid #E8E8E8;border-right: 2px solid #E8E8E8;}
+.setupprimarybottomborder{border-bottom: 3px solid #E8E8E8;}
+.setupprimarydoubleborder{border-left: 10px solid #E8E8E8;border-right: 10px solid #E8E8E8;border-top: 10px solid #D9E9C7;border-bottom: 10px solid #E8E8E8;}
+.setupprimaryleftborder{border-left: 8px solid #E8E8E8;}
+.setupprimaryrightborder{border-right: 8px solid #E8E8E8;}
+
+.setupsecondarysideborder{border-left: 8px solid #EFEFF7;border-right: 8px solid #EFEFF7;}
+.setupsecondarybottomborder{border-bottom: 3px solid #EFEFF7;}
+.setupsecondarytopborder{border-top: 3px solid #EFEFF7;}
+.setupsecondarydoubleborder{border-left: 10px solid #EFEFF7;border-right: 10px solid #EFEFF7;border-top: 10px solid #EFEFF7;border-bottom: 10px solid #EFEFF7;}
+
+.setupmenusideborder{border-left: 5px solid #AFAFBC;border-right: 5px solid #AFAFBC;}
+.setupmenutopborder{border-top: 3px solid #AFAFBC;}
+.setupmenubottomborder{border-bottom: 3px solid #AFAFBC;}
+
+.rblightsilversideborder{border-left: 5px solid #E8E8E8;border-right: 5px solid #E8E8E8;}
+
+.solid{border: 1px solid black;}
+.solidgrid{border: 1px solid black;border-spacing: 1px;}
+.solidgray{border: 1px solid #635D5A;}
+.solidlightgray{border: 1px solid #CCCCCC;}
+.dashedbottomlightgray{border-bottom: 1px dashed #CCCCCC;}
+.solidverylightgray{border: 1px solid #CCCCCC;}
+.dashedbottomverylightgray{border-bottom: 1px dashed #CCCCCC;}
+.solidblue{border: 1px solid #4241FF;}
+
+.solidlightgray-nobottom{border-top: 1px solid #CCCCCC;border-left: 1px solid #CCCCCC;border-right: 1px solid #CCCCCC;border-bottom: 0px;}
+
+.bottomlightgray{border-bottom: 1px solid #CCCCCC;}
+
+form{margin: 0;padding: 0;}
+
+
+
+/* 
+=======================================================
+Images
+=======================================================
+*/
+
+img{border: 0px;}
+
+/* 
+=======================================================
+Lists
+=======================================================
+*/
+
+ol{list-style: decimal outside;}
+ol.roman{list-style: lower-roman outside;}
+ol.alpha{list-style: lower-alpha outside;}
+
+ul{list-style: disc outside;}
+ul.square{list-style: square outside;}
+ul.circle{list-style: circle outside;}
+
+
+/* 
+=======================================================
+Links
+=======================================================
+*/
+
+.nsbLinks a:link{color: #000000;text-decoration: none;}
+.nsbLinks a:visited{color: #000000;text-decoration: none;}
+.nsbLinks a:hover{color: #000000;text-decoration: none;}
+
+.bblinks a:link{font-weight: bold;color: #000000;}
+.bblinks a:visited{font-weight: bold;color: #000000;}
+.bblinks a:hover {font-weight: bold;color: #000000;}
+
+.wwlinks a:link{font-weight: bold;color: #FFFFFF;}
+.wwlinks a:visited{font-weight: bold;color: #FFFFFF;}
+.wwlinks a:hover {font-weight: bold;color: #FFFFFF;}
+
+.wwnlinks a:link{color: #FFFFFF;}
+.wwnlinks a:visited{color: #FFFFFF;}
+.wwnlinks a:hover {color: #FFFFFF;}
+
+.yellowlinks a:link{color: #FFE78F;}
+.yellowlinks a:visited{color: #FFE78F;}
+.yellowlinks a:hover {color: #FFE78F;}
+
+.gglinks a:link{font-weight: bold;color: #777777;}
+.gglinks a:visited{font-weight: bold;color: #777777;}
+.gglinks a:hover {font-weight: bold;color: #777777;}
+
+.blackLinks a:link {color: #000000;}
+.blackLinks a:visited {color: #000000;}
+.blackLinks a:hover {color: #000000;}
+
+.grayLinks a:link {color: #777777;}
+.grayLinks a:visited {color: #777777;}
+.grayLinks a:hover {color: #777777;}
+
+.boldlinks a:link{font-weight: bold;}
+.boldlinks a:visited{font-weight: bold;}
+.boldlinks a:hover {font-weight: bold;}
+
+.smallLinks a:link {font-size: 95%;}
+.smallLinks a:visited {font-size: 95%;}
+.smallLinks a:hover {font-size: 95%;text-decoration: underline;}
+
+.xsmallLinks a:link {font-size: 90%;}
+.xsmallLinks a:visited {font-size: 90%;}
+.xsmallLinks a:hover {font-size: 90%;}
+
+.normalLinks a:link {font-weight: normal;}
+.normalLinks a:visited {font-weight: normal;}
+.normalLinks a:hover {font-weight: normal;}
+
+.normalSmallLinks a:link {font-weight: normal;font-size: 95%;}
+.normalSmallLinks a:visited {font-weight: normal;font-size: 95%;}
+.normalSmallLinks a:hover {font-weight: normal;font-size: 95%;}
+
+/*.unselectedTabLinks a:link {color: #777777;}
+.unselectedTabLinks a:visited {color: #777777;}
+.unselectedTabLinks a:hover {text-decoration: underline;color: #118EFF}*/
+
+td.actionCol a:link {font-weight: normal;font-size: 95%;}
+td.actionCol a:visited {font-weight: normal;font-size: 95%;}
+td.actionCol a:hover {font-weight: normal;font-size: 95%;}
+
+
+/* 
+=======================================================
+Form Elements
+=======================================================
+*/
+
+select{;font-family: 'Arial', 'Helvetica', sans-serif;color: black;border:1px solid #ccc;}
+input{padding-top: 0;font-family: 'Arial', 'Helvetica', sans-serif;border:1px solid #ccc;}
+textarea{;font-family: 'Arial', 'Helvetica', sans-serif;border:1px solid #ccc;}
+
+td.detailDataCol input, td.detailWideDataCol input{;}
+td.detailDataCol select, td.detailWideDataCol select{;}
+td.emailDataCol input, td.emailWideDataCol input{;}
+td.emailDataCol select, td.emailWideDataCol select{;}
+
+td.regularSize input, td.regularSize select {;}
+
+option {color: black;}
+option.no-op {color: silver;}
+option.noop {color: silver;}
+
+.select2style {
+	font-size: 95%;
+	.bigdrop.select2-container .select2-results {max-height: 300px;}
+        .bigdrop .select2-results {max-height: 300px;}	
+}
+.select2style.select2-container .select2-results {max-height: 300px;}
+.select2style .select2-results {max-height: 300px;}
+
+
+/* 
+=======================================================
+Font Families
+=======================================================
+*/
+
+.trebuchet{font-family: Trebuchet MS;}
+.courier {font-family: courier, courier new, monospace;}
+
+
+/* 
+=======================================================
+Font Sizes
+=======================================================
+*/
+
+.supersmall{font-size: 1%}
+.xxxsmall{font-size: 75%;}
+.xxsmall{font-size: 85%;}
+.xsmall{font-size: 90%;}
+.small{font-size: 95%;}
+.normal{;}
+.xnormal{font-size: 105%;}
+/*.medium{font-size: 110%;}*/
+.xmedium{font-size: 115%;}
+.large{font-size: 120%;}
+.larger{font-size: 135%;}
+.xlarge {font-size: 150%;}
+.xxlarge {font-size: 180%;}
+.xxxlarge{font-size: 225%;}
+
+/* 
+=======================================================
+Font Weights and Styles
+=======================================================
+*/
+
+.bold{font-weight: bold;}
+.normal{font-weight: normal;}
+.italic{font-style: italic;}
+
+
+.iewrap{word-wrap: break-word;}
+
+/* 
+=======================================================
+Foreground Colors
+=======================================================
+*/
+
+.red{color: #990000;}
+.green{color: #21B600;}
+.blue{color: #0000FF;}
+.silver{color: #9C9C9C;}
+.gray{color: #635D5A;}
+.white{color: #FFFFFF;}
+.yellow{color: #FFE78F;}
+.orange{color: #E47911;}
+.black{color: #000000;}
+.required{color: #990000;} 
+.bluelinks{color: #0000FF;}
+
+.lightblue{color: #DDDDFF;}
+.darkgreen{color: #21B600;}
+.darkblue{color: #4241FF;}
+.darkred{color: #990000;}
+.darkyellow{color: #ACB423;}
+.darkorange{color: #DB8733;}
+.darkpurple{color: #A496D3;}
+.darkerprimary{background-color: #C6C697;}
+.lightprimary{background-color: #F1F1E9;}
+.verylightprimary{background-color: #F9F9F1;}
+
+/* 
+=======================================================
+Left Side Borders
+=======================================================
+*/
+
+.blueleft{border-left: 1px solid #4241FF;}
+.greenleft{border-left: 1px solid #21B600;}
+.yellowleft{border-left: 1px solid #DEBE00;}
+.orangeleft{border-left: 1px solid #F77108;}
+.redleft{border-left: 1px solid #990000;}
+.silverleft{border-left: 1px solid #9C9C9C;}
+.grayleft{border-left: 1px solid #635D5A;}
+.fieldleft{border-left: 1px solid #DDDDDD;}
+.blackleft{border-left: 1px solid #000000;}
+.darkprimaryleft{border-left: 1px solid #DFE0B4;}
+.darkbrownleft{border-left:1px solid #737B33;}
+
+.requiredInput{border-left:3px solid #990000;}/*border:1px solid #ccc;*/
+
+/* 
+=======================================================
+Right Side Borders
+=======================================================
+*/
+
+.blueright{border-right: 1px solid #4241FF;}
+.greenright{border-right: 1px solid #21B600;}
+.yellowright{border-right: 1px solid #DEBE00;}
+.orangeright{border-right: 1px solid #F77108;}
+.redright{border-right: 1px solid #990000;}
+.silverright{border-right: 1px solid #9C9C9C;}
+.grayright{border-right: 1px solid #635D5A;}
+.fieldright{border-right: 1px solid #DDDDDD;}
+.blackright{border-right: 1px solid #000000;}
+.darkprimaryright{border-right: 1px solid #DFE0B4;}
+.darkbrownright{border-right:1px solid #737B33;}
+
+/* 
+=======================================================
+Top Borders
+=======================================================
+*/
+
+.bluetop{border-top: 1px solid #4241FF;}
+.greentop{border-top: 1px solid #21B600;}
+.yellowtop{border-top: 1px solid #DEBE00;}
+.orangetop{border-top: 1px solid #F77108;}
+.redtop{border-top: 1px solid #990000;}
+.silvertop{border-top: 1px solid #9C9C9C;}
+.graytop{border-top: 1px solid #635D5A;}
+.fieldtop{border-top: 1px solid #DDDDDD;}
+.blacktop{border-top: 1px solid #000000;}
+.darkprimarytop{border-top: 1px solid #DFE0B4;}
+.darkbrowntop{border-top:1px solid #737B33;}
+
+/* 
+=======================================================
+Bottom Borders
+=======================================================
+*/
+
+.bluebottom{border-bottom: 1px solid #4241FF;}
+.greenbottom{border-bottom: 1px solid #21B600;}
+.yellowbottom{border-bottom: 1px solid #DEBE00;}
+.orangebottom{border-bottom: 1px solid #F77108;}
+.redbottom{border-bottom: 1px solid #990000;}
+.graybottom{border-bottom: 1px solid #635D5A;}
+.fieldbottom{border-bottom: 1px solid #CCCCCC;}
+.blackbottom{border-bottom: 1px solid #000000;}
+.darkprimarybottom{border-bottom: 1px solid #DFE0B4;}
+.darkbrownbottom{border-bottom:1px solid #737B33;}
+
+.silverbottom{border-bottom: 1px solid #9C9C9C;}
+.sectionbottom{border-bottom: 1px solid #CCCCCC;}
+.lightbottom{border-bottom: 1px solid #EEE;}
+
+.breadcrumbbottom{border-bottom:1px solid #859EBA;}
+
+/* 
+=======================================================
+Background Colors
+=======================================================
+*/
+
+.primary{background-color: #E6EACC;}
+.neutral{background-color: #E8E8E8;}
+
+.secondary{background-color: #E8E8E8;}
+
+.setupprimary{background-color: #E8E8E8;}
+.setup{background-color: #E8E8E8;}
+
+.rbsilverbg{background-color:#EEE;}
+
+.darkprimary{background-color: #DFE0B4;}
+.setupsecondary{background-color: #EFEFF7;}
+
+.rbbreadcrumbsbg{background-color: #BBC9D9;}
+
+.rbsetupheaderbg{background-color:#868699;}
+.rbsetupmenubg{background-color:#AFAFBC;}
+
+.rbinfomessage{background-color: #FFF1A8;}
+
+.rbsidebarbg{background-color: #DCE1B6;}
+.rbseltabbg{background-color: #5583BB;}
+.rbheaderdarkblue{background-color:#365A84;} 
+
+/*.highlight{background-color: #FFF8CE;}*/
+.highlight{background-color: #F2F3FF;}
+
+.websidebar{background-color: #E8E8E8;}
+
+.rbblue{background-color: #4241FF;}
+.rblightblue{background-color: #DDDDFF;}
+.rbdarkblue{background-color: #1A3AAC;}
+.rbgreen{background-color: #21B600;}
+.rblightgreen{background-color: #DFFFD9;}
+.rbyellow{background-color: #DEBE00;}
+.rblightyellow{background-color: #FFF8CE;}
+.rborange{background-color: #F77108;}
+.rblightorange{background-color: #FEE9D8;}
+.rbred{background-color: #990000;}
+.rblightred{background-color: #FFDCD9;}
+.rbsilver{background-color: #9C9C9C;}
+.rblightsilver{background-color: #E8E8E8;}
+.rbgray{background-color: #635D5A;}
+.rblightgray{background-color: #DDDDDD;}
+.rbwhite{background-color: #FFFFFF;}
+.imorange{background-color: #FAD163;}
+.rbpurple{background-color: #A496D3;}
+.rblightpurple{background-color: #E1DFF4;}
+.rbbrown{background-color:#BEC879;}
+.rbmediumyellow{background-color: #F2F4C6;}
+.rbmediumorange{background-color: #F3D7BB;}
+.rbmediumpurple{background-color: #D2D2FF;}
+.rbnormalpurple{background-color: #D2D2DF;}
+
+.appdirectory{background-color: #EDEA78;}
+
+/* 
+=======================================================
+Tables
+=======================================================
+*/
+
+table{text-align: left;empty-cells: show;border-collapse: collapse;padding: 0;}/**/
+
+td{border-width: 1px;}
+
+/* Hover effect for IE */
+.hover:hover {background-color: #FFF8CE;} 
+
+/* Hover effect for Netscape, Firefox, etc */
+tr.hover:hover {background-color: #FFF8CE;} 
+
+table.overflowItemsLookup {width: 100%;}
+table.overflowItemsLookup td{border-width: 1px;padding: 2px 2px 2px 5px;border-bottom: 0px solid #DDDDDD;}
+table.overflowItemsLookup tr{height: 20px;}
+
+table.overflowItems {width: 100%;background-color: #FFFFFF;}
+table.overflowItems td{border-width: 1px;padding: 2px 2px 2px 5px;}/*border-bottom: 1px solid #DDDDDD;*/
+table.overflowItems tr{height: 20px;}
+
+table.overflowItemsParent {width: 100%;background-color: #FFFFFF;}
+table.overflowItemsParent td{padding: 0px 0px 0px 0px;}/*0100border-width: 1px*/
+table.overflowItemsParent tr{height: 20px;}
+
+/* 
+=======================================================
+Object List Views
+=======================================================
+*/
+
+tr.objectListHeader {
+	background-color:#EEE;
+}
+
+tr.objectListHeader th {  
+	font-weight: bold;
+	font-size:90%;
+	color: #555;
+	border-left: 0px solid #E6EACC;
+	border-top: 0px solid #E6EACC;
+	border-right: 0px solid #E6EACC;
+	border-bottom: 1px solid #DDDDDD;
+	padding: 4px 4px 4px 4px;
+	text-align: left;
+	vertical-align: text-top;
+	white-space: nowrap;
+}
+tr.objectListHeaderSetup th { 
+	font-weight: bold;
+	font-size:90%;
+	color: #555;
+	border-left: 0px solid #D9E9C7;
+	border-top: 0px solid #D9E9C7;
+	border-right: 0px solid #D9E9C7;
+	border-bottom: 1px solid #DDDDDD;
+	padding: 4px 4px 4px 4px;
+	text-align: left;
+	vertical-align: text-top;
+	white-space: nowrap;
+}
+tr.objectListHeaderLayer1 th {
+	color: #FFFFFF;
+	font-family: Trebuchet MS;
+	font-size: 95%;
+	font-weight: bold;
+	background-color: #D2D2DF;
+	border-left: 0px solid #D2D2DF;
+	border-top: 0px solid #D2D2DF;
+	border-right: 0px solid #D2D2DF;
+	border-bottom: 0px solid #DDDDDD;
+	padding: 2px 4px 2px 4px;
+	text-align: left;
+	vertical-align: text-top;
+	white-space: nowrap;
+}
+tr.objectListHeaderLayer2 th {
+	color: #FFFFFF;
+	font-family: Trebuchet MS;
+	font-size: 95%;
+	font-weight: bold;
+	background-color: #D2D2FF;
+	border-left: 0px solid #D2D2FF;
+	border-top: 0px solid #D2D2FF;
+	border-right: 0px solid #D2D2FF;
+	border-bottom: 0px solid #DDDDDD;
+	padding: 2px 4px 2px 4px;
+	text-align: left;
+	vertical-align: text-top;
+	white-space: nowrap;
+}
+tr.objectListHeaderLayer3 th {
+	color: #FFFFFF;
+	font-family: Trebuchet MS;
+	font-size: 95%;
+	font-weight: bold;
+	background-color: #DDDDFF;
+	border-left: 0px solid #DDDDFF;
+	border-top: 0px solid #DDDDFF;
+	border-right: 0px solid #DDDDFF;
+	border-bottom: 0px solid #DDDDDD;
+	padding: 2px 4px 2px 4px;
+	text-align: left;
+	vertical-align: text-top;
+	white-space: nowrap;
+}
+tr.objectListHeader th.center {
+	text-align: center;
+}
+tr.objectListHeaderSetup th.center {
+	text-align: center;
+}
+
+tr.objectListHeaderSetup th.smallIcon {
+	text-align: center;white-space: nowrap;padding: 4px 2px 4px 0px;
+}
+tr.objectListHeader th.right {
+	text-align: right;
+}
+
+tr.objectListHeader th.smallIcon {
+	text-align: center;white-space: nowrap;padding: 4px 2px 4px 0px;
+}
+th A:link {color: #555;text-decoration: none;}
+th A:visited {color: #555;text-decoration: none;}
+th A:hover {color: #555;text-decoration: underline;}
+
+tr.objectListHeaderLayer1 th A:link {color: white;font-weight: bold;text-decoration: underline;}
+tr.objectListHeaderLayer1 th A:visited {color: black;font-weight: bold;text-decoration: underline;}
+tr.objectListHeaderLayer1 th A:hover {color: white;font-weight: bold;text-decoration: underline;}
+
+
+tr.listItem td {
+	/*color: gray;*/
+	font-weight: normal;
+	border-left: 0px solid #FFFFFF;
+	border-top: 1px solid #DDDDDD;
+	border-right: 0px solid #FFFFFF;
+	border-bottom: 1px solid #DDDDDD;
+	text-align: left;
+	vertical-align: text-top;
+	vertical-align: top;
+}
+tr.listItemLayered td {
+	color: black;
+	font-weight: normal;
+	border-left: 0px solid #FFFFFF;
+	border-top: 0px solid #DDDDDD;
+	border-right: 0px solid #FFFFFF;
+	border-bottom: 0px solid #00FF00;
+	text-align: left;
+	vertical-align: text-top;
+	vertical-align: top;
+}
+
+tr.listItem td.summary {color: #9C9C9C;font-weight: bold;text-align: right;background-color: #FFF8CE !important}
+tr.listItem td.totalSummary {color: #635D5A;font-weight: bold;text-align: left;background-color: #FEE9D8 !important}
+tr.listItem td.listItemValue {padding: 4px 4px 4px 4px;white-space:normal;}
+tr.listItem td.listItemNumberValue {padding: 4px 4px 4px 4px;text-align: right;}
+tr.listItem td.smallIcon, tr.objectListHeader th.smallIcon{text-align: center;white-space: nowrap;padding: 4px 2px 4px 0px;}
+tr.listItem td.checkbox{white-space: nowrap;padding: 7px 4px 0px 4px;}
+tr.listItem td.listItemRight {text-align: right;padding: 4px 4px 4px 4px;}
+
+tr.listItem td.groupSpacer{border-bottom: 0px;border-top: 0px;border-right: 1px solid #DDDDDD;background-color: #E8FCDC;}
+
+tr.objectListHeaderLayer1 td.groupSpacer, tr.objectListHeaderLayer1 th.groupSpacer{border-bottom: 0px;border-top: 0px;border-right: 0px solid #DDDDDD;background-color: #E8FCDC;}
+
+tr.inline td {
+	color: black;
+	font-weight: normal;
+	border-left: 0px solid #FFFFFF;
+	border-top: 0px solid #DDDDDD;
+	border-right: 0px solid #FFFFFF;
+	border-bottom: 0px solid #DDDDDD;
+	text-align: left;
+	vertical-align: text-top;
+	vertical-align: top;
+}
+tr.inline td.smallIcon{text-align: left;white-space: nowrap;padding: 4px 2px 4px 0px;}
+
+tr.groupRow {border-bottom: 0px solid #DDDDDD; background-color: #E8FCDC !important;}
+tr.groupRow td {color:#777777; padding: 2px 2px 2px 4px; background-color: #E8FCDC !important;}
+
+tr.viewed {font-weight: normal;background-color: #FFFFFF;}
+tr.viewed td {font-weight: normal;}
+tr.unviewed {font-weight: bold;background-color: #FFFFFF;}
+tr.unviewed td {font-weight: bold;}
+
+tr.highlightViewed {font-weight: normal;background-color: #F2F3FF;}
+tr.highlightViewed td {font-weight: normal;}
+tr.highlightUnviewed {font-weight: bold;background-color: #F2F3FF;}
+tr.highlightUnviewed td {font-weight: bold;}
+
+tr.selectedViewed {font-weight: normal;background-color: #FFF8CE;}
+tr.selectedViewed td {font-weight: normal;}
+tr.selectedUnviewed {font-weight: bold;background-color: #FFF8CE;}
+tr.selectedUnviewed td {font-weight: bold;}
+
+tr.parentRow {font-weight: bold;background-color: #F7F7F7;}
+
+td.actionCol{font-weight: normal;font-size: 95%;padding: 4px 4px 4px 4px;color:#555;}
+th.actionCol{font-weight: normal;padding: 4px 4px 4px 4px;white-space: nowrap;}
+th.numericCol{text-align: center;font-weight: normal;}
+
+/* 
+=======================================================
+MiniCalendar
+=======================================================
+NOTE: Selected view styles are only meant to be used when viewing a daily, weekly or monthly calendar view page.
+*/
+
+/* Minicalendar overall styles */
+table.miniCalendar{width: 100%;font-size: 95%;background-color: #FFFFFF;}
+table.miniCalendar td{padding: 2px 5px 2px 5px;border-width: 0px;text-align: center;}
+table.miniCalendar A:link {color: black;text-decoration: none;}
+table.miniCalendar A:visited {color: black;text-decoration: none;}
+table.miniCalendar A:hover {color: black;text-decoration: underline;}
+table.miniCalendar th{color: black;font-weight: normal;background-color: #E4E4E4;text-align: center;}/*#DFE0B4*/
+
+/* Current day styles */
+td.dayCurrent{color: white;font-weight: bold;background-color: #CCCCCC;}
+td.dayCurrent A:link {color: white;text-decoration: none;}
+td.dayCurrent A:visited {color: white;text-decoration: none;}
+td.dayCurrent A:hover {color: white;text-decoration: underline;}
+
+/* Weekday not in month styles */
+td.dayNotInMonth{color: silver;font-weight: bold;background-color: white;}
+td.dayNotInMonth A:link {color: silver;text-decoration: none;}
+td.dayNotInMonth A:visited {color: silver;text-decoration: none;}
+td.dayNotInMonth A:hover {color: silver;text-decoration: underline;}
+
+/* Weekend day not in month styles */
+td.weekendDayNotInMonth{color: silver;font-weight: bold;background-color: #EFEFF7;}
+td.weekendDayNotInMonth A:link {color: silver;text-decoration: none;}
+td.weekendDayNotInMonth A:visited {color: silver;text-decoration: none;}
+td.weekendDayNotInMonth A:hover {color: silver;text-decoration: underline;}
+
+/* Weekday in selected view styles */
+td.dayInView{color: black;font-weight: bold;background-color: #D7D7A0;}
+
+/* Weekday not in selected view styles */
+td.dayNotInViewBusy{color: black;font-weight: bold;background-color: #FFFFFF;}
+td.dayNotInViewNotBusy{color: black;font-weight: normal;background-color: #FFFFFF;}
+
+/* Weekend day not in selected view styles */
+td.weekendDayNotInViewBusy{color: black;font-weight: bold;background-color: #EFEFF7;}
+td.weekendDayNotInViewNotBusy{font-weight: normal;background-color: #EFEFF7;}
+
+/*
+=======================================================
+Object Detail
+=======================================================
+*/
+
+/*table.detailTable td {vertical-align:top;}*/
+
+td.detailLabelCol3{padding:2px 4px 2px 2px;width: 13%;border-left: 0px solid #FFFFFF;}
+td.detailDataCol3{padding: 2px 2px 2px 4px;width: 20%;border-right: 0px solid #FFFFFF;}
+
+td.detailLabelCol{padding:2px 4px 2px 2px;width: 20%;border-left: 0px solid #FFFFFF;}
+td.detailDataCol{padding: 2px 2px 2px 4px;width: 30%;border-right: 0px solid #FFFFFF;}
+td.detailWideLabelCol{padding:2px 4px 2px 2px;width: 20%;border-left: 0px solid #FFFFFF;}
+td.detailWideDataCol{padding: 2px 2px 2px 4px;width: 80%;border-right: 0px solid #FFFFFF;}
+
+table.detailTable td.detailHTMLCol{padding: 2px 2px 2px 4px;width: 100%;border-right: 0px solid #FFFFFF;border-left: 0px solid #FFFFFF;}
+
+td.editorLabelCol{padding:2px 4px 2px 2px;width: 38%;}
+td.editorDataCol{padding: 0 2px 0 4px;width: 48%;}
+td.editorWideLabelCol{padding:2px 4px 2px 2px;width: 20%;}
+td.editorWideDataCol{padding: 0 2px 0 4px;width: 70%;}
+
+td.emailWideLabelCol{padding:2px 4px 2px 2px;width: 10%;border-left: 0px solid #FFFFFF;}
+td.emailWideDataCol{padding: 2px 2px 2px 4px;width: 90%;border-right: 0px solid #FFFFFF;}
+
+sectionHeaderSideBorders{border-left: 0px solid #FFFFFF;border-right: 0px solid #FFFFFF;}
+
+
+/*
+=======================================================
+Dynamic Dropdown Styles
+=======================================================
+*/
+
+
+#rbe_DDdropmenudiv{position:absolute;border:1px solid #CCCCCC;border-bottom-width: 0;font:normal 12px Arial;line-height:16px;z-index:100;}
+
+#rbe_DDdropmenudiv a{width: 100%;display: block;text-indent: 3px;border-bottom: 1px solid #CCCCCC;padding: 1px 0;text-decoration: none;font-weight: normal;color: gray;}
+
+#rbe_DDdropmenudiv a:hover{ background-color: #FFF8CE;}
+
+/*
+=======================================================
+Customizable styles
+=======================================================
+*/
+
+/*
+=======================================================
+Used to render labels of component properties (action properties, field properties, object properties etc) in Setup Pages
+=======================================================
+*/
+
+/*required fields*/
+td.rbs_rightLabelRequired {
+	padding:2px 4px 2px 2px;
+	width: 20%;
+	text-align: right; 
+	vertical-align: top; 
+	font-size: 85%; 
+	font-weight: bold; 
+	color: #555; 
+}
+	
+td.rbs_rightLabelRequired3 {
+	padding:2px 4px 2px 2px;
+	width: 13%;
+	text-align: right; 
+	vertical-align: top; 
+	font-size: 85%; 
+	font-weight: bold; 
+	color: #555; 
+}	
+	
+/*not required fields*/
+td.rbs_rightLabel {
+	padding:2px 4px 2px 2px;
+	width: 20%;
+	border-left: 0px solid #FFFFFF;
+	text-align: right;
+	vertical-align: top; 
+	font-size: 85%; 
+	font-weight: bold; 
+	color: #555;
+}
+ 	
+td.rbs_rightLabel3 {
+	padding:2px 4px 2px 2px;
+	width: 13%;
+	border-left: 0px solid #FFFFFF;
+	text-align: right;
+	vertical-align: top; 
+	font-size: 85%; 
+	font-weight: bold; 
+	color: #555;
+} 	
+ 
+td.rbs_rightWideLabelRequired { 
+	font-size: 85%; 
+	font-weight: bold; 
+	text-align: right; 
+	vertical-align: top; 
+	color: #555; 
+	padding:2px 4px 2px 2px;
+	width: 20%;
+	border-left: 0px solid #FFFFFF; 
+}
+
+/* Email Pages required */
+td.rbs_rightLabelEmail {
+	padding:2px 4px 2px 2px; 
+	width: 10%; 
+	text-align: right; 
+	vertical-align: top; 
+	font-size: 85%; 
+	font-weight: bold; 
+	color: #555; 
+}
+	
+/* this renders thecomponent properties label with a bottom border in setup pages*/		
+td.rbs_rightLabelWide {
+	font-weight: bold; 
+	font-size: 85%; 
+	color: #555;
+	vertical-align: top; 
+	text-align: right; 
+	padding:2px 4px 2px 2px;
+	width: 20%;
+	border-left: 0px solid #FFFFFF; 
+}
+
+/* this renders thecomponent properties label with no bottom border in setup pages*/		
+td.rbs_SetupLabelNoFieldBottom {
+	padding:2px 4px 2px 2px;
+	width: 20%;
+	border-left: 0px solid #FFFFFF; 
+	vertical-align: top; 
+	font-weight: bold;
+	font-size: 85%;
+	color: #555;
+	text-align: right; 
+}
+	
+/* used to render the setup column label that refers to a group of components in setup pages */
+td.rbs_SetupColumnRequired { 
+	color: #555; 
+	border-left: 3px solid #990000; 
+	font-weight: bold; 
+	font-size: 85%; 
+	vertical-align: top; 
+	text-align: right; 
+	padding:2px 4px 2px 2px;
+	width: 20%;
+	border-left: 0px solid #FFFFFF; 
+}
+	
+td.rbs_errorLabelRightWide {
+	font-size: 85%; 
+	font-weight: bold; 
+	text-align: right; 
+	vertical-align: top; 
+	padding:2px 4px 2px 2px;
+	width: 20%;
+	border-left: 0px solid #FFFFFF;
+}
+
+td.rbs_errorLabelRight {
+	font-size: 85%; 
+	font-weight: bold; 
+	text-align: right; 
+	vertical-align: top;
+	padding:2px 4px 2px 2px;
+	width: 20%;
+	border-left: 0px solid #FFFFFF;
+}
+
+td.rbs_errorLabelRight3 {
+	font-size: 85%; 
+	font-weight: bold; 
+	text-align: right; 
+	vertical-align: top;
+	padding:2px 4px 2px 2px;
+	width: 13%;
+	border-left: 0px solid #FFFFFF;
+}
+
+td.rbs_errorLabelRequired {
+	font-size: 85%; 
+	font-weight: bold; 
+	text-align: right; 
+	vertical-align: top;
+	padding:2px 4px 2px 2px;
+	width: 20%;
+	border-left: 0px solid #FFFFFF;
+	color: #990000; 
+}
+
+td.rbs_errorLabelRequiredWide {
+	font-size: 85%; 
+	font-weight: bold; 
+	text-align: right; 
+	vertical-align: top;
+	padding:2px 4px 2px 2px;
+	width: 20%;
+	border-left: 0px solid #FFFFFF;
+	color: #990000;
+}
+
+td.rbs_errorLabelRequired3 {
+	font-size: 85%; 
+	font-weight: bold; 
+	text-align: right; 
+	vertical-align: top;
+	padding:2px 4px 2px 2px;
+	width: 13%;
+	border-left: 0px solid #FFFFFF;
+	color: #990000; 
+}
+
+/* renders the "Return to App" link in Setup Pages */
+.rbs_ReturnToAppLink {text-align: right; font-weight: bold;}
+/*.rbs_ReturnToAppLink a:link{color: #000088;}
+.rbs_ReturnToAppLink a:visited{color: #000088;}
+.rbs_ReturnToAppLink a:hover {color: #000088;}*/
+
+/* Renders the components header info "Red= required  information" */
+.rbs_ComponetHeaderInfo {text-align: right; width: 100%; font-size: 90%; font-weight: bold; color: #635D5A;}
+
+/* thin section Title */
+.rbs_thinSectionTitle {
+	text-align: left;
+	font-size: 110%;
+	font-weight: bold;
+	color: #635D5A;
+	background-color: #E8E8E8;
+	width: 100%;}
+
+/* available component name in page editor */
+.rbs_AvailCompName{background-color: #FFFFFF; color: #21B600; text-align: left; font-size: 90%; font-weight: bold; vertical-align: top;}
+
+/* used to render the topic of the page (Object, Portal: etc)in Setup pages */
+.rbs_PageTopicWide{font-size: 120%; vertical-align: middle; text-align: left; color: #635D5A; font-weight: bold; width: 100%;}
+
+/* render a bold link in navy color (used to display the portal main link) */
+.rbs_BoldNavyLink {
+	padding: 2px 2px 2px 4px;
+	width: 30%;
+	border-right: 0px solid #FFFFFF; 
+	//font-weight: bold; 
+	vertical-align: top; 
+	text-align: left;
+	//border-bottom: 1px solid #DDDDDD;
+}
+
+/* used to render column that has the entire sidebar content  */
+.rbs_sidebarContent{vertical-align: top; background-color:#FFF; height: 100%;text-align: left;}/*BEC879,737B33,737B33*/
+
+/* Renders disabled checkbox in field Setup Pages */
+td.rbs_disabledFieldProp{text-align: left; vertical-align: top; color: #635D5A; padding:2px 4px 2px 2px;width: 80%;border-left: 0px solid #FFFFFF;}
+
+/* renders the help information about the component in detail in gray in setup pages */
+td.rbs_grayDetailInfoCol{
+padding:2px 4px 2px 2px;
+width: 20%;
+border-left: 0px solid #FFFFFF; 
+color: #635D5A; 
+text-align: left; 
+vertical-align: top; }
+
+/* render the login form mockup in page editor */
+.rbs_loginFormFields{text-align: right; font-size: 95%; vertical-align: top; font-weight: bold; color: #9C9C9C;}
+
+/* render the new component link (New Object, New Template etc) in component pages(objects.jsp, tabs.jsp etc) in Setup Pages */
+.rbs_NewComponentLink {text-align: left; width: 100%; vertical-align: top;font-weight: bold;}
+
+/* used to render a very large text as alert (used in confirmcheckDialog.jsp) */
+.rbs_xxlargeAlert {
+	text-align: center;
+	font-size: 180%;
+	color: #9C0000;
+	font-weight: bold; }
+
+/* renders the text in silver and bold and center. used in rendering the relation type names */
+.rbs_silverBold{vertical-align: top; font-weight: bold;text-align: center;color: #635D5A;}
+
+/* renders the Data Column of a field in a three column section */
+td.rbs_leftDataCol3{text-align: left; vertical-align: top; padding: 2px 2px 2px 4px;width: 20%;border-right: 0px solid #FFFFFF;}
+td.rbs_leftDataCol input{;}
+td.rbs_leftDataCol select{;}
+
+/* renders the Data Column of a field in a two column section */
+td.rbs_leftDataCol{text-align: left; vertical-align: top; padding: 2px 2px 2px 4px;width: 30%;border-right: 0px solid #FFFFFF;}
+td.rbs_leftDataCol input{;}
+td.rbs_leftDataCol select{;}
+
+/* used to render the Data Column of a field in a one column section */
+td.rbs_leftDataColWide{text-align: left; vertical-align: top; padding: 2px 2px 2px 4px;width: 80%;border-right: 0px solid #FFFFFF;}
+td.rbs_leftDataColWide input{;}
+td.rbs_leftDataColWide select{;}
+
+td.rbs_errorDataColWide {text-align: left; vertical-align: top; padding: 2px 2px 2px 4px;width: 80%;border-right: 0px solid #FFFFFF;}
+td.rbs_errorDataColWide input{;}
+td.rbs_errorDataColWide select{;}
+
+td.rbs_errorDataCol {text-align: left; vertical-align: top; padding: 2px 2px 2px 4px;width: 30%;border-right: 0px solid #FFFFFF;}
+td.rbs_errorDataCol input{;}
+td.rbs_errorDataCol select{;}
+
+td.rbs_errorDataCol3 {text-align: left; vertical-align: top; padding: 2px 2px 2px 4px;width: 20%;border-right: 0px solid #FFFFFF;}
+td.rbs_errorDataCol input{;}
+td.rbs_errorDataCol select{;}
+
+
+/* renders a column with detail information about the component property in Setup Pages*/
+td.rbs_grayDetailHTMLcol{color: #635D5A; padding: 2px 2px 2px 4px;width: 100%;border-right: 0px solid #FFFFFF;border-left: 0px solid #FFFFFF;}
+
+
+/*render columns that has bold data (relationsEdit, relationshipConvert pages) .*/
+td.rbs_boldDataCol{text-align: left; vertical-align: top; font-weight: bold; padding: 2px 2px 2px 4px;width: 80%;border-right: 0px solid #FFFFFF;}
+td.rbs_boldDataCol input{;}
+td.rbs_boldDataCol select{;}
+
+/* renders the left Data Column in email pages*/
+td.rbs_emailLeftDataCol{text-align: left; vertical-align: top; padding: 2px 2px 2px 4px;width: 90%;border-right: 0px solid #FFFFFF;}
+td.rbs_emailLeftDataCol select{;}
+td.rbs_emailLeftDataCol input{;}
+
+/* renders  a column that fills the entire row and has bottom border  (AssignPages.jsp) */
+.rbs_fieldBottomColumn{width: 100%; font-weight: bold; text-align: left;}
+
+/* renders a white table with padding in Edit pages in Setup */
+.rbs_whiteTable{padding: 2px 2px 2px 4px;width: 100%;border-right: 0px solid #FFFFFF; border-left: 0px solid #FFFFFF; background-color: #FFFFFF; width: 100%;}
+
+/* renders a section with thick borders  Pagesection.java */
+.rbs_sectionTablePrimary{ width: 100%; background-color: #E6EACC;  border-top: 1px solid #635D5A;}
+
+/* renders bold gray text (numbers in filters)*/
+.rbs_graybold{font-weight: bold; color: #635D5A; font-size: 120%; vertical-align: top;}
+
+/* selector table */
+.rbs_selectorTable {width: 100%; background-color: #E8E8E8; border: 0px; border-left: 5px solid #E8E8E8;border-right: 5px solid #E8E8E8;}
+
+/* report table */
+.rbs_listTable{background-color: #E6EACC;border-bottom: 1px solid #DFE0B4;border-right: 8px solid #E6EACC; width: 100%;}
+
+/* core/web/setup pages */
+.rbs_primaryTableNoborder{width: 100%; background-color: #E6EACC; border: 0px;border-left: 8px solid #E6EACC;border-right: 8px solid #E6EACC; }
+.rbs_setupprimaryTable {width: 100%; border: 0px; background-color: #E8E8E8; border-left: 8px solid #E8E8E8;border-right: 8px solid #E8E8E8;}
+
+/* not gray */
+.rbs_InfoSmallWide {vertical-align: top; font-size: 95%; border-bottom: 1px solid #9C9C9C; width: 100%; }
+
+/* renders gray text bold  in setup pages*/
+.rbs_smallInfoGrayBold {vertical-align: top; font-size: 95%; color: #9C9C9C; border-bottom: 1px solid #9C9C9C;   font-weight: bold; }
+.rbs_InfoGrayBoldWide {  width: 100%; vertical-align: top; font-size: 95%; color: #635D5A; border-bottom: 1px solid #9C9C9C;   font-weight: bold; }
+
+/* not gray */
+.rbs_InfoBold {vertical-align: top; border-bottom: 1px solid #9C9C9C;   font-weight: bold;}
+
+/* top silverbottom */
+.rbs_silverbottom {border-bottom: 1px solid #9C9C9C;  vertical-align: top; }
+
+
+/* Renders yellow background table used in providing helptips */
+.rbs_helptipTable {color: #000000; width: 100%; ; background-color: #FFF8CE;}
+.rbs_helpTipCol {background-color: #FFF8CE; width: 100%;}
+
+/* renders a yellow background table with links in setup pages (ObjectView.jsp)*/
+.rbs_highlightTable {text-align: center; width: 100%; background-color: #FFF8CE;}
+
+/* renders links in a section and fills the entire row  like Edit Chart Link. */
+.rbs_wideSectionLinks{vertical-align: middle; text-align: left; width: 100%;}
+.rbs_wideSectionLinks a:link {font-size: 95%;}
+.rbs_wideSectionLinks a:visited {font-size: 95%;}
+.rbs_wideSectionLinks a:hover {font-size: 95%;}
+
+/* renders links in a section like in Edit View */
+.rbs_viewSectionLinks {vertical-align: middle; text-align: right;}
+.rbs_viewSectionLinks  a:link {font-size: 95%;}
+.rbs_viewSectionLinks  a:visited {font-size: 95%;}
+.rbs_viewSectionLinks  a:hover {font-size: 95%;}
+
+/* renders inner table in setup Pages (ex: administrationSetup.jsp)*/
+.rbs_setupPageInnerTable {
+vertical-align: top; 
+text-align: left; 
+height: 100%; 
+width: 100%; }
+
+/* renders outer table in setup pages  (ex: administrationSetup.jsp)*/
+.rbs_setupPageOuterTable {
+	vertical-align: top; 
+	text-align: left; 
+	height: 100%; 
+	width: 100%;
+	background-color: #FFFFFF;}
+
+/* renders the main table that has both sidebar and the rest */
+.rbs_mainContentTable {vertical-align: top; height: 100%; width: 100%; border: 0px; }
+
+/* display error messages or alerts */
+.rbs_alertMsg {color: #990000; text-align: left; }
+
+/* renders the script component in page editor */
+.rbs_scriptComponent{font-weight: bold; color: #0000FF; font-size: 95%;}
+
+/* render links in  side bar */
+.rbs_sidebarLink {font-weight: bold; text-align: left;}
+.rbs_sidebarLink  a:link {font-size: 95%;}
+.rbs_sidebarLink  a:visited {font-size: 95%;}
+.rbs_sidebarLink  a:hover {font-size: 95%;}
+
+/* renders short column with bottom border */
+.rbs_shortColFieldbottom {vertical-align: top; text-align: left; border-bottom: 1px solid #DDDDDD;}
+
+/* renders the right column of properties table in page Editor */
+td.rbs_propertiesEditorRightCol {vertical-align: top; text-align: left; border-bottom: 1px solid #DDDDDD;}
+td.rbs_propertiesEditorRightCol input, td.rbs_propertiesEditorRightCol select {;}
+
+/* renders the left column of properties table in page Editor */
+.rbs_propertiesEditorLeftCol {text-align: right; vertical-align: top; font-size: 95%; font-weight: bold; border-bottom: 1px solid #DDDDDD; }
+
+/* renders empty Silver table in setup pages */
+.rbs_wideSilverEmptyTable {border-bottom: 1px solid #DDDDDD; width: 100%;background-color: #E8E8E8;}
+
+/* renders the column that display warning icon in dialog box pages */
+.rbs_warningIconCol{font-weight: bold; text-align: left; text-align: center;}
+
+/*  renders a silver column  */
+td.rbs_silverCol{padding: 2px 2px 2px 4px;width: 100%;border-right: 0px solid #FFFFFF;border-left: 0px solid #FFFFFF; text-align: left; vertical-align: top;}
+
+/* renders the Wide Data column on right in setup pages */
+td.rbs_SetupDataColWide { 
+	vertical-align: top; 
+	text-align: left; 
+	padding: 2px 2px 2px 4px;
+	width: 80%;
+	border-right: 0px solid #FFFFFF;}
+td.rbs_SetupDataColWide input{;}
+td.rbs_SetupDataColWide select{;}
+
+/* renders column with gray text UICOmponents.jsp) */
+td.rbs_detailHTMLCol{vertical-align: top; color: #635D5A;}
+
+/* render column wide and left and top (Components.jsp) */
+.rbs_wideLeftTop{width: 100%; text-align: left; vertical-align: top;}
+
+/* render the form table in objectForm and Report form pages*/
+.rbs_roundedTable{border: 0px; background-color: #E8E8E8; width: 100%;}
+
+
+/* renders the sub total summary col in list (report and view) */
+tr.listItem td.rbs_summaryNumberCol {padding: 2px; text-align: right; color: black;background-color: #FFF8CE;}
+
+/* renders the sub total text  */
+tr.listItem td.rbs_summaryTextCol {padding: 2px; color: black;text-align: left; background-color: #FFF8CE;}
+
+/* render the summary Text column for the total summary */
+tr.listItem td.rbs_listSummaryText  {padding: 2px; color: black;text-align: right;background-color: #FEE9D8;}
+
+/* renders the total summary Number column */
+tr.listItem td.rbs_listSummaryNumber {padding: 2px; color: black;text-align: right;background-color: #FFFDE6;}/*FEE9D8*/
+
+
+/* used in viewing list items */
+tr.rbs_rowHighlightViewed {font-weight: normal; background-color: #F2F3FF;}
+tr.rbs_rowHighlightViewed td { 
+	color: black;
+	border-left: 0px solid #FFFFFF;
+	border-top: 1px solid #DDDDDD;
+	border-right: 0px solid #FFFFFF;
+	border-bottom: 1px solid #DDDDDD;
+	text-align: left;
+	vertical-align: text-top;
+	vertical-align: top;
+} 
+
+tr.rbs_rowHighlightUnviewed {font-weight: bold; background-color: #FFF8CE;}
+tr.rbs_rowHighlightUnviewed  td {
+	color: black;
+	font-weight: bold;
+	border-left: 0px solid #FFFFFF;
+	border-top: 1px solid #DDDDDD;
+	border-right: 0px solid #FFFFFF;
+	border-bottom: 1px solid #DDDDDD;
+	text-align: left;
+	vertical-align: text-top;
+	vertical-align: top;
+} 
+
+
+tr.rbs_rowUnviewed {font-weight: bold;background-color: #FFFFFF;}
+tr.rbs_rowUnviewed  td {
+	color: black;
+	font-weight: bold;
+	border-left: 0px solid #FFFFFF;
+	border-top: 1px solid #DDDDDD;
+	border-right: 0px solid #FFFFFF;
+	border-bottom: 1px solid #DDDDDD;
+	text-align: left;
+	vertical-align: text-top;
+	vertical-align: top;
+}
+
+tr.rbs_parentRow {font-weight: bold; background-color: #F7F7F7;}
+tr.rbs_parentRow  td {
+	color: black;
+	font-weight: normal;
+	border-left: 0px solid #FFFFFF;
+	border-top: 1px solid #DDDDDD;
+	border-right: 0px solid #FFFFFF;
+	border-bottom: 1px solid #DDDDDD;
+	text-align: left;
+	vertical-align: text-top;
+	vertical-align: top;
+}
+
+tr.rbs_rowViewed {font-weight: normal;background-color: #EFEFF7;}
+tr.rbs_rowViewed  td {
+	color: black;
+	font-weight: normal;
+	border-left: 0px solid #FFFFFF;
+	border-top: 1px solid #DDDDDD;
+	border-right: 0px solid #FFFFFF;
+	border-bottom: 1px solid #DDDDDD;
+	text-align: left;
+	vertical-align: text-top;
+	vertical-align: top;
+}
+
+
+ tr.rbs_whiteListItem  td {
+	color: black;
+	font-weight: normal;
+	border-left: 0px solid #FFFFFF;
+	border-top: 1px solid #DDDDDD;
+	border-right: 0px solid #FFFFFF;
+	border-bottom: 1px solid #DDDDDD;
+	text-align: left;
+	vertical-align: text-top;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+
+ tr.rbs_whiteListItem  td table tbody tr td {
+	color: black;
+	font-weight: normal;
+	border-left: 0px;
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 0px;
+	text-align: left;
+	vertical-align: text-top;
+	vertical-align: top;
+}
+
+tr.rbs_parentRow td.smallIcon, 
+tr.rbs_rowHighlightViewed td.smallIcon, 
+tr.rbs_rowHighlightUnviewed td.smallIcon, 
+tr.rbs_whiteListItem td.smallIcon, 
+tr.objectListHeader th.smallIcon {text-align: center;white-space: nowrap;padding: 4px 2px 4px 0px;}
+
+tr.rbs_rowUnviewed td.listItemValue,
+tr.rbs_rowViewed td.listItemValue, 
+tr.rbs_rowHighlightViewed td.listItemValue, 
+tr.rbs_rowHighlightUnviewed td.listItemValue, 
+tr.rbs_whiteListItem td.listItemValue {padding: 4px 4px 4px 4px;}
+
+tr.rbs_rowUnviewed td.actonCol,
+tr.rbs_rowViewed td.actionCol, 
+tr.rbs_rowHighlightViewed td.actionCol, 
+tr.rbs_rowHighlightUnviewed td.actionCol, 
+tr.rbs_whiteListItem td.actionCol {font-weight: normal;font-size: 95%;padding: 4px 4px 4px 4px;white-space: nowrap;}
+
+tr.rbs_rowUnviewed td.actionCol,
+tr.rbs_rowViewed th.actionCol, 
+tr.rbs_rowHighlightViewed th.actionCol, 
+tr.rbs_rowHighlightUnviewed th.actionCol, 
+tr.rbs_whiteListItem th.actionCol {font-weight: normal;padding: 4px 4px 4px 4px;white-space: nowrap;}
+
+tr.rbs_rowUnviewed td.groupSpacer,
+tr.rbs_rowViewed td.groupSpacer, 
+tr.rbs_rowHighlightViewed td.groupSpacer, 
+tr.rbs_rowHighlightUnviewed td.groupSpacer, 
+tr.rbs_whiteListItem td.groupSpacer{border-bottom: 0px;border-top: 0px;border-right: 1px solid #DDDDDD;background-color: #E8FCDC;}
+
+tr.rbs_rowUnviewed td.checkbox,
+tr.rbs_rowViewed td.checkbox, 
+tr.rbs_rowHighlightViewed td.checkbox, 
+tr.rbs_rowHighlightUnviewed td.checkbox, 
+tr.rbs_whiteListItem td.checkbox{width: 30px;text-align: right;white-space: nowrap;padding: 2px 2px 0px 2px;}
+
+tr.rbs_whiteListItem td.listItemNumberValue {padding: 4px 4px 4px 4px;text-align: right;}
+tr.rbs_whiteListItem td.summary {color: #9C9C9C;font-weight: bold;text-align: right;background-color: #FFF8CE !important}
+tr.rbs_whiteListItem td.totalSummary {color: #635D5A;font-weight: bold;text-align: left;background-color: #FEE9D8 !important}
+tr.rbs_whiteListItem td.rbs_listItemValueRight {padding: 4px 4px 4px 4px; text-align: right;}
+
+/* renders primary colored table */
+.rbs_primaryWideTable{background-color: #E6EACC; width: 100%;}
+
+/* display notificaion table in page editor*/
+.rbs_notificationTable {background-color: #FEE9D8; height: 100%; width: 100%;}
+
+/* renders wide silver  table with top border (ex: objectView page) */
+.rbs_silverFieldTopWide {background-color: #E8E8E8; width: 100%; border-top: 1px solid #DDDDDD;}
+
+/* renders wide silver table with gray bottom border */
+.rbs_silverGraybottom{background-color: #E8E8E8; width: 100%; border-bottom: 1px solid #635D5A;}
+
+/* render helptiptable */
+.rbs_FormHelpTipTable {background-color: #FFF8CE; color: #9C9C9C; font-size: 95%;}
+
+/* render editor form table */
+.rbs_editorFormTable{background-color: #F2F4C6; width: 100%; height: 100%;}
+
+/* render expanding column in reprot*/
+.rbs_reportExpand{vertical-align: top; text-align: center; background-color: #D2D2DF;}
+
+/* render the main content table in setup pages*/
+.rbs_componentContentTable{ padding: 2px 2px 2px 4px;width: 100%;border-right: 0px solid #FFFFFF;border-left: 0px solid #FFFFFF; background-color: #FFFFFF; width: 100%;}
+
+/* render white blank table */
+.rbs_whiteBlankTable {background-color: #FFFFFF; width: 100%; border: 0px;}
+
+/* render white blank table */
+.rbs_whitePaddedGrayBottomTable {padding: 2px 2px 2px 4px;width: 100%;border-right: 0px solid #FFFFFF;border-left: 0px solid #FFFFFF; background-color: #FFFFFF; width: 100%;border-bottom: 1px solid #CCCCCC;}
+
+/* renders filter table */
+td.rbs_filtersTable{vertical-align: top; padding: 2px 2px 2px 4px;width: 100%;border-right: 0px solid #FFFFFF;border-left: 0px solid #FFFFFF; text-align: right;}
+
+/*render record action column (edit, delete button etc) */
+.rbs_recordActionCol {text-align: right; vertical-align: top;}
+
+/* renders login table in page editor */
+.rbs_peloginTable{height: 100%; width: 100%; background-color: #EFEFF7;}
+
+/* div spacer in page editor */
+.rbs_peDivSpacer {width: 100%; background-color: #E8E8E8; font-size: 1%; }
+
+/* htmlEditDialog.jsp */
+.rbs_centerwide{vertical-align: middle; text-align: left; width: 100%;}
+
+/* render table with  gray borders (recyclebin.jsp) */
+.rbs_grayWideTable{width: 100%;} /** replaced with wide **/
+
+/* render main table in all setup pages */
+.rbs_mainComponentTable{width: 100%; border: 0px; padding: 0px;}
+
+/* UICOmponets.java */
+.rbs_widePrimary {width: 100%; background-color: #E6EACC; border-left: 8px solid #E6EACC;border-right: 8px solid #E6EACC;}
+
+/* renders table that separates section */
+.rbs_sectionSeparate {width: 100%; background-color: #E6EACC; border-bottom: 1px solid #9C9C9C;}
+
+/* renders error message table */
+.rbs_errormsgTable{width: 100%; color: #9C9C9C;}
+
+/* renders the table with lookup value */
+.rbs_lookupValue {width: 100%; background-color: #E8E8E8; border-left: 5px solid #E8E8E8;border-right: 5px solid #E8E8E8;}
+
+/* UI Components.java */
+.rbs_silverNoborderTable {background-color: #E8E8E8; border: 0px; width: 100%;}	
+	
+/* render outer component content table */
+.rbs_outerMainComponentTable {width: 100%; height: 100%; vertical-align: top; background-color: #FFFFFF;} 
+
+/* renders columns that are highlighted yellow */
+.rbs_highlightLinks{background-color: #F2F3FF;}/*#FFF8CE;*/
+
+/* renders text large and courier font */
+.rbs_largeCourier{font-size: 120%; font-family: courier, courier new, monospace;}
+
+
+/* renders miniCalendar table */
+table.rbs_miniCalTable{width: 100%;font-size: 95%;background-color: #EFEFF7;}
+table.rbs_miniCalTable td{padding: 2px 5px 2px 5px;border-width: 0px;text-align: center;}
+table.rbs_miniCalTable A:link {color: black;text-decoration: none;}
+table.rbs_miniCalTable A:visited {color: black;text-decoration: none;}
+table.rbs_miniCalTable A:hover {color: black;text-decoration: underline;}
+table.rbs_miniCalTable th{color: black;font-weight: normal;text-align: center;}
+
+/* renders spacer column (lists) */
+.rbs_smallSpacer{font-size: 90%; border-bottom: 0px;border-top: 0px;border-right: 1px solid #DDDDDD;background-color: #E8FCDC;}
+
+/* renders component name in page editor */
+.rbs_componentName {color: #635D5A; font-size: 90%; text-align: right; font-weight: normal; }
+
+/* renders silver text very small */
+.rbs_smallStatus{color: #635D5A; font-size: 90%;}
+
+
+/* renders listItem aligned right for numbers */
+tr.listItem td.rbs_listItemValueRight {padding: 4px 4px 4px 4px; text-align: right;}
+
+/* renders a wide table */
+table.rbs_detailTable{width: 100%; }
+table.rbs_detailTable td.detailHTMLCol{padding: 2px 2px 2px 4px; border-right: 0px solid #FFFFFF;border-left: 0px solid #FFFFFF;}
+
+/* primary wide  tables no border*/
+.rbs_primaryWide{width: 100%; background-color: #E6EACC;}
+
+/* infomessage wide */
+/*.rbs_infoMessage {background-color: #FFF1A8;width: 100%; }*/
+
+/* wide white table/Div component view pages (tabView, appView etc)  */
+.rbs_wideWhite {width: 100%;background-color: #FFFFFF;}
+
+/* render column wide and right */
+.rbs_rightWide{width: 100%;text-align: right;}
+
+/* wideSecondary (#EFEFF7) */
+.rbs_secondaryWide {width: 100%; background-color: #EFEFF7;}
+
+/* setupprimary Wide */
+.rbs_setupPrimaryWide {width: 100%; background-color: #E8E8E8; }
+
+/*wide noborder table */
+.rbs_noborderTable { border: 0px; width: 100%;}
+
+/* lightRedTable */
+.rbs_lightRedTable {width: 100%; background-color: #FFDCD9;}
+
+/* silver Table */
+.rbs_lightsilverTable {width: 100%; background-color: #E8E8E8;}
+
+/* silver side border table */
+.rbs_silverSideBorderTable {width: 100%; border-left: 5px solid #E8E8E8;border-right: 5px solid #E8E8E8;}
+
+/* mediumPurple table */
+.rbs_mediumPurpleTable {width: 100%; background-color: #D2D2FF;}
+
+/* Secondary Table */
+.rbs_secondaryTable {border-bottom: 1px solid #DDDDDD; background-color: #EFEFF7;}
+
+/* small gray Text */
+.rbs_smallGray {color: #635D5A; font-size: 95%;}
+
+/* center bold */
+.rbs_centerBold {font-weight: bold;text-align: center;}
+
+/* center wide bold small renders Month and year in calendar */
+.rbs_miniCalHeader {font-size: 95%;font-weight: bold;text-align: center; width: 100%;}
+
+/* right small renders >> links */
+.rbs_calNext {font-size: 95%;text-align: right;}
+
+/* bold italic */
+.rbs_boldItalic{font-weight: bold; font-style: italic;}
+
+/* renders the text read only */
+.rbs_readOnly{font-weight: bold; color: #9C9C9C;}
+
+/* wide small "Back to List links" */
+.rbs_BacktoCol {font-size: 95%; width: 100%;}
+
+/* xlarge bold */
+.rbs_xlargeBold {font-weight: bold; font-size: 150%;}
+
+/* gray Div */
+.rbs_unselectedButton {padding: 2px 4px 2px 4px; background-color: #E8E8E8; border: 1px solid #CCCCCC; }
+.rbs_selectedButton {padding: 2px 4px 2px 4px; border: 1px solid #CCCCCC; font-weight: bold; background-color: #FFF8CE;}
+
+/* wide no border table */
+.rbs_wideTable {width: 100%; border:0px;}
+
+/* Wide silver table */
+.rbs_silverTableWide {width: 100%; border-left: 5px solid #E8E8E8;border-right: 5px solid #E8E8E8; }
+
+/* right large bold top setup page */
+.rbs_rightLargeText {font-weight: bold; text-align: right; vertical-align: top; font-size: 120%; }
+
+/* bold wide column */
+.rbs_boldWideCol {width: 100%; font-weight: bold; }
+
+/* renders setupsecondary table */
+.rbs_wideSetupSecondary {width: 100%; border: 0px; background-color: #EFEFF7;}
+
+
+/*** Pacific Header ***/
+/* Float Elements 
+---------------------------------*/
+.fl-lt {float:left;}
+.fl-rt {float:right;}
+
+/* Clear Floated Elements
+---------------------------------*/
+.clear {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+.clearfix:before,
+.clearfix:after {
+  content: '\0020';
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+
+/* Header Style
+---------------------------------*/ 
+.header
+{
+/*height:115px;
+background:url(/_Assets/img/header_bg.jpg) repeat-x left top;*/
+min-width:1000px; /*width:100%; commented by kalpana*/
+margin-bottom: 8px;
+}
+
+
+
+header .caret{
+	margin-top: 16px;
+	margin-left: 0px;
+	display: inline-block;
+	width: 0;
+	height: 0;
+	vertical-align: top;
+	border-top: 4px solid #FFFFFF;
+	border-right: 4px solid transparent;
+	border-left: 4px solid transparent;
+	content: "";
+}
+.pacific-header {
+	background-color: #54565B;
+	height: 35px;
+}
+.application-header {
+	background-color: #0A425B;
+	min-height: 47px;
+	overflow : auto;
+}
+.pacific-logo {
+	margin-left: 10px;
+	margin-top: 1px;
+	float: left;
+}
+.pacific-d2c-logo {
+	float: left;
+	margin-top: 5px;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	min-height : 36px;
+	max-height : 53px;
+	min-width  : 36px;
+	max-width  : 212px;
+}
+.pull-right {
+	float: right;
+}
+.user-panel {
+	position: absolute;
+	right: 10px;
+	min-width: 220px;
+	max-width: 350px;
+	z-index: 33;
+}
+.user-panel span {
+	float: right;
+	margin-right: 5px;
+}
+.user-panel .caret {
+	margin-top: 18px;
+}
+.user-panel img {
+	float: right;
+	margin-top: 2px;
+	
+}
+.application-title {
+	margin-left: 10px;
+}
+.application-title img {
+	float: left;
+	margin-top: 5px;
+	margin-right: 10px;
+}
+.application-title span {
+	float: left;
+	font: 28px "Helvetica W01 Roman",Arial,Tahoma,Sans-serif;
+	color: #FFFFFF;
+	margin-top: 8px
+}
+.d2c-user-panel {
+	/*position: absolute;
+	right: 2px;*/
+	cursor:pointer;
+}
+.d2c-header-username {
+	color: #FFFFFF;
+}
+.d2c-header-open-username {
+	color: #4c4c4c;
+}
+#user-popup {
+	width: 100%;
+	text-align: right;
+	background-color: #FFFFFF;
+	display:none;
+	border: solid 1px #d0d0d0;
+	margin-top: -1px !important;
+	font-family: "Helvetica W01 Roman",Arial,Tahoma,Sans-serif;
+}
+#user-popup img {
+	margin-right: 1px;
+}
+#user-popup .caret {
+	border-top-color:#000000;
+}
+#update-profile-button {
+	border: none;
+	height: 14px;
+	background-color:#1895c1;
+	color: #FFFFFF;
+	margin: 5px 2px 2px 0px;
+	display: inline-block;
+	padding: 7px 5px 7px 5px;
+	font: 14px "Helvetica W01 Roman",Arial,Tahoma,Sans-serif;
+	cursor: pointer;
+}
+#update-profile-button:hover {
+	text-decoration: underline;
+}
+#links-list {
+	text-align: left;
+	padding-bottom: 10px;
+	background-color: #f2f2f2;
+}
+#links-list li {
+	margin-left: 10px;
+	margin-bottom: 6px;
+	line-height:15px;
+}
+#links-list hr {
+	margin-bottom: 10px;
+}
+#links-list a {
+	color: #1895c1;
+	font-size:14px;
+	font-weight : normal;
+}
+
+#links-list a:hover {
+	text-decoration: underline;
+}
+#links-list div {
+	height: 1px;
+}
+.hello-guest-span {
+	color: white;
+	width: 100%;
+	text-align: right;
+}
+.hey-user {
+	min-width: 160px;
+	max-width: 300px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: right;
+	font: 12px "Helvetica W01 Roman",Arial,Tahoma,Sans-serif;
+	padding-top: 12px;
+}
+.hey-user b {
+	font-weight: normal;
+	margin-left: 5px;
+}
+.hey-user.d2c-header-username b {
+	color: #CCCCCC;
+}
+.hey-user.d2c-header-open-username b {
+	color: #808080;
+}
+/* footer Style
+---------------------------------*/ 
+
+.footer span {
+	margin-top: 10px;
+}
+.footer a {
+	margin-right: 10px;
+	margin-left: 10px;
+	cursor: pointer;
+	color: #FFFFFF;
+}
+.footer
+{
+	height: 30px;
+	background-color: #54565B;
+	color: #FFFFFF !important;
+	font: 10px Helvetica !important;
+}
+
+#footerBox .gray  {
+	color : #54565B;
+}
+
+.d2c-shadow-edge {
+	box-shadow: 0 4px 4px -2px #232323;
+	-moz-box-shadow: 0 4px 4px -2px #232323;
+	-webkit-box-shadow: 0 4px 4px -2px #232323;
+}
+
+/****  Local Substitute for global reset being used in header shared code ****/
+header ol, header ul {
+	list-style: none outside none;
+		margin : 0px !important;
+}
+
+.stickyFooter {
+	position : absolute;
+	bottom : 0px; 
+}
+
+/*************** SEARCH  *****************/
+
+#rb_search_container {
+    float: right;
+    height: 24px;
+    margin: 14px 10px 5px 0;
+    overflow: hidden;
+}
+
+
+#rb_search_container .select2-container .select2-choice {
+    height: 22px;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+
+#rb_search_container  .select2-search {
+    display: inline-block;
+    margin: 0;
+    min-height: 20px;
+}
+
+
+/**
+html body .select2-drop {
+    border-radius: 0px !important;
+}
+
+.select2-drop .select2-results .select2-highlighted {
+    background: none repeat scroll 0 0 #CCCCCC;
+    color: #FFFFFF;
+}
+**/
+
+
+#rb_search_container   .select2-container .select2-choice div {
+	border-radius : 0px;
+	background: none repeat scroll 0 0 transparent;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#ffffff', GradientType = 0);
+    border-left: 0 none;
+}
+
+
+#rb_search_container  .select2-container .select2-choice {
+    line-height: 20px;
+    border-radius : 0px;
+}
+
+#rb_search_container  .select2-container .select2-choice div b {
+    background: url("select2/select2.png") no-repeat scroll 0px -1px transparent;
+}
+
+#rb_search_container  .select2-dropdown-open .select2-choice div b {
+    background-position: -18px -1px;
+}
+
+
+#rb_search_container  .select2-drop {
+	border-radius : 0px;
+}
+
+#rb_search_container  .input-append input, .input-append select, .input-append .uneditable-input {
+	border-radius : 0px;
+	font-size : 14px;
+	height: 22px;
+	padding : 0px;
+	text-indent : 3px;
+
+}
+
+#rb_search_container .input-append .add-on:last-child, .input-append .btn:last-child, .input-append .btn-group:last-child > .dropdown-toggle {
+	border-radius : 0px;
+}
+
+#rb_search_container  .rb-btn-search {
+    height: 24px;
+    width: 30px;
+    background-color : #1895c1;
+    float : right;
+    background-image: url("../images/searchicon.png");
+    margin-left : 5px;
+    cursor : pointer;
+
+    
+}
+
+#rb_search_container  .rb-btn-search:hover, #rb_search_container  .rb-btn-search:active {
+
+    background-color : #0d5475;
+
+ /* background-position: 8px 5px;
+ 
+ background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #ccc), color-stop(0.6, #eee));
+ background-image: -webkit-linear-gradient(center bottom, #ccc 0%, #eee 60%);
+ background-image: -moz-linear-gradient(center bottom, #ccc 0%, #eee 60%);
+ background-image: -o-linear-gradient(bottom, #ccc 0%, #eee 60%);
+ background-image: -ms-linear-gradient(top, #cccccc 0%, #eeeeee 60%);
+ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#cccccc', endColorstr = '#eeeeee', GradientType = 0);
+ background-image: linear-gradient(top, #cccccc 0%, #eeeeee 60%);
+
+ 
+ */
+}
+
+
+#rb_search_container  .rb-btn-search  .rb-icon-search {
+	width : 12px;
+	height : 14px;
+	background-image: url("../images/search.png");
+	background-position: -20px 0px;
+	background-repeat: no-repeat;
+	border : 0px !important;
+	padding : 0px !important;
+	margin : 0px !important;
+}
+
+#rb_search_container  .rb-btn-search:hover  .rb-icon-search, #rb_search_container  .rb-btn-search:active  .rb-icon-search {
+	background-image: url("../images/search.png");
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+}
+
+/***   
+	important : After Pacific Header was put in, I found that shift-tabbing from Search... box gives active to div.select2-search > input[=text]
+	 This causes a the input to be dragged into viewport (#rb_search_container) causing a serious layout issue in the limited #rb_search_container space    
+	 Making the input already (using the following rule) in the vertical range of viewport cancels the viewport shift 
+***/
+
+#rb_search_container .select2-offscreen  input {
+	position : absolute;
+	top : -24px;
+}
+
+
+/* CUSTOM CSS */
+
+/****************************************
+GLOBALS
+*****************************************/
+
+body, html{
+	font-family: Segoe UI,Arial,Verdana,Tahoma,sans-serif;
+	color: rgb(71, 66, 63);
+}
+
+a{
+	color:rgb(65,97,115);
+}
+
+a:hover{
+	text-decoration:none;
+}
+
+.xxlarge{
+	width:10px;
+}
+
+body > table.wide:nth-child(1){
+}
+label, td.rbs_rightLabelWide, td.rbs_rightLabel {
+	color: rgb(93,58,20);
+}
+
+
+textarea, input:not([type]), input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"]{
+	border-radius:0px;
+	-ms-border-radius:0px;
+	-o-border-radius:0px;
+	-moz-border-radius:0px;
+	-webkit-border-radius:0px;
+	-webkit-border-bottom-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	-webkit-border-top-left-radius: 0px;
+	border-top-left-radius: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	-moz-border-radius-topleft: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+	border-top-right-radius: 0px;
+	-moz-border-radius-bottomright: 0px;
+	-moz-border-radius-topright: 0px;
+	box-shadow: 0px 0px 0px 0px rgba(255,255,255,0.0);
+	-o-box-shadow: 0px 0px 0px 0px rgba(255,255,255,0.0);
+	-ms-box-shadow: 0px 0px 0px 0px rgba(255,255,255,0.0);
+	-moz-box-shadow: 0px 0px 0px 0px rgba(255,255,255,0.0);
+	-webkit-box-shadow: 0px 0px 0px 0px rgba(255,255,255,0.0);
+	border:1px solid rgba(183,148,110,0.4);
+	background: rgb(255,254,243);
+}
+
+.btn, .btn-small, .btn-primary, .dropdown-toggle, .btn-group, .btn-group > .btn:first-child, .label.label-primary{
+	border-radius:0px;
+	-ms-border-radius:0px;
+	-o-border-radius:0px;
+	-moz-border-radius:0px;
+	-webkit-border-radius:0px;
+	-webkit-border-bottom-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	-webkit-border-top-left-radius: 0px;
+	border-top-left-radius: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	-moz-border-radius-topleft: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+	border-top-right-radius: 0px;
+	-moz-border-radius-bottomright: 0px;
+	-moz-border-radius-topright: 0px;
+	text-shadow: 0px 0px 0px rgba(0,0,0,0.0);
+	
+}
+.application-header {
+
+}
+.application-header {
+	min-height: 47px;
+	overflow: hidden;
+	background: rgb(245,245,245);
+	width: 225px;
+	border-right: 2px solid #CCC;
+}
+#headerBox{
+	margin-bottom:0px; height:50px;
+}
+#rbi_appTreeSection img{
+	height:20px;
+	width:auto;
+}
+div.rbs_footer{
+	background:rgb(97, 123, 136);
+}
+div.rbs_footer div{
+	color: rgb(255,255,255);
+}
+div.rbs_footer div a{
+	color:rgb(255,255,255);
+}
+#rbe_tabs #rbe_selectedTab{
+	border-top: 3px solid #777;
+}
+
+button.btn.btn-small, input[type="submit"].btn.btn-small, a.btn.btn-small, a.btn.btn-small.btn-primary, button.btn.btn-small.btn-primary{
+	/*background: rgba(97,123,136,0.8);*/
+	color: rgb(55,55,55);
+	text-shadow: 0px 0px 0px rgb(0,0,0);
+}
+button.btn.btn-small.btn-primary, a.btn.btn-small.btn-primary, input[type="submit"].btn.btn-small.btn-primary{
+	color:rgb(255,255,255);
+}
+
+.btn:hover, .btn-mini:hover, .btn-small:hover, .btn-primary:hover{
+	/*background: rgb(0,51,151);*/
+	color: rgb(253,253,253);
+}
+
+button.dropdown-toggle.btn-link{
+	background-color: none;
+}
+
+element.style{
+	background-color: none;
+}
+
+.xxlarge{
+	width:10px;
+}
+
+.rbs_wideTable{
+}
+
+td.top img{
+	margin-top: 15px;
+}
+
+#s2id_searchDefId, #s2id_rbe_createSelect2{
+	border-radius:0px;
+	-ms-border-radius:0px;
+	-o-border-radius:0px;
+	-moz-border-radius:0px;
+	-webkit-border-radius:0px;
+	-webkit-border-bottom-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	-webkit-border-top-left-radius: 0px;
+	border-top-left-radius: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	-moz-border-radius-topleft: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+	border-top-right-radius: 0px;
+	-moz-border-radius-bottomright: 0px;
+	-moz-border-radius-topright: 0px;
+}
+
+.rbs_mainContentTable{
+	
+}
+
+div.roundedSectionBorder.rbsilverbg{
+	border-radius:0px;
+	-ms-border-radius:0px;
+	-o-border-radius:0px;
+	-moz-border-radius:0px;
+	-webkit-border-radius:0px;
+	-webkit-border-bottom-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	-webkit-border-top-left-radius: 0px;
+	border-top-left-radius: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	-moz-border-radius-topleft: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+	border-top-right-radius: 0px;
+	-moz-border-radius-bottomright: 0px;
+	-moz-border-radius-topright: 0px;
+	border:none;
+	padding:10px;
+	background: none;
+	/*border:rgba(183,148,110,0.4);
+	background: rgb(97, 123, 136);*/
+}
+div.roundedSectionBorder.rbsilverbg > div.wide.bold > div.bold{
+	background:rgb(97,123,136);
+	margin:0px;
+	padding:10px;
+	color:rgb(255,255,255);
+}
+div.roundedSectionBorder.rbsilverbg > div.wide.bold{
+	margin:0px;
+}
+div.roundedSectionBorder.rbsilverbg > div.wide.bold > table.wide.rbwhite, td.well.well-small.rbwhite{
+	padding:10px;border:3px solid rgb(97,123,136);margin:0px;
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a{
+	background: rgb(183,148,110);
+}
+div.wide.lightbottom.bold > div.bold.gray{
+	color: rgb(55,55,55);
+}
+
+div.wide.inline-block.bold{
+	background:none;
+}
+
+div.wide.inline-block.bold, div.bold{
+	background: rgb(245,245,245);
+}
+
+.dropdown-menu{
+	border-radius:0px;
+	-ms-border-radius:0px;
+	-o-border-radius:0px;
+	-moz-border-radius:0px;
+	-webkit-border-radius:0px;
+	-webkit-border-bottom-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	-webkit-border-top-left-radius: 0px;
+	border-top-left-radius: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	-moz-border-radius-topleft: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+	border-top-right-radius: 0px;
+	-moz-border-radius-bottomright: 0px;
+	-moz-border-radius-topright: 0px;
+}
+
+.objectListHeader{
+	background: rgb(250,162,46);
+}
+
+div.xxxsmall.bold{
+	background: none;
+}
+
+
+
+/*********************************************************************
+TABS
+**********************************************************************/
+
+#rbe_tabs{
+	border: none;
+	margin-bottom: 50px;
+}
+
+#rbe_tabs div{
+}
+
+div.rbs_pageTab.rbs_pageTabSelected{
+}
+a.pacific-logo img{
+	margin-top:5px;height:24px;width:auto;
+}
+.pacific-header {
+background-color: rgb(97,123,136);
+height: 35px;
+}
+#rbe_tabs div a{
+	color:rgb(33,100,152)
+}
+.rbs_tab.rbs_tab_selected.dropdown{
+	border-top: 3px solid rgb(33,100,152);
+}
+#theFrame{
+	border: 1px solid rgba(183,148,110,0.4);
+}
+
+#rbe_sidebarTD > div > table{
+	width:225px;
+}
+
+#rbe_sidebarTD{
+		background:rgb(245,245,245); padding-top:50px; display: table-cell !important;
+}
+
+#sidebarControlContainer {
+	width: 12px;
+	height: 100%;
+	min-height: 300px;
+	margin-right: 2px;
+	display: inline-block;
+	border-left: 2px solid #CCC;
+}
+
+#sidebarIndicator{
+	display:none;
+}
+.overflowItems.rbwhite, .highlight{
+	padding:10px;
+}
+
+.glyphicon {
+position: relative;
+top: 1px;
+display: inline-block;
+font-family: 'Glyphicons Halflings';
+-webkit-font-smoothing: antialiased;
+font-style: normal;
+font-weight: normal;
+line-height: 1;
+-moz-osx-font-smoothing: grayscale;
+}
+/*********************************************************************
+BUTTON PRIMARY FACES
+
+button.btn.btn-small, input[type="submit"].btn.btn-small, a.btn.btn-small{
+	background: rgb(250,162,46);
+	color: rgb(55,55,55);
+	text-shadow: 0px 0px 0px rgb(0,0,0);
+}
+
+button.btn.btn-small.btn-primary, input[type="submit"].btn.btn-small.btn-primary{
+	background: rgb(250,162,46);
+}
+**********************************************************************/
+td.rbs_rightWideLabelRequired, td.rbs_rightWideLabelRequired label, td.rbs_rightLabelRequired, td.rbs_rightLabelRequired label {
+color: #F00 !important;
+}
+div.wide.inline-block.bold, div.bold {
+background:none;
+margin-bottom:10px;
+}
+
+.rbs_pageTabSelected{
+border-radius:0px;
+-o-border-radius:0px;
+-ms-border-radius:0px;
+-moz-border-radius:0px;
+-webkit-border-radius:0px;
+background:rgb(255,255,255);
+border-top:3px solid #CCC;
+}
+
+.rbs_pageTabRollover{
+border-radius:0px;
+-o-border-radius:0px;
+-ms-border-radius:0px;
+-moz-border-radius:0px;
+-webkit-border-radius:0px;
+}
+
+tr.groupRow, td.rbs_smallSpacer{
+	color: rgb(220, 220, 220);
+	padding: 2px 2px 2px 4px;
+}
+
+body, html{
+overflow-x:hidden;
+}
+.rbSectionFocus { background:rgb(245,245,245) !important; border:1px solid rgb(240,240,240) !important; padding:15px; }
+.rbSectionFocus div, .rbSectionFocus td, .rbSectionFocus tr, .rbSectionFocus table { background: none !important; }
+
+#newloader{
+	margin-top:20%;
+}
+
+.rbcmenu, #rbe_tabs{
+	text-align: center;
+	margin: -16px auto 0px -3px;
+	width: 100%;
+	border-bottom: 1px solid rgb(242,242,242);
+	border-bottom: 1px solid #CCC;
+	white-space:nowrap;
+}
+
+.rbcmenu .tabs{
+	float:none;
+	display: inline-block;
+	white-space: nowrap;
+	font-weight: normal;
+	padding: inherit;
+	text-align: center;
+	width:120px;
+	height:70px;
+	border:none;
+	border-radius:100%;
+}
+
+.rbcmenu .tabs a, .rbcmenu .tabs i{
+	color:rgb(192,192,192);
+}
+
+.rbcmenu .sel{
+	background:rgba(0,91,171,0,8);
+}
+
+.rbcmenu .sel a,.rbcmenu .sel i{
+	color:rgb(255,255,255);
+}
+
+#sidebarControl { display:none; }
+#sidebarControlContainer { width: 0px; }

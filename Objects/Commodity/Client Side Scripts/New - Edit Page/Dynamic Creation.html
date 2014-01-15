@@ -1,0 +1,771 @@
+<script src = "{!#HOSTED_FILE.76088162}"></script>
+<script src = "{!#HOSTED_FILE.76096436}"></script>
+<style>
+#step2{
+	margin:20px;
+	display:none;
+}
+
+#step1{
+	margin:20px;
+}
+
+#step2 p{
+	margin:10px;
+}
+#step2 label, #tradingFields label{
+	margin-right:5px;
+}
+
+#tradingFields{
+	border-top: 1px solid rgb(245,245,245);
+}
+
+#initialinfo, #registeredGrades{
+	padding:5px;
+	border: 1px dashed rgb(222,222,222);
+}
+
+#initialinfo p{
+	display:inline-block;
+}
+
+#buttongroup{
+	margin:10px;
+}
+
+#fieldcreator{
+	padding:5px;
+	border:1px solid rgb(250,250,250);
+	background:rgb(245,245,245);
+}
+
+#cachedgrades tr, #cachedgrades td, #cachedgrades table, #cachedgrades th{
+	border: 1px solid rgb(242,242,242);
+	border-collapse: collapse;
+	padding:5px;
+	text-align:center;
+}
+
+#fieldholder p, #editfieldsHolder p{
+	display:inline-block;
+	margin:10px;
+}
+
+#fieldholder p label, #editfieldsHolder p label{
+	margin-right:5px;
+}
+
+#fieldholder{
+	width:35%;
+}
+
+#fieldholder input{
+	float:right;
+}
+
+#steps{
+	width:100%;
+	text-align:center;
+	margin:20px;
+}
+#stepind{
+	margin:auto;
+	padding:10px 20px 10px 20px;
+	display:inline-block;
+}
+
+#c1,#c2,#c3{
+	-webkit-border-radius: 999px;
+    -moz-border-radius: 999px;
+    border-radius: 999px;
+	padding:15px 22px 15px 22px;
+	background:rgba(192,192,192,0.8);
+	color:rgb(245,245,245);
+}
+
+#stepholder > div{
+	display:inline-block;
+}
+
+#stepholder{
+	display:inline-block;
+}
+#c1{
+	background:rgba(48,173,227,0.8);
+	color:rgb(255,255,255);
+}
+
+#savefields{
+	display:none;
+}
+
+p.step2link, p.step3link, p.step4link{
+	display:none;
+	text-align:right;
+	font-weight:600;
+	font-size:14px;
+	margin:20px;
+}
+
+p.step2link a, p.step3link a, p.step4link a{
+	color:rgb(145,45,0);
+}
+
+#tradingFields table,#tradingFields tr,#tradingFields th,#tradingFields td{
+	border:none;
+	margin:10px;
+	padding:10px;
+	text-align:center;
+}
+
+#regtable{
+	width:40%;
+	margin:20px;
+}
+
+#regtable tr{
+	border: 1px solid rgb(252,252,252);
+}
+
+#regtable td{
+	padding:10px;
+}
+
+#mask{
+	position:fixed;
+	height:0px;
+	width:0px;
+	top:50%;
+	left:50%;
+	display:none;
+	background:rgba(0,0,0,0.4);
+	text-align:center;
+}
+
+#editor{
+	padding:25px;
+	margin: 10% auto;
+	background: rgb(250,250,250);
+	width:50%;
+}
+
+#cachedGradeTable{
+	margin-top:10px;
+}
+
+#cachedGradeTable > tbody > tr:nth-child(even){
+	background: rgb(254,254,254);
+}
+
+#cachedGradeTable > tbody > tr:nth-child(odd){
+	background: rgb(245,245,245);
+}
+
+#cachedGradeTable > tbody > tr:nth-child(1){
+	background: linear-gradient(bottom, rgb(235,235,235), rgb(245,245,245));
+	background: -webkit-linear-gradient(bottom, rgb(235,235,235), rgb(245,245,245));
+	background: -moz-linear-gradient(bottom, rgb(235,235,235), rgb(245,245,245));
+	background: -ms-linear-gradient(bottom, rgb(235,235,235), rgb(245,245,245));
+	background: -o-linear-gradient(bottom, rgb(235,235,235), rgb(245,245,245));
+	color:rgb(55,55,55);
+}
+
+#errmsg, #errmsg2{
+	width:20%;
+	text-align:center;
+	padding: 10px;
+	color:rgb(255,255,255);
+	display:none;
+	background:rgba(115,15,0,0.3);
+}
+
+#gdesc{
+	resize:none;
+	width:250px;
+	height:75px;
+}
+</style>
+<div id = "errmsg"></div>
+<div id = "steps">
+	<div id = "stepholder">
+		<div class = "s1" id = "stepind">
+			<div id = "c1">1</div>
+		</div>
+		<div>Create Fields for Trading Standards</div>
+	</div>
+	<div id = "stepholder">
+		<div class = "s1" id = "stepind">
+			<div id = "c2">2</div>
+		</div>
+		<div>Create Grades and Trading Standard Values</div>
+	</div>
+	<div id = "stepholder">
+		<div class = "s1" id = "stepind">
+			<div id = "c3">3</div>
+		</div>
+		<div>Review and Save Commodity and Grades</div>
+	</div>
+</div>
+<div id = "step1">
+	<p><a href = "javascript:appendField()" style="text-decoration:underline"><b>+</b>&nbsp;New Trading Standard Field</a></p>
+	<div id = "fieldcreator">
+	</div>
+	<p class = "step2link"><a href = "javascript:saveFields()" style="text-decoration:underline">Step 2 >></a></p>
+	
+</div>
+
+<div id = "step2">
+	<div id = "initialinfo">
+		<p><label for='gname' style="color:rgb(255,0,0)">Grade</label><input type='text' id='gname' name='gname'></p>
+		<p><label for='csg' style="color:rgb(255,0,0)">CSG Number</label><input type='text' id='csg' name='csg'></p>
+		<p><label for='cy' style="color:rgb(255,0,0)">Crop Year</label><select type='text' id='cy' name='cy'><option value="0">-- Please Select --</option></select></p>
+		<p><label for='gdesc' style="color:rgb(255,0,0)">Description</label><textarea id='gdesc' name='gdesc'></textarea></p>
+		<div id = "chks">
+			<p>Select Applicable Variety</p>
+			<div id = "chkholder"></div>
+		</div>
+		<div id = "tradingFields"></div>
+		<div id = "buttongroup">
+			<input type = "button" class = "btn btn-small btn-primary" value = "Add Grade" onclick = "cacheGrade()">
+		</div>
+		
+	</div>
+	<div id = "cachedgrades"></div>
+	<p class = "step3link"><a href = "javascript:lastStep()" style="text-decoration:underline">Step 3 >></a></p>
+	<p class = "step4link"><a href = "javascript:buttonClick(0)" style="text-decoration:underline">Save</a></p>
+	<p class = "step4link"><a href = "javascript:buttonClick(1)" style="text-decoration:underline">Cancel</a></p>
+	<p class = "back2link"><a href = "javascript:backFieldCreate()" style="text-decoration:underline"><< Back to Trading Standard Field Creation</a></p>
+	<p class = "back3link"><a href = "javascript:backGradeCreate()" style="text-decoration:underline"><< Back to Grade Creation</a></p>
+	
+	
+</div>
+<script>
+/*************************************************************
+DYNAMIC TRADING STANDARD FIELDS AND GRADING PARAMETERS CREATION
+JC Pradel
+10/19/2013
+**************************************************************/
+var grades = [];
+var gradectr, fieldctr;
+var hasGrades = false, hasFields = false;
+$(document).ready(function(){
+	loader();
+});
+var hiddenGrid1;
+var hiddenGrid2;
+function loader(){
+	hiddenGrid1 = "#rbi_S_"+rbf_getSectionIdByTitle("Grades");
+	hiddenGrid2 = "#rbi_S_"+rbf_getSectionIdByTitle("New Section");
+	$(hiddenGrid1).hide();
+	$(hiddenGrid2).hide();
+	if(parseInt("{!id}") > 0){
+		hasGrades = true;
+		hasFields = true;
+		getRegisteredGrade();
+	}else{
+		$("input[value=' Save ']").hide();
+	}
+	$("input[value='Save & New']").hide();
+}
+
+function lastStep(){
+	$("#c1").css("background","rgba(192,192,192,0.8)");
+	$("#c2").css("background","rgba(192,192,192,0.8)");
+	$("#c3").css("background","rgba(48,173,227,0.8)");
+	$("#initialinfo").slideUp();
+	$("p.step4link").show();
+	$("p.step3link").hide();
+	$("p.back2link").hide();
+	$("p.back3link").show();
+	$("#cachedGradeTable td.actions, #cachedGradeTable th.actions").hide();
+	$("input[value=' Cancel ']").hide();
+}
+
+function backFieldCreate(){
+	$("#c1").css("background","rgba(48,173,227,0.8)");
+	$("#c2").css("background","rgba(192,192,192,0.8)");
+	$("#c3").css("background","rgba(192,192,192,0.8)");
+	$("#step2").slideUp();
+	$("#step1").slideDown();
+	$("p.step4link").hide();
+	$("p.step3link").hide();
+	$("p.back2link").hide();
+	$("p.back3link").hide();
+	$("input[value=' Save ']").show();
+}
+
+function backGradeCreate(){
+	$("#c1").css("background","rgba(192,192,192,0.8)");
+	$("#c2").css("background","rgba(48,173,227,0.8)");
+	$("#c3").css("background","rgba(192,192,192,0.8)");
+	$("#initialinfo").slideDown();
+	$("p.step1link").hide();
+	$("p.step3link").hide();
+	$("p.back2link").show();
+	$("p.back3link").hide();
+	$("p.step4link").hide();
+	$("p.step3link").show();
+	$("input[value=' Cancel ']").show();
+	$("#cachedGradeTable td.actions, #cachedGradeTable th.actions").show();
+}
+
+function showGradeCreator(){
+	$("#initialinfo").slideDown();
+}
+
+function buttonClick(mode){
+	switch(mode){
+		case 0:
+			$("input[value=' Save ']").click();
+		break;
+		case 1:
+			$("input[value=' Cancel ']").click();
+		break;
+	}
+}
+
+function appendField(){
+	if(rbf_getFieldValue("commodity_name") == ""){
+		$("#errmsg").hide();
+		$("#errmsg").show().html("*You must enter a Commodity first before proceeding.");
+	}else if(rbf_getFieldValue("R76081378") == ""){
+		$("#errmsg").hide();
+		$("#errmsg").show().html("*You must choose/create atleast one Variety before proceeding.");
+	}else{
+		$("#errmsg").hide();
+		$("p.step2link").show();
+		rbf_addGridRow(1);
+		gradectr=rbf_getMaxRowIndex2(0)-1;
+		fieldctr=rbf_getMaxRowIndex2(1)-1;
+		var fields = "";
+		if(hasGrades){
+			fields = "<div id = 'fieldholder' class='divfield_"+fieldctr+"'><p><label for='gparam"+fieldctr+"'><a href = 'javascript:deleteField("+fieldctr+")'>[Remove]</a></label><input type='text' hint = 'Fieldname' autofocus id='gparam"+fieldctr+"' onchange='newlycreatedfield("+fieldctr+")' name='gparam"+fieldctr+"'></p></div>";
+		}else{
+			fields = "<div id = 'fieldholder' class='divfield_"+fieldctr+"'><p><label for='gparam"+fieldctr+"'><a href = 'javascript:deleteField("+fieldctr+")'>[Remove]</a></label><input type='text' hint = 'Fieldname' autofocus id='gparam"+fieldctr+"' onchange='updateFieldGrid("+fieldctr+")' name='gparam"+fieldctr+"'></p></div>";
+		}
+		$("#fieldcreator").append(fields);
+	}
+}
+
+function setGridField(index){
+	rbf_setGridValue2(1,"name",index,$("#gparam"+index).val());
+	rbf_setGridValue2(1,"min_field",index,$("#gparam"+index).val());
+}
+
+function saveFields(){
+	var hasBlank = 0;
+	var maxRow = rbf_getMaxRowIndex2(1);
+	if($("#fieldcreator").children().length > 0){
+		for(var i = 0; i < maxRow; i++){
+			if($("input[name='name_1_"+i+"']").val() == ""){
+				hasBlank++;
+			}
+		}
+		
+		if(hasBlank > 0){
+			$("#errmsg").hide();
+			$("#errmsg").show().html("*Kindly ensure that there are no blank fields before proceeding.");
+			hasBlank=0;
+		}else{
+			var varieties = rbf_getFieldValue("R76081378");
+			var vids = varieties.split(",");
+			var def = "def";
+			var chkfield = "<span style='margin:10px;'><input type='checkbox' checked='checked' onclick='selectRadio(\""+def+"\")' id='def' name='varieties' value='"+varieties+"'><label for='def' style='padding:5px'>All Varieties</label></span>";
+			for(var i = 0; i < vids.length; i++){
+				if($("#R76081378_"+vids[i]+" > span:nth-child(2) > a").html()){
+					var name = $("#R76081378_"+vids[i]+" > span:nth-child(2) > a").html();
+				}else{
+					var name = $("#R76081378_"+vids[i]+" > a").html();
+				}
+				
+				chkfield+="<span style='margin:10px;'><input type='checkbox' id='"+vids[i]+"' onclick='deselectRadio(\""+def+"\")' name='varieties' value='"+vids[i]+"'><label for='"+vids[i]+"' style='padding:5px'>"+name+"</label></span>";
+			}
+			$("#chkholder").html(chkfield);
+			$("#errmsg").hide();
+			$("input[value=' Save ']").hide();
+			var cachectr = 0;
+			hasFields = true;
+			var fields = "<table><tr><th></th><th>Min Value</th><th>Max Value</th></tr>";
+			$("#fieldcreator > div").each(function(){
+				var fname = $(this).find('input[type="text"]').val();
+				fields += "<tr>"+
+					"<td style='text-align:left;'>"+
+						"<span class='gval"+cachectr+"'>"+fname+"</span>"+
+					"</td>"+
+					"<td>"+
+						"<input type='text' id='gvalmin_"+cachectr+"' name='gvalmin_"+cachectr+"'>"+
+					"</td>"+
+					"<td>"+
+						"<input type='text' id='gvalmax_"+cachectr+"' name='gvalmax_"+cachectr+"'>"+
+					"</td>"+
+				"</tr>";
+				cachectr++;
+			});
+			fields+="</table>";
+			fieldctr=rbf_getMaxRowIndex2(1)-1;
+			$("#step1").slideUp();
+			$("#c1").css("background","rgba(192,192,192,0.8)");
+			$("#c3").css("background","rgba(192,192,192,0.8)");
+			$("#c2").css("background","rgba(48,173,227,0.8)");
+			$("#step2").slideDown();
+			$("p.step3link").show();
+			$("p.back2link").show();
+			$("p.back3link").hide();
+			$("#tradingFields").html(fields);
+			getRegisteredGrade();
+			hasBlank=0;
+		}
+	}else{
+		$("#errmsg").hide();
+		$("#errmsg").show().html("*You must create atleast one Trading Standard Field before proceeding.");
+		hasBlank=0;
+	}
+	
+}
+
+function selectRadio(rid){
+	$("#chkholder").children().each(function(){
+		$(this).find("input[type='checkbox']").removeAttr("checked");
+	});
+	$("#"+rid).attr("checked","checked");
+}
+
+function deselectRadio(id){
+	$("#"+id).removeAttr("checked");
+}
+
+function cacheGrade(){
+	hasGrades = true;
+	var cachectr = 0;
+	var fields = "";
+	var viewingTable = "<table style='width:100%'><tr><th>Parameter</th><th>Min Value</th><th>Max Value</th></tr>";
+	if($('#gname').val() == "" || $('#csg').val() == ""){
+		$("#errmsg").hide();
+		$("#errmsg").show().html("*Grade and CSG Number must be specified.");
+	}else{
+		grades.push({
+			name: $('#gname').val(),
+			csg: $('#csg').val(),
+			fields: []
+		});
+		$("#tradingFields > table > tbody > tr").each(function(){
+			if($(this).index() > 0){
+				var theIndex = $(this).index()-1;
+				var gvalmin = $('#gvalmin_'+cachectr).val();
+				var gvalmax = $('#gvalmax_'+cachectr).val();
+				var fieldName = $("span.gval"+theIndex).html();
+				viewingTable += "<tr style='border:none'><td style='border:none'>"+fieldName+"</td><td style='border:none'>"+(gvalmin ? gvalmin : "none")+"</td><td style='border:none'>"+(gvalmax ? gvalmax : "none")+"</td></tr>";
+				if($(this).index() == $("#tradingFields > table > tbody > tr").length-1){
+					fields+=fieldName+"*"+(gvalmin == "" ? "none" : gvalmin)+"*"+(gvalmax == "" ? "none" : gvalmax);
+				}else{
+					fields+=fieldName+"*"+(gvalmin == "" ? "none" : gvalmin)+"*"+(gvalmax == "" ? "none" : gvalmax)+"~";
+				}
+				cachectr++;
+			}
+		});
+		viewingTable+="</table>";
+		var varids = "";
+		$("#chks > #chkholder").children().each(function(){
+			if($(this).find("input[type='checkbox']").is(":checked")){
+				varids += $(this).find("input[type='checkbox']").val()+",";
+			}
+		});
+		rbf_addGridRow(0);
+		gradectr=rbf_getMaxRowIndex2(0)-1;
+		rbf_setGridValue2(0, "name", gradectr, $("#gname").val());
+		rbf_setGridValue2(0, "csg_number", gradectr, $("#csg").val());
+		rbf_setGridValue2(0, "grading_fields", gradectr, fields);
+		rbf_setGridValue2(0, "trading_standard_fields", gradectr, viewingTable);
+		rbf_setGridValue2(0, "R37228", gradectr, varids.slice(0,-1));
+		rbf_setGridValue2(0, "stringified_varieties", gradectr, varids.slice(0,-1));
+		rbf_setGridValue2(0, "description", gradectr, $("#gdesc").val());
+		var ct = 0;
+		$('#gname').val("");
+		$('#csg').val("");
+		$('#gdesc').val("");
+		$("#tradingFields > table > tbody > tr").each(function(){
+			if($(this).index() > 0){
+				$("#gvalmin_"+ct).val("");
+				$("#gvalmax_"+ct).val("");
+				ct++;
+			}
+		});
+		getRegisteredGrade();
+		$("#errmsg1").hide();
+	}
+}
+
+function resetGrid(gridNo){
+	var maxRow = rbf_getMaxRowIndex2(gridNo);
+	for(var g = 0; g < maxRow; g++){
+		rbf_delGridRow(gridNo, g);
+	}
+}
+
+function setMinMaxField(index){
+	$("input[name='min_field_1_"+index+"']").val($("select[name='min_value_field_1_"+index+"']").val());
+}
+
+function getRegisteredGrade(){
+	if(hasGrades){
+		var maxRow = rbf_getMaxRowIndex2(0);
+		var rTable = "<table id='regtable'><tbody>";
+		var registeredTable = "<table style='width:100%' id = 'cachedGradeTable'><tbody><tr><th class='actions' id='mainheader'></th><th id='mainheader'>Grade</th><th id='mainheader'>Description</th><th id='mainheader'>CSG Number</th><th id='mainheader'>Fields</th></tr>";
+		for(var i = 0; i < maxRow; i++){
+			if($("input[name='name_0_"+i+"']").val()){
+				registeredTable +="<tr><td class='actions'><a href = 'javascript:showEdit("+i+")' style='margin:5px'>[Edit]</a><a href = 'javascript:deleteGrade("+i+")' "+
+				"style='margin:5px'>[Remove]</a></td>"+
+				"<td>"+$("input[name='name_0_"+i+"']").val()+"</td>"+
+				"<td>"+$("input[name='description_0_"+i+"']").val()+"</td>"+
+				"<td>"+$("input[name='csg_number_0_"+i+"']").val()+"</td><td style='text-align:left'><table style='width:100%;border:none'><tr style='border:none'><th style='border:none'>Parameter</th><th style='border:none'>Min Value</th><th style='border:none'>Max Value</th></tr>";
+				var valueFields = rbf_getGridValue2(0,"grading_fields",i).split("~");
+				for(var x = 0; x < valueFields.length; x++){
+					var f = valueFields[x].split("*");
+					registeredTable+="<tr style='border:none' id='grow_"+i+"'><td style='border:none'>"+f[0]+"</td><td style='border:none'>"+f[1]+"</td><td style='border:none'>"+f[2]+"</td></tr>";
+				}
+				registeredTable += "</table></td></tr>";
+			}
+		}
+		$("p.step2link").show();
+		registeredTable+="</tbody></table>";
+		var maxRow = rbf_getMaxRowIndex2(1);
+		for(var x = 0; x < maxRow; x++){
+			if($("input[name='name_1_"+x+"']").val()){
+				console.log($("input[name='name_1_"+x+"']").val());
+				var thename = $("input[name='name_1_"+x+"']").val();
+				rTable += "<div id = 'fieldholder' class='divfield_"+x+"'><p><label for='gparam"+x+"'><a href = 'javascript:deleteField("+x+")'>[Remove]</a></label><input type='text' hint = 'Fieldname' value='"+thename+"' autofocus id='gparam"+x+"' onchange='updateFieldGrid("+x+")' name='gparam"+x+"'></p></div>";
+			}
+		}
+		rTable+="</tbody></table>";
+		if(hasGrades){
+			$("#fieldcreator").html(rTable);
+		}
+		$("#cachedgrades").html(registeredTable);
+	}
+}
+function deleteGrade(index){
+	$("tr#grow_"+index).remove();
+	rbf_delGridRow(0, index);
+	getRegisteredGrade();
+}
+function deleteField(index){
+	var deletedValue = rbf_getGridValue2(1,"name",index);
+	var maxRow = rbf_getMaxRowIndex2(0);
+	if(hasGrades){
+		for(var i = 0; i < maxRow; i++){
+			var ffield = rbf_getGridValue2(0,"grading_fields",i).split("~");
+			var tsfield = rbf_getGridValue2(0,"trading_standard_fields",i);
+			var newValueHolder = "";
+			var newTableHolder = "";
+			$("#hiddenDiv").html(tsfield);
+			for(var x = 0; x < ffield.length; x++){
+				var fieldsplit = ffield[x].split("*");
+				if(deletedValue == fieldsplit[0]){
+					$("#hiddenDiv > table > tbody > tr").each(function(){
+						console.log($(this).children("td:nth-child(1)").html());
+						if($(this).children("td:nth-child(1)").html() == fieldsplit[0]){
+							$(this).remove();
+						}
+					});
+					ffield[x]="";
+				}else{
+					if(x == ffield.length-1){
+						newValueHolder+=fieldsplit[0]+"*"+fieldsplit[1]+"*"+fieldsplit[2];
+					}else{
+						newValueHolder+=fieldsplit[0]+"*"+fieldsplit[1]+"*"+fieldsplit[2]+"~";
+					}
+				}
+				
+			}
+			newTableHolder = $("#hiddenDiv").html();
+			rbf_setGridValue2(0,"trading_standard_fields",i,newTableHolder.replace("<tbody>","").replace("</tbody>",""));
+			rbf_setGridValue2(0,"grading_fields",i,newValueHolder);
+		}
+	}
+	rbf_delGridRow(1, index);
+	$("div.divfield_"+index).remove();
+}
+
+function updateFieldGrid(index){
+	if($("#gparam"+index).val() !== ""){
+		var newfield = $("#gparam"+index).val();
+		var maxRow = rbf_getMaxRowIndex2(0);
+		console.log(newfield);
+		for(var i = 0; i < maxRow; i++){
+			var currentparamvalue = rbf_getGridValue2(0,"grading_fields",i);
+			console.log(rbf_getGridValue2(1,"name",index));
+			var currentdispalyvalue = rbf_getGridValue2(0,"trading_standard_fields",i);
+			var newparamvalue = currentparamvalue.replace(rbf_getGridValue2(1,"name",index), newfield);
+			var newdisplayvalue = currentdispalyvalue.replace(rbf_getGridValue2(1,"name",index), newfield);
+			rbf_setGridValue2(0,"grading_fields",i,newparamvalue);
+			rbf_setGridValue2(0,"trading_standard_fields",i,newdisplayvalue);
+		}
+		rbf_setGridValue2(1,"name",index,newfield);
+		rbf_setGridValue2(1,"min_field",index,newfield);
+	}
+}
+
+function newlycreatedfield(index){
+	if($("#gparam"+index).val() !== ""){
+		var newfield = $("#gparam"+index).val();
+		rbf_setGridValue2(1,"name",index,newfield);
+		rbf_setGridValue2(1,"min_field",index,newfield);
+		var maxRow = rbf_getMaxRowIndex2(0);
+		if(hasGrades){
+			for(var i = 0; i < maxRow; i++){
+				var currentparamvalue = rbf_getGridValue2(0,"grading_fields",i) + "~"+newfield+"*none*none";
+				var currentdispalyvalue = rbf_getGridValue2(0,"trading_standard_fields",i);
+				var newdisplayvalue = currentdispalyvalue.replace("</tr></table>", "<tr><td style='border:none'>"+newfield+"</td><td style='border:none'>none</td><td style='border:none'>none</td></tr></table>");
+				rbf_setGridValue2(0,"grading_fields",i,currentparamvalue);
+				rbf_setGridValue2(0,"trading_standard_fields",i,newdisplayvalue);
+			}
+		}
+	}
+}
+
+function varietyChoices(ids){
+	var varieties = ids;
+	var vids = varieties.split(",");
+	var def = "def";
+	var chkfield = "<span style='margin:10px;'><input type='checkbox' checked='checked' onclick='selectRadio(\""+def+"\")' id='def' name='varieties' value='"+varieties+"'><label for='def' style='padding:5px'>All Varieties</label></span>";
+	for(var i = 0; i < vids.length; i++){
+		var name = $("#R76081378_"+vids[i]+" > span:nth-child(2) > a").html();
+		chkfield+="<span style='margin:10px;'><input type='checkbox' id='"+vids[i]+"' onclick='deselectRadio(\""+def+"\")' name='varieties' value='"+vids[i]+"'><label for='"+vids[i]+"' style='padding:5px'>"+name+"</label></span>";
+	}
+	return chkfield;
+}
+function showEdit(index){
+	var gname = "name";
+	var fieldName1 = "gname";
+	var fieldName2 = "csg";
+	var gcsg = "csg_number";
+	var grade = rbf_getGridValue2(0,gname,index);
+	var csg = rbf_getGridValue2(0,gcsg,index);
+	var varieties = rbf_getFieldValue("R76081378");
+	var vids = varieties.split(",");
+	var def = "def2";
+	var chkfield = "<span style='margin:10px;'><input type='checkbox' checked='checked' onclick='selectRadio(\""+def+"\")' id='def2' name='varieties' value='"+varieties+"'><label for='def2' style='padding:5px'>All Varieties</label></span>";
+	for(var i = 0; i < vids.length; i++){
+		if($("#R76081378_"+vids[i]+" > span:nth-child(2) > a").html()){
+			var name = $("#R76081378_"+vids[i]+" > span:nth-child(2) > a").html();
+		}else{
+			var name = $("#R76081378_"+vids[i]+" > a").html();
+		}
+		chkfield+="<span style='margin:10px;'><input type='checkbox' id='"+vids[i]+"' onclick='deselectRadio(\""+def+"\")' name='varieties' value='"+vids[i]+"'><label for='"+vids[i]+"' style='padding:5px'>"+name+"</label></span>";
+	}
+	var editFields = "<div id = 'errmsg2'></div>"+
+		"<div id = 'editfieldsHolder'>"+
+		"<p><label for='gname_"+index+"' style='color:rgb(255,0,0)'>Grade</label><input type='text' value='"+grade+"' onchange='syncField(\""+gname+"\","+index+",\""+fieldName1+"\")' id='gname_"+index+"' name='gname_"+index+"'></p>"+
+		"<p><label for='csg_"+index+"' style='color:rgb(255,0,0)'>CSG Number</label><input type='text' value='"+csg+"' onchange='syncField(\""+gcsg+"\","+index+",\""+fieldName2+"\")' id='csg_"+index+"' name='csg_"+index+"'></p>"+
+		"<div id = 'chkvars'>"+
+			"<p>Select Applicable Variety</p>"+
+			"<div id = 'chkholder'>"+chkfield+"</div>"+
+		"</div>"+
+		"<table id='uptbl' style='margin:20px auto;'><tbody><tr><th>Parameter</th><th>Min Value</th><th>Max Value</th></tr>";
+	var valueFields = rbf_getGridValue2(0,"grading_fields",index).split("~");
+	
+	for(var i = 0; i < valueFields.length; i++){
+		var f = valueFields[i].split("*");
+		
+		editFields+="<tr><td id='tdfname_"+i+"' style='padding:5px'>"+f[0]+"</td><td style='padding:5px'><input type='text' id='min_"+i+"' value="+f[1]+"></td><td style='padding:5px'><input type='text' id='max_"+i+"' value="+f[2]+"></td></tr>";
+	}
+	editFields+="</tbody></table>"+
+		"</div><input type = 'button' class = 'btn btn-small btn-primary' value = 'Update' onclick = 'updateGradeValue("+index+")'>"+
+		"&nbsp;&nbsp;&nbsp;&nbsp;<input type = 'button' class = 'btn btn-small btn-primary' value = 'Cancel' onclick = 'hideMask()'>";
+	
+	$("#editor").html(editFields);
+	var currentVars = rbf_getGridValue2(0, "R37228", index).split(",");
+	for(var i = 0; i < currentVars.length; i++){
+		if(currentVars.length == vids.length){
+			$("#chkvars").find("input[id='def2']").click();
+		}else{
+			$("#chkvars").find("input[id='"+currentVars[i]+"']").click();
+		}
+	}
+	showMask();
+}
+function hideMask(){
+	$("#mask").show().animate({
+			"height":"0px",
+			"width":"0px",
+			"top":"50%",
+			"left":"50%",
+		},200, function(){
+			$(this).hide();
+		});
+	$("body, html").css({
+		"overflow-y":"auto",
+		"overflow-x":"auto"
+	});
+	$("#errmsg2").hide();
+}
+
+function showMask(){
+	$("#mask").show().animate({
+		"top":"0px",
+		"left":"0px",
+		"height":"100%",
+		"width":"100%"
+	}, 200);
+	$("body, html").css({
+		"overflow-y":"hidden",
+		"overflow-x":"hidden"
+	});
+}
+
+function syncField(integ,index,name){
+	if($("#"+name+"_"+index).val() !== ""){
+		var theValue = $("#"+name+"_"+index).val();
+		rbf_setGridValue2(0,integ,index,theValue);
+	}
+}
+
+function updateGradeValue(ind){
+	var currentUptGrade = [];
+	var ctr=0;
+	var format = "";
+	if($('#gname_'+ind).val() == "" || $('#csg_'+ind).val() == ""){
+		$("#errmsg2").hide();
+		$("#errmsg2").show().html("*Grade and CSG Number must be specified.");
+	}else{
+		$("#uptbl > tbody > tr").each(function(){
+			if($(this).index() > 0){
+				var gfield = $("td#tdfname_"+ctr).text();
+				var gvalmin = $('#min_'+ctr).val();
+				var gvalmax = $('#max_'+ctr).val();
+				currentUptGrade.push({
+					fieldname: gfield,
+					min: gvalmin,
+					max: gvalmax
+				});
+				ctr++;
+			}
+		});
+		var varids = "";
+		$("#chkvars > #chkholder").children().each(function(){
+			if($(this).find("input[type='checkbox']").is(":checked")){
+				varids += $(this).find("input[type='checkbox']").val()+",";
+			}
+		});
+		var viewingTable = "<table style='width:100%'><tr><th>Parameter</th><th>Min Value</th><th>Max Value</th></tr>";
+		for(var i = 0; i < currentUptGrade.length; i++){
+			if(i==currentUptGrade.length-1){
+				format+=currentUptGrade[i].fieldname+"*"+(currentUptGrade[i].min == "" ? "none" : currentUptGrade[i].min)+"*"+(currentUptGrade[i].max == "" ? "none" : currentUptGrade[i].max);
+			}else{
+				format+=currentUptGrade[i].fieldname+"*"+(currentUptGrade[i].min == "" ? "none" : currentUptGrade[i].min)+"*"+(currentUptGrade[i].max == "" ? "none" : currentUptGrade[i].max)+"~";
+			}
+			viewingTable += "<tr style='border:none'><td style='border:none'>"+currentUptGrade[i].fieldname+"</td><td style='border:none'>"+(currentUptGrade[i].min ? currentUptGrade[i].min : "none")+"</td><td style='border:none'>"+(currentUptGrade[i].max ? currentUptGrade[i].max : "none")+"</td></tr>";
+		}
+		viewingTable+="</table>";
+		rbf_setGridValue2(0, "trading_standard_fields", ind, viewingTable);
+		rbf_setGridValue2(0, "grading_fields", ind, format);
+		rbf_setGridValue2(0, "R37228", ind, varids.slice(0,-1));
+		rbf_setGridValue2(0, "stringified_varieties", ind, varids.slice(0,-1));
+		$("#mask").hide();
+		getRegisteredGrade();
+		$("#errmsg2").hide();
+	}
+	
+}
+</script>

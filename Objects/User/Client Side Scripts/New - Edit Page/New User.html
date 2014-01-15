@@ -1,0 +1,275 @@
+<script src = "{!#HOSTED_FILE.76088162}"></script>
+<script src = "{!#HOSTED_FILE.76096436}"></script>
+<script>
+$(document).ready(function(){
+	loader();
+});
+
+function loader(){
+	toggle();
+    $("select#dateFormat").val("1");
+	$("select[name='role']").attr("onchange","toggle()");
+	$('label[for="ngr_number"]').css("color","rgb(255,0,0)");
+	//$("#h_locationId").attr("hidenchange","setGroup()");
+	$("select[name='timeZone']").find("option[value='Australia/Sydney']").attr("selected","selected");
+	$("#rbi_L_R389383").css("color","rgb(255,0,0)");
+	hideField("timeZone");
+	if("{!#CURR_USER.role#code}" == "$A"){
+		$("select[name='role'] > option[code='$BA']").remove();
+		$("select[name='role'] > option[code='$CMS']").remove();
+		$("select[name='role'] > option[code='$A']").remove();
+		$("select[name='role'] > option[code='$rbadmin']").remove();
+		rbf_setPicklistCode("role","$TO");
+	}else if("{!#CURR_USER.role#code}" == "$CMS"){
+		$("select[name='role'] > option[code='$rbadmin']").remove();
+		$("select[name='role'] > option[code='$TO']").remove();
+		$("select[name='role'] > option[code='$WO']").remove();
+		$("select[name='role'] > option[code='$A']").remove();
+	}else if("{!#CURR_USER.role#code}" == "$BA"){
+		$("select[name='role'] > option[code='$BA']").remove();
+		$("select[name='role'] > option[code='$rbadmin']").remove();
+		$("select[name='role'] > option[code='$CMS']").remove();
+		//$("select[name='role'] > option[code='$TO']").remove();
+		//$("select[name='role'] > option[code='$WO']").remove();
+	}
+}
+
+function syncName(){
+	$("#firstName").val($("#lastName").val());
+}
+
+function toggle(){
+	console.log(rbf_getPicklistCode("role"));
+	rbf_setFieldValue("locationId","");
+	//rbf_setFieldValue("R2354869","");
+	var hiddenGrid = "#rbi_S_"+rbf_getSectionIdByTitle("Contacts");
+	if(rbf_getPicklistCode("role") == "user_clien" || rbf_getPicklistCode("role") == "$rbadmin"){		
+		showField("member");
+		showField("current");
+		showField("ngr_number");
+		hideField("locationId");
+		//hideField("R2354869");
+		hideField("R361387");
+		$('#rbi_F_R389383').css('display','none');
+		$('#rbi_L_R389383').css('display','none');
+		//hideField("R389383");
+		setDefaultLocation();
+		//setDefaultGroup();
+		showField("firstName");
+		showField("middleName");
+		showField("lastName");
+		showField("company_name");
+		$(hiddenGrid).show();
+		//$("#rbi_L_lastName > label").html("Company");
+		//$("#lastName").attr("onkeyup","syncName()");
+	}else{
+		if(rbf_getPicklistCode("role") == "$thebuyer"){
+			setDefaultLocation();
+			//setDefaultGroup();
+			hideField("locationId");
+			//hideField("R2354869");
+			showField("firstName");
+			showField("middleName");
+			showField("lastName");
+			showField("company_name");
+			hideField("R361387");
+			hideField("R389383");
+			$(hiddenGrid).show();
+			//$("#rbi_L_lastName > label").html("Company");
+			//$("#lastName").attr("onkeyup","syncName()");
+		}else if(rbf_getPicklistCode("role") == "$CMS"){
+			hideField("locationId");
+			//hideField("R2354869");
+			hideField("R361387");
+			hideField("R389383");
+			//setDefaultLocation();
+			//setDefaultGroup();
+			showField("firstName");
+			showField("middleName");
+			showField("lastName");
+			hideField("company_name");
+			$(hiddenGrid).hide();
+			//$("#rbi_L_lastName > label").html("Lastname");
+			//$("#lastName").removeAttr("onkeyup");
+		}else if(rbf_getPicklistCode("role") == "$A"){
+			hideField("locationId");
+			//hideField("R2354869");
+			showField("R361387");
+			hideField("R389383");
+			//$("#R361387").attr("hidenchange","getParentLocation()");
+			showField("firstName");
+			showField("middleName");
+			showField("lastName");
+			hideField("company_name");
+			$(hiddenGrid).hide();
+			//$("#rbi_L_lastName > label").html("Lastname");
+			//$("#lastName").removeAttr("onkeyup");
+		}else if(rbf_getPicklistCode("role") == "$BA"){
+			hideField("locationId");
+			//hideField("R2354869");
+			hideField("R361387");
+			showField("R389383");
+			//$("#R361387").attr("hidenchange","getParentLoc()");
+			showField("firstName");
+			showField("middleName");
+			showField("lastName");
+			hideField("company_name");
+			$(hiddenGrid).hide();
+			//$("#rbi_L_lastName > label").html("Lastname");
+			//$("#lastName").removeAttr("onkeyup");
+			if("{!#CURR_USER.role#code}" == "$BA"){
+				hideField("R389383");
+				/*var uid = parseInt("{!#CURR_USER.id}");
+				rbf_selectNumber("SELECT locationId FROM USER WHERE id = "+uid,function(lid){
+				 console.log("lid: "+lid);
+					if(lid>0){
+						$("#h_locationId").val(lid);
+						rbf_selectNumber("SELECT mirrored_location FROM $ORG_LOCN WHERE id="+lid,function(sid){
+							console.log("sid: "+sid);
+							if(sid>0){
+								rbf_setFieldValue("R389383",sid);
+								rbf_selectNumber("SELECT id FROM $GROUP WHERE locationId="+lid, function(gid){
+									console.log("gid: "+gid);
+									if(gid > 0){
+										rbf_setFieldValue("R2354869",gid);
+									}
+								});
+							}
+						});
+					}
+				});*/
+			}else{
+				showField("R389383");
+			}
+		}else if(rbf_getPicklistCode("role") == "$WO" || rbf_getPicklistCode("role") == "$TO"){
+			hideField("locationId");
+			//hideField("R2354869");
+			hideField("R361387");
+			hideField("R389383");
+			showField("firstName");
+			showField("middleName");
+			showField("lastName");
+			hideField("company_name");
+			$(hiddenGrid).hide();
+			//$("#rbi_L_lastName > label").html("Lastname");
+			//$("#lastName").removeAttr("onkeyup");
+			if("{!#CURR_USER.role#code}" == "$A"){
+				hideField("R361387");
+				/*var uid = parseInt("{!#CURR_USER.id}");
+				rbf_selectNumber("SELECT locationId FROM USER WHERE id = "+uid,function(lid){
+				 console.log("lid: "+lid);
+					if(lid>0){
+						rbf_setFieldValue("locationId",lid);
+						rbf_selectNumber("SELECT mirrored_site FROM $ORG_LOCN WHERE id="+lid,function(sid){
+							console.log("sid: "+sid);
+							if(sid>0){
+								rbf_setFieldValue("R361387",sid);
+								rbf_selectNumber("SELECT id FROM $GROUP WHERE locationId="+lid, function(gid){
+									console.log("gid: "+gid);
+									if(gid > 0){
+										rbf_setFieldValue("R2354869",gid);
+									}
+								});
+							}
+						});
+					}
+				});*/
+			}else{
+				showField("R361387");
+			}
+		}else{
+			//hideField("R2354869");
+			hideField("R361387");
+			hideField("R389383");
+			showField("locationId");
+			showField("firstName");
+			showField("middleName");
+			showField("lastName");
+			hideField("company_name");
+			$(hiddenGrid).hide();
+			//$("#rbi_L_lastName > label").html("Last Name");
+			//$("#rbi_L_lastName > label").html("Lastname");
+			//$("#lastName").removeAttr("onkeyup");
+		}
+		hideField("member");
+		hideField("current");
+		hideField("ngr_number");
+		$('input[name="member"]').prop('checked', false);
+		$('input[name="current"]').prop('checked', false);
+	}
+}
+
+function getParentLocation(){
+	var site = parseInt(rbf_getFieldValue("R361387")) || 0;
+	console.log("site: "+site);
+	if(site > 0){
+		rbf_selectQuery("SELECT id, parentId, name FROM $ORG_LOCN WHERE mirrored_site = "+site, 1, function(rows){
+			if(rows.length>0){
+				console.log("rows[0][0]: "+rows[0][0]);
+				console.log("rows[0][1]: "+rows[0][1]);
+				$("#h_locationId").val(rows[0][0]);
+				rbf_selectNumber("SELECT id FROM $GROUP WHERE locationId="+parseInt(rows[0][0]), function(gid){
+					if(gid > 0){
+						rbf_setFieldValue("R2354869",gid);
+					}
+				});
+			}
+		});
+	}
+}
+
+function getParentLoc(){
+	var loc = parseInt(rbf_getFieldValue("R389383")) || 0;
+	console.log("loc: "+rbf_getFieldValue("R389383"));
+	console.log("loc: "+loc);
+	if(loc > 0){
+		rbf_selectQuery("SELECT id, parentId, name FROM $ORG_LOCN WHERE mirrored_location = "+loc, 1, function(rows){
+			if(rows.length>0){
+				console.log("rows[0][0]: "+rows[0][0]);
+				console.log("rows[0][1]: "+rows[0][1]);
+				rbf_setFieldValue("locationId",rows[0][0]);
+				rbf_selectNumber("SELECT id FROM $GROUP WHERE locationId="+parseInt(rows[0][0]), function(gid){
+					console.log("group: "+gid);
+					if(gid > 0){
+						
+						rbf_setFieldValue("R2354869",gid);
+					}
+				});
+			}
+		});
+	}
+}
+
+function setDefaultLocation(){
+	rbf_selectNumber("SELECT id FROM $ORG_LOCN WHERE name='All Access'", function(lid){
+		if(lid > 0){
+			rbf_setFieldValue("locationId",lid);
+		}
+	});
+}
+
+function setDefaultGroup(){
+	rbf_selectNumber("SELECT id FROM $GROUP WHERE name='All Access'", function(gid){
+		if(gid > 0){
+			rbf_setFieldValue("R2354869",gid);
+		}
+	});
+}
+
+function setGroup(){
+	if(rbf_getPicklistCode("role") !== "user_clien" && rbf_getPicklistCode("role") !== "$thegrower"){
+		var theid = parseInt(rbf_getFieldValue("locationId"));
+		console.log("theid: "+theid);
+		rbf_selectValue("SELECT name FROM $ORG_LOCN WHERE id="+theid, function(loc){
+			console.log(loc);
+			if(loc){
+				rbf_selectNumber("SELECT id FROM $GROUP WHERE name = '"+loc+"'", function(gid){
+					if(gid > 0){
+						rbf_setFieldValue("R2354869",gid);
+					}
+				});
+			}
+		});
+	}
+}
+</script>

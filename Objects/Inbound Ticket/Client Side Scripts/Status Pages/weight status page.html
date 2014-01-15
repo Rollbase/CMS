@@ -1,0 +1,192 @@
+<script src = "{!#HOSTED_FILE.76088162}"></script>
+<script>
+$(document).ready(function(){
+	hideField("total_weight");
+	$('#tare_mass').attr("onkeyup","computeTotalWeight();setDateTime('tare_date_and_time');");
+	$('#gross_mass_uom_').attr("onkeyup","computeTotalWeight();setDateTime('gross_date_and_time');");
+	loader();
+});
+function loader(){
+	setIcons(sections.weight.title,sections.weight.icon);
+	hideButton();
+	hideField("Pinbound_ticket");
+	hideField("total_net_mass");
+	hideField("total_weight");
+	toReadOnlyField("total_weight",false);
+	toReadOnlyField("total_net_mass",false);
+	hideField("gross_date_and_time");
+	hideField("tare_date_and_time");
+	$("td.left.xlarge.top:nth-child(1)").html("Inbound Ticket - Weighbridge").css("padding-top","25px");;
+	$("div[name='Page End'] > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr:nth-child(1)").html("");
+	setExistingValues("total_weight");
+	setExistingValuesDate("tare_date_and_time");
+	setExistingValuesDate("grossDateTime");
+	showAllocated();
+	rbf_setFieldValue("isweighing",1);
+	hideField("isweighing");
+	if ($('#tare_mass').val() != 0 && $("#gross_mass_uom_").val() != 0){
+		showField("total_weight");
+		showField("gross_date_and_time");
+		showField("tare_date_and_time");
+		toReadOnlyDP("gross_date_and_time","rbi_F_gross_date_and_time");
+		toReadOnlyDP("tare_date_and_time","rbi_F_tare_date_and_time");
+		if ($("#total_weight").val() < 0)
+		computeTotalWeight();
+	}
+
+}
+function setDateTime(integ){
+	var currentdate = new Date(); 
+		var hours = currentdate.getHours();
+		var minutes = currentdate.getMinutes();
+		var ampm = hours >= 12 ? 'PM' : 'AM';
+		var hours = hours % 12;
+		hours = hours ? hours : 12;
+		minutes = minutes < 10 ? '0'+minutes : minutes;
+	var datetime = (currentdate.getMonth()+1) + "/"
+                + currentdate.getDate()  + "/" 
+                + currentdate.getFullYear() + " "  
+                + hours + ":"  
+                + minutes + " "
+				+ ampm;
+	showField(integ);
+	toReadOnlyDP(integ,"rbi_F_"+integ);
+	rbf_setFieldValue(integ, datetime.toString());
+	showField("total_weight");
+}
+
+var sections = {
+	ticket: {icon: "{!#HOSTED_FILE.379460}", title: "Inbound Ticket Information"},
+	client: {icon: "{!#HOSTED_FILE.76278993}", title: "Client Information"},
+	goods: {icon: "{!#HOSTED_FILE.379461}", title: "Details of Goods"},
+	test: {icon: "{!#HOSTED_FILE.379462}", title: "Test Results"},
+	weight: {icon: "{!#HOSTED_FILE.379463}", title: "Weight Information"},
+};
+
+var allocFields = {
+	buyers: {name: "Buyers", integ: "R76435438"},
+	locations: {name: "Locations", integ: "R76435457"},
+	allocType: {name: "Allocation Type", integ: "R76435693"},
+	junction: {name: "Buyer", integ: "R76436965"},
+	transTicket: {name: "Transaction Ticket",integ:"R76435416"},
+	weight: {name: "Weight",integ:"weight"},
+	name: {name: "name",integ:"name"}
+};
+
+function setIcons(title, icon){
+	var section_id = rbf_getSectionIdByTitle(title);
+	$("#rbi_S_"+section_id).css({
+		"margin-bottom":"25px"
+	});
+	var theInnerSection = $("#rbi_S_"+section_id+" > div.wide.lightbottom.bold > div.bold.gray");
+	theInnerSection.html("<img src = '"+icon+"'>&nbsp;"+title);
+	theInnerSection.find("img").css({
+		"height":"50px",
+		"width":"auto"
+	});
+}
+
+function computeTotalWeight(){
+	var gross = parseFloat(rbf_getFieldValue("gross_mass_uom_").replace(",","")).toFixed(2);
+	var tare = parseFloat(rbf_getFieldValue("tare_mass").replace(",","")).toFixed(2);
+	var totalAlloc = 0;
+	var pinbound = parseInt(rbf_getFieldValue("Pinbound_ticket"));
+	var getTotalAlloc = new queryBuilder("allocation",new Array(allocFields.weight.integ));
+	getTotalAlloc.argSetup(allocFields.transTicket.integ, OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectQuery(getTotalAlloc.constructQuery(), 1000, function(rows){
+		console.log(rows.length);
+		if(rows.length > 0){
+			for(var i = 0; i < rows.length; i++){
+				totalAlloc += parseFloat(rows[i][0]);
+				console.log(rows[i][0]);
+			}
+		}
+		if(tare>0){
+			rbf_setFieldValue("total_weight",(gross-tare).toFixed(2));
+			rbf_setFieldValue("total_net_mass",(gross-tare-totalAlloc).toFixed(2));
+		}else{
+			rbf_setFieldValue("total_weight",0);
+			rbf_setFieldValue("total_net_mass",0);
+		}
+	});
+}
+
+var allAllocations = new Array(allocFields.name.integ,allocFields.weight.integ);
+function showAllocated(){
+	var pinbound = parseInt(rbf_getFieldValue("Pinbound_ticket"));
+	var getAlloc = new queryBuilder("allocation",allAllocations);
+	var totalAlloc = 0;
+	getAlloc.argSetup(allocFields.transTicket.integ, OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectQuery(getAlloc.constructQuery(), 1000, function(rows){
+		if(rows.length > 0){
+			var allocTable = "<p>Current Allocations</p><table id = 'allocTable'><tr><th>Buyer</th><th>Weight</th></tr>";
+			for(var i = 0; i < rows.length; i++){
+				allocTable += "<tr><td>"+rows[i][0]+"</td><td>"+rows[i][1]+"</td></tr>";
+				totalAlloc+=parseFloat(rows[i][1]);
+			}
+			allocTable += "<tr><td></td><td></td></tr><tr><td style = 'text-align:right'>Total</td><td>"+totalAlloc+"</td></tr>";
+			allocTable += "</table>"
+			$("#allocations").html(allocTable).show();
+		}
+	});
+}
+
+function setExistingValues(field){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getValue = new queryBuilder("inbound_ticket", new Array(field));
+	getValue.argSetup("id", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectValue(getValue.constructQuery(), function(val){
+		var floated = parseFloat(val).toFixed(2);
+		if(floated > 0){
+			rbf_setFieldValue(field,floated);
+		}
+	});
+}
+
+function setExistingValuesDate(field){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getValue = new queryBuilder("inbound_ticket", new Array(field));
+	getValue.argSetup("id", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectValue(getValue.constructQuery(), function(val){
+		var floated = val;
+		if(floated){
+			rbf_setFieldValue(field,floated);
+		}
+	});
+}
+
+function hideButton(){
+$('input[value=" Cancel "]').css('visibility', 'hidden');
+$('input[value=" Save "]').css('visibility', 'hidden');
+}
+
+function cancel(){
+	$("td.center.wide > input[value=' Cancel ']").click();
+}
+
+
+function validateValues(){
+	var warningMsgs = "This grain did not pass the Trading Standards. Saving this test result will automatically reject the ticket.";
+	if(parseInt($('#gross_mass_uom_').val()) > 0){
+		if(parseInt($('#tare_mass').val()) > 0){
+			if(parseInt($('#tare_mass').val()) < parseInt($('#gross_mass_uom_').val())){
+				$("td.center.wide > input[value=' Save ']").click();
+			}else{
+				$("#warning").show();
+				$("#warning").html("Tare Mass exceeds Gross Mass");
+				setTimeout(function(){
+					$("#warning").fadeOut(400);
+				}, 8000);
+			}
+		}else{
+			$("td.center.wide > input[value=' Save ']").click();
+		}
+	}else{
+		$("#warning").show();
+		$("#warning").html("Gross Mass must be entered");
+		setTimeout(function(){
+			$("#warning").fadeOut(400);
+		}, 8000);
+	}
+}
+</script>

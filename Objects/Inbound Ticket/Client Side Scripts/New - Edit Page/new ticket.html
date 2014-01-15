@@ -1,0 +1,419 @@
+<script src = "{!#HOSTED_FILE.76088162}"></script>
+<script src = "{!#HOSTED_FILE.76096436}"></script>
+<style>
+tr.grades:hover{
+	background:rgb(245,245,245);
+	cursor:pointer;
+}
+#varieties tr:hover{
+	background: rgb(230,230,230);
+}
+#varieties tr td a{
+	display:block;
+	padding:10px;
+}
+#varieties tr td a:hover{
+	text-decoration:none;
+}
+
+#varieties{
+	background:rgb(252,252,252);
+}
+
+ul.ui-autocomplete, ul.ui-menu, ul.ui-widget-content, ul.ui-corner-all{
+	width:300px;
+	margin: 420px;
+	position:relative;
+}
+
+#rbi_F_R77270359 .lookupItem { display:none; } /* hides the lookup X icon*/
+</style>
+
+<script>
+function setSelectedG(value){
+$("#s2id_R77357021 > a > span").html(value);
+}
+function getURLpar(str){ return String( String(window.location.href).split("&" + str + "=")[1] ).split('&')[0]; }
+istesting = false;
+$(document).ready(function(){
+	loader();
+	$('#tare_mass').attr("onkeyup","computeTotalWeight();setDateTime('tare_date_and_time');");
+	$('#gross_mass_uom_').attr("onkeyup","computeTotalWeight();setDateTime('gross_date_and_time');");
+	$('[name=theForm] select').each(function(index, element) {
+		$(this).width( $(this).innerWidth() + 30 ).select2();
+		$(this).select2("val", $(this).select2("val"));
+	});
+	window.setInterval(function() {
+		$('[name=theForm] select').each(function(index, element) {
+			$(this).select2("val", $(this).select2("val") );
+		});
+	},250);
+	$("#rbi_L_R636384").addClass("rbs_rightLabelRequired");
+});
+
+var ticketTestFields = {
+	protein_min: "protein_min____",
+	protein_max: "protein_max____",
+	moisture_max: "moisture_max____",
+	above_screen_max: "above_screen_max____by_weight_",
+	screenings_below_screen_max: "screeningsbelowscreen",
+	test_weight_min__kg_hl_: "test_weight_min__kg_hl_",
+	grade: {objname: "grade2", field: "R76086207"},
+	commodity: {objname: "commodity", field: "R76085584"}
+};
+function loader(){
+	$("#gross_mass_uom_, #tare_mass").keypress(function(){
+		return isNumberKey(event);
+		});
+	$("#gross_mass_uom_ , #tare_mass").attr('maxlength','20');	
+	toReadOnlyField("ngr_number",false);
+	hideField("ngr_number");
+	hideField("R77202633");
+	hideField("total_weight");
+	hideField("grading_values_ticket");
+	hideField("tare_date_and_time");
+	hideField("gross_date_and_time");
+	$("#rbi_L_reason").css("color","red");
+	$("#rbi_F_results, #rbi_L_results, #rbi_F_reason, #rbi_L_reason").hide();
+	$('#rbi_F_cropyr_temp. #rbi_L_cropyr_temp').css('visibility','hidden');
+	toReadOnlyField("total_weight",false);
+	toReadOnlyField("total_net_mass",false);
+	$('input[type="submit"]').css("display","none");
+	toReadOnlySelector(ticketTestFields.grade.field);
+	setIcons(sections.ticket.title,sections.ticket.icon);
+	setIcons(sections.client.title,sections.client.icon);
+	setIcons(sections.goods.title,sections.goods.icon);
+	setIcons(sections.test.title,sections.test.icon);
+	setIcons(sections.weight.title,sections.weight.icon);	
+	setDefaultCollapsed(sections.test.title);
+	setDefaultCollapsed(sections.weight.title);
+	if(parseInt("{!id}")>0){
+		$("#rbi_S_"+rbf_getSectionIdByTitle("Testing and Grading Information")).hide();
+		$("#rbi_S_"+rbf_getSectionIdByTitle("Weight Details")).hide();
+	}
+	toReadOnlySelector("R77270359");
+	getActiveSeason();
+	console.log(rbf_getViewSelector("R77357021"));
+	rbf_setViewSelector("R77357021", 77150908);
+	if("{!#CURR_USER.role#code}"=="$BA"){
+		showField("R636384");
+	}else{
+		hideField("R636384");
+	}
+	
+	if(parseInt($('#'+ticketTestFields.commodity.field).val()) > 0){
+		checkGradingType();
+	}
+}
+var customFields;
+
+function checkGradingType(){
+	customFields = [];
+	$("#standards").html("");
+	rbf_setFieldValue("R76086207","");
+	$("#txtR76085584").val("");
+	//$("#rtable_R99896 div.lookupItem").remove();
+	//$("#R99896").html("<option value='0'>-- Please Select --</option>");
+	var commod = $("#R76085584").val();
+	console.log("COMMOD: " + commod);
+	if(commod == ""){
+		$("#cfieldholder").html("");
+	}else{
+		rbf_selectQuery("SELECT id, name, min_field, max_field FROM grading_field WHERE R458250 = "+parseInt(commod), 1000, function(cgrows){
+			if(cgrows.length > 0){
+				var cfields = "<table class='wide'><tbody>";
+				for(var i = 0; i < cgrows.length; i++){
+					cfields+="<tr><td class = 'rbs_rightLabel'><label for='"+cgrows[i][0]+"'>"+cgrows[i][1]+"</label></td>";
+					cfields+="<td class = 'rbs_leftDataCol'><input type='text' id='"+cgrows[i][0]+"' name='"+cgrows[i][0]+"' onkeypress='return isNumberKey(event)'></td></tr>";
+					customFields.push({
+						fieldId:cgrows[i][0],
+						fieldName:cgrows[i][1],
+						valueField:cgrows[i][2]
+					});
+					console.log("cgrows[i][2]: "+cgrows[i][2]);
+					console.log("cgrows[i][3]: "+cgrows[i][3]);
+				}
+				cfields+="</tbody></table>";
+				$("#cfieldholder").html(cfields);
+			}
+		});
+	}
+}
+
+var theResult = "";
+function tableLayout(){
+	var newTable = "<table>"
+	$("#cfieldholder > table > tbody > tr").each(function(index, element) {
+        newTable+="<tr><td style='font-size:6px'>"+$(this).find("td.rbs_rightLabel > label").text()+"</td><td style='font-size:6px'>"+$(this).find("td.rbs_leftDataCol > input[type='text']").val()+"</td></tr>";
+		console.log(newTable);
+	});	
+	newTable+="</table>";
+	rbf_setFieldValue("grading_values_ticket",newTable);
+}
+function getGrade(){
+	var tradingStandards = [],  matchedGrades = [], standards = [];
+	var commod = rbf_getFieldValue("R76085584");
+	var query = "SELECT id, name, grading_fields, stringified_varieties FROM grade2 WHERE R76081223="+parseFloat(commod);
+	
+	theResult = "<p>Trading Standards</p><table id = 'standards'>"+
+		"<tr><th>Grade</th>";
+	rbf_selectQuery(query, 1000, function(datacheck){
+		if(datacheck.length>0){
+			var tick_variety = rbf_getFieldValue("R99896");
+			for(var i = 0; i < datacheck.length; i++){
+				var validate = 0;
+				var datafields = datacheck[i][2].split("~");
+				var datavarieties = datacheck[i][3].split(",") ? datacheck[i][3].split(",") : datacheck[i][3];
+				var approvedVariety = 0;
+				for(var v = 0; v < datavarieties.length; v++){
+					if(parseInt(tick_variety) == parseInt(datavarieties[v])){
+						approvedVariety++;
+					}
+				}
+				if(approvedVariety > 0){
+					console.log("APPROVED: " + approvedVariety);
+					for(var x = 0; x < datafields.length;x++){
+						var spl2 = datafields[x].split("*");
+						for(var cf=0;cf<customFields.length;cf++){
+							var cvalue = $("#"+customFields[cf].fieldId.toString()).val();
+							console.log("spl2[0]: "+spl2[0] + "\n customFields[cf].valueField.toString(): " + customFields[cf].valueField.toString() + "\n");
+							if(spl2[0] == customFields[cf].valueField.toString()){
+								
+								if(spl2[1] !== "none" && spl2[2] !== "none"){
+									if(parseFloat(cvalue) >= parseFloat(spl2[1]) && parseFloat(cvalue) <= parseFloat(spl2[2])){
+										console.log(parseFloat(cvalue)+" <= >= "+parseFloat(spl2[1])+" AND "+parseFloat(spl2[2]));
+										validate++;
+									}
+								}else if(spl2[1] == "none" && spl2[2] == "none"){
+									validate++;
+								}else{
+									if(spl2[1] !== "none"){
+										if(parseFloat(cvalue) >= parseFloat(spl2[1])){
+											validate++;
+										}
+									}else{
+										if(spl2[2] !== "none"){
+											if(parseFloat(cvalue) <= parseFloat(spl2[2])){
+												validate++;
+											}
+										}
+									}
+								}
+							}else{
+								
+								console.log("NO MATCH");
+							}
+						}
+					}
+				}
+				if($("input[name='show_all_grades']").is(":checked")){
+					if(approvedVariety > 0){
+						tradingStandards.push({
+							id:datacheck[i][0],
+							name:datacheck[i][1],
+							fields:datacheck[i][2]
+						});
+					}
+				}else{
+					if(validate == customFields.length){
+						tradingStandards.push({
+							id:datacheck[i][0],
+							name:datacheck[i][1],
+							fields:datacheck[i][2]
+						});
+					}
+				}
+			}
+			if(tradingStandards.length>0){
+				$("#warning").hide();
+				$("#rbi_F_reason").hide();
+				$("#rbi_L_reason").hide();
+				for(var i = 0; i < tradingStandards.length;i++){
+					var theId = tradingStandards[i].id;
+					var theName = tradingStandards[i].name;
+					var theFields = tradingStandards[i].fields.split("~");
+					if(i==0){
+						for(var x = 0; x < theFields.length;x++){
+							var spl2 = theFields[x].split("*");
+							theResult+="<th>"+spl2[0]+"</th>";
+						}
+						theResult+="</tr>";
+					}
+					theResult+="<tr id = '"+theId+"' class='grades' onclick='setGrade("+theId+",\""+theName+"\")'><td>"+theName+"</td>";
+					for(var x = 0; x < theFields.length;x++){
+						var spl2 = theFields[x].split("*");
+						theResult+="<td id='"+spl2[0]+"'>"+spl2[1]+" - "+spl2[2]+"</td>";
+					}
+					theResult+="</tr>";
+					console.log("theResult: "+theResult);
+				}
+				theResult+="</table>";
+				$("#bigDiv").html(theResult);
+				$("#bigDiv").show();
+			}else{
+				theResult+="<tr>No Grades Matched Your Testing Results</tr></table>";
+				$("#bigDiv").html(theResult);
+				$("#bigDiv").show();
+				istesting = true;
+				validateValues();
+			}
+		}else{
+			theResult+="<tr>No Grades Matched Your Testing Results</tr></table>";
+			istesting = true;
+			$("#bigDiv").html(theResult);
+			$("#bigDiv").show();
+		}
+		
+		showField("show_all_grades");
+		setGrade(0,"Select grade below");
+	});
+}
+
+function setGrade(id, name){
+	rbf_setFieldValue("R76086207",parseInt(id));
+	$("#txtR76086207").val(name);
+	var resultTemp= "";
+	var viewTable = "<table style='width:100%;padding:4px;border:1px solid rgb(250,250,250)'><tr><th style='padding:4px;border:1px solid rgb(250,250,250)'><b>Grade</b>";
+	for(var cf=0;cf<customFields.length;cf++){
+		var cvalue2 = $("#"+customFields[cf].fieldId.toString()).val() || 0;
+		viewTable+="<th style='padding:4px;border:1px solid rgb(250,250,250)'><b>"+customFields[cf].fieldName+"</b></th>";
+		resultTemp += customFields[cf].fieldName + ": " + cvalue2 + "\n";
+	}
+	viewTable+="</tr><tr><td style='padding:4px;border:1px solid rgb(250,250,250)'>"+name+"</td>";
+	for(var cf=0;cf<customFields.length;cf++){
+		var cvalue = $("#"+customFields[cf].fieldId.toString()).val() || 0;
+		viewTable+="<td style='padding:4px;border:1px solid rgb(250,250,250)'>"+cvalue+"</td>";
+	}
+	viewTable+="</tr></table>";
+	$("#results_ifr").contents().find("p").html(viewTable);
+	rbf_setFieldValue("results",viewTable);
+	console.log(viewTable);
+	//$("#grading_values_ticket").val(resultTemp);
+	rbf_setFieldValue("grading_values_ticket", resultTemp);
+}
+
+var sections = {
+	ticket: {icon: "{!#HOSTED_FILE.379460}", title: "Inbound Ticket Information"},
+	client: {icon: "{!#HOSTED_FILE.76278993}", title: "Client Information"},
+	goods: {icon: "{!#HOSTED_FILE.379461}", title: "Details of Goods"},
+	test: {icon: "{!#HOSTED_FILE.379462}", title: "Testing and Grading Information"},
+	weight: {icon: "{!#HOSTED_FILE.379463}", title: "Weight Details"},
+};
+
+function setDefaultCollapsed(title){
+	var section_id = rbf_getSectionIdByTitle(title);
+	$("#rbi_S_"+section_id+" > div > span").click();
+}
+
+function setIcons(title, icon){
+	var section_id = rbf_getSectionIdByTitle(title);
+	
+	$("#rbi_S_"+section_id).css({
+		"margin-bottom":"25px"
+	});
+	var theInnerSection = $("#rbi_S_"+section_id+" > div.wide.lightbottom.bold > div.bold.gray");
+	var theCollapsableSection = $("#rbi_S_"+section_id+" > div.wide.inline-block.lightbottom.bold span.bold.gray");
+	theInnerSection.html("<img src = '"+icon+"'>&nbsp;"+title);
+	theCollapsableSection.html("<img src = '"+icon+"'>&nbsp;"+title);
+	theInnerSection.find("img").css({
+		"height":"50px",
+		"width":"auto"
+	});
+	theCollapsableSection.find("img").css({
+		"height":"50px",
+		"width":"auto"
+	});
+}
+
+function getActiveSeason(){
+	rbf_selectQuery("SELECT id, name FROM crop_year WHERE isactiveseason = 1", 1, function(cy){
+		if(cy.length > 0){
+			rbf_setFieldValue("R77270359",cy[0][0]);
+			$("#txtR77270359").val(cy[0][1]);
+		}
+	});
+}
+
+function validateValues(){
+	var warningMsgs = "";
+	$("#rbi_F_reason").fadeIn();
+	$("#rbi_L_reason").fadeIn();
+	warningMsgs = "This grain did not pass the Trading Standards. This ticket will be rejected. Please provide a reason before proceeding.";
+	$("#warning").hide();
+	$("#warning").show();
+	$("#warning").html("*"+warningMsgs);
+	$("#warning > p").css({
+		"color":"rgb(115,15,0)",
+		"font-size":"12px"
+	});
+}
+
+function allowSave(){
+	console.log(rbf_getFieldValue("R76086207"));
+	if(istesting){
+		if(rbf_getFieldValue("reason") && rbf_getFieldValue("reason") !== ""){
+			$("td.center.wide > input[value=' Save ']").click();
+		}else{
+			if(parseInt(rbf_getFieldValue("R76086207")) > 0){
+				$("td.center.wide > input[value=' Save ']").click();
+			}
+		}
+	}else{
+		$("td.center.wide > input[value=' Save ']").click();
+	}
+	
+}
+
+function cancel(){
+	$("td.center.wide > input[value=' Cancel ']").click();
+}
+
+function computeTotalWeight(){
+	var gross = parseFloat(rbf_getFieldValue("gross_mass_uom_").replace(",","")).toFixed(2);
+	var tare = parseFloat(rbf_getFieldValue("tare_mass").replace(",","")).toFixed(2);
+	if(tare > 0){
+		rbf_setFieldValue("total_weight",(gross-tare).toFixed(2));
+	}else{
+		rbf_setFieldValue("total_weight",0);
+	}
+}
+
+function setDateTime(integ){
+	var currentdate = new Date(); 
+		var hours = currentdate.getHours();	//+3 for Australia Time Zone
+		var minutes = currentdate.getMinutes();
+		//var ampm = hours >= 12 ? 'PM' : 'AM';
+		//var hours = hours % 12;
+		//hours = hours ? hours : 12;
+		minutes = minutes < 10 ? '0'+minutes : minutes;
+	var datetime =  currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1) + "/" 
+                + currentdate.getFullYear() + " "  
+                + hours + ":"  
+                + minutes; //+ " "
+				//+ ampm;
+	showField(integ);
+	toReadOnlyDP(integ,"rbi_F_"+integ);
+	rbf_setFieldValue(integ, datetime.toString());
+	showField("total_weight");
+	
+	if ($("#tare_mass").val() == "")
+		rbf_setFieldValue("tare_date_and_time", "");
+	if ($("#gross_mass_uom_").val() == "")
+		rbf_setFieldValue("gross_date_and_time", "");
+}
+
+function isNumberKey(evt)
+       {
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+       }
+
+function onChangeCommodity(){
+	//$('#s2id_R99896 span').text('-- Please select --');
+}
+</script>

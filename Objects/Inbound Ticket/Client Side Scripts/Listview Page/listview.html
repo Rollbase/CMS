@@ -1,0 +1,28 @@
+<div id='templateLinks'></div>
+<script>
+var templates = []; 
+//{!#LOOP_BEGIN.all#823934}
+templates.push({
+	'id' 		: '{!ticket_template.id}',
+	'hotkey' 	: String('{!ticket_template.name#text}').split('|')[0],
+	'name' 		: String('{!ticket_template.name#text}').split('|')[1],
+	'href'		: '{!ticket_template.url_for_new_inbound_ticket}'
+});
+//{!#LOOP_END.all}
+
+$(templates).each(function(index, element) {
+	var tempLink = "<a class='btn btn-primary' id='" + templates[index].id + "' href='" + templates[index].href + "'><div style='font-size:120%;'><b>SHIFT + " +
+		templates[index].hotkey + "</b></div>" + templates[index].name +"</a>";
+	$('#templateLinks').append(tempLink);
+});
+
+$(window).keypress(function(event) {
+	if (event.shiftKey) {
+		$(templates).each(function(index, element) {
+			if ( String.fromCharCode(event.keyCode) == String(templates[index].hotkey).toUpperCase() ) {
+				window.location.href = $( "#" + templates[index].id ).attr('href');
+			}
+		});
+	}
+});
+</script>

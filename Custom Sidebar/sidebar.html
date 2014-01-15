@@ -1,0 +1,70 @@
+<div id='sidebar'></div>
+<script>
+try  {
+	$('[id*=rbi_I_]').hide(); //hide all inline editing 
+	var rbloader = document.getElementById('rbe_loading').style;
+	var loader = document.getElementById('rbe_loading_image').getAttribute('src');
+	document.getElementById('rbe_loading').innerHTML = "<div id = 'newloader' style = 'margin-top:20%;'><img src = '"+loader+"'>&nbsp;Loading</div>";
+}catch(e) { console.log(e.message); }
+
+var secIndex = 0;
+$(document).ready(function() {	
+	$('#sidebar').parent().hide().prev().hide();
+	$('.icon-shopping-cart').first().parent().parent().parent().hide();
+	if ( $("[name=theForm]").length > 0 ) { //Data Input Pages Only
+		$('[id*=rbi_S]').each(function() {		
+			if ( $(this).attr('name') != 'Page Begin' && $(this).attr('name') != 'Page End' ) {
+				$(this).addClass('rbSectionSelect').attr('hotkey', secIndex );
+				if ( secIndex < 10) {
+					var label = " ALT + " + secIndex;
+					$(this).find('.bold').first().prepend("<p style='color:rgb(97,123,136);font-size:14px'><i class='icon-bookmark-empty'></i>"+label+"</p>");
+				}
+				secIndex++;
+			}
+		});
+	}
+});
+
+$(document).keydown(function(event) {
+	$('[id*=rbi_S]').each(function(index,element) {
+		$(this).removeClass('rbSectionFocus');
+	});
+	if (event.altKey==1) {
+		event.preventDefault();
+		$("div.select2-drop.select2-with-searchbox.select2-drop-active").hide();
+		$("input[class='select2-input']").val("").blur();
+		$('[id*=rbi_S]').each(function(index,element) {
+			var pressedKey = '';
+			switch ( String.fromCharCode(event.keyCode) ) {
+				case '1' : pressedKey = '1'; break;
+				case '2' : pressedKey = '2'; break;
+				case '3' : pressedKey = '3'; break;
+				case '4' : pressedKey = '4'; break;
+				case '5' : pressedKey = '5'; break;
+				case '6' : pressedKey = '6'; break;
+				case '7' : pressedKey = '7'; break;
+				case '8' : pressedKey = '8'; break;
+				case '9' : pressedKey = '9'; break;
+				case '0' : pressedKey = '0'; break;
+			}
+			if ( pressedKey == String( $(this).attr('hotkey') ) ) {
+				$(this).addClass('rbSectionFocus');
+				rbf_setSectionCollapse( String( $(this).attr('id') ).replace('rbi_S_','') , false );
+				$(this).find('input,select,textarea').each(function() {
+					if ( $(this).attr('readOnly') != 'readonly' && $(this).attr('readonly') != 'readOnly' &&
+						$(this).css('display') != 'none' && $(this).css('visibility') != 'hidden') {
+						$(this).focus().prop('selectedIndex',0);
+						$("input[class='select2-input']").val("").focus();
+						var top = $("div.rbSectionSelect.rbSectionFocus").position().top;
+						$("body, html").animate({
+							scrollTop: top
+						},800);
+						event.preventDefault();
+						return false;
+					}
+				});
+			}
+		});
+	}
+});
+</script>

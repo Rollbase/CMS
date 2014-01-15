@@ -1,0 +1,476 @@
+<style>
+#mainform{
+	width: 850px;
+	margin: 5% auto;
+	height:auto;
+	box-shadow: 0px 0px 2px 2px rgba(0,0,0,0.3);
+	padding:20px;
+	background:rgb(255,255,255);
+	
+}
+
+#mask{
+	height:100%;
+	width:100%;
+	position:fixed;
+	background:rgba(0,0,0,0.2);
+	top:0px;
+	left:0px;
+	display:none;
+	text-align:center;
+}
+
+#pheader{
+	text-align:left;
+}
+
+#mainpanel{
+	margin-top:25px;
+	overflow-y:auto;
+	border: 1px solid rgb(245,245,245);
+}
+
+#myform{
+	padding:10px;
+	height:150px;
+}
+
+#titlepanel{
+	text-align:left;
+	border-bottom:1px solid rgb(245,245,245);
+}
+
+#titlepanel h1, #titlepanel i{
+	color: rgb(97,123,136);
+}
+#titlepanel p{
+	color:rgb(44,44,44);
+}
+</style>
+<script>
+var global_mod = 0;
+function createGrainAcc(){
+	if($("#hidenuser").val() !== "" && $("#R186881").val() !== "" && $("#weight").val() !== ""){
+		var uid = parseInt($("#hidenuser").val());
+		var unalloc = parseFloat($("#unalloc").html().replace(",",""));
+		var commod = parseInt("{!R76085584#id}");
+		var grade = parseInt("{!R76086207#id}");
+		if(parseInt($("#weight").val()) > unalloc){
+			$("#error").attr("class","alert alert-danger").html("Entered weight exceeds warehouse weight").show();
+			setTimeout(function(){
+				$("#error").hide();
+			}, 8000);
+		}else{
+			rbf_selectQuery("SELECT id, shrink_percentage FROM shrink_percentage",1,function(rows){
+				if(rows.length > 0){
+					var sid = parseInt(rows[0][0]);
+					var sval = parseFloat(rows[0][1]).toFixed(3);
+					rbf_selectNumber("SELECT id FROM allocation WHERE R99851 = "+sid+" AND R76435416 = "+parseInt("{!id}"), function(acount){
+						if(acount > 0){
+							createNewAllocation(uid,commod,grade,sval,unalloc);
+						}else{
+							createShrink(sid,uid,sval,new Array());
+							createNewAllocation(uid,commod,grade,sval,unalloc);
+						}
+					});	
+				}else{
+				}
+			});
+		}		
+	}else{
+		$("#error").attr("class","alert alert-danger").html("Fill up all the required fields").show();
+		setTimeout(function(){
+			$("#error").hide();
+		}, 8000);
+	}
+}
+
+function createNewAllocation(uid,commod,grade,shrinkval,unalloc){
+	rbf_selectNumber("SELECT id FROM junction_buyer WHERE R77202641 = "+uid, function(jid){
+		function cRecs(jnc){
+			console.log("jnc: "+jnc);
+			var createUrl = rbv_rootURL.replace("prod1/","") + "rest/api/update2";
+			var sesId = rbf_getExportURL().split("=");
+			var logUrl = rbv_rootURL.replace("prod1/","") + "rest/api/login";
+			var tick_id = parseInt("{!id}");
+			$.ajax({
+				url: logUrl,
+				type: "GET",
+				data: "loginName=jcpradel@cms_rbv1&password=greedykirkie"
+			}).done(function(logstat){
+				if($(logstat).find("resp").attr("status") == "ok"){
+					var sessionId = $(logstat).find("sessionId").text();
+					
+					if(parseFloat($("#weight").val().replace(",","")) > parseFloat(unalloc)){
+						$("#error").attr("class","alert alert-danger").html("Cannot allocate this amount of weight").show();
+						setTimeout(function(){
+							$("#error").hide();
+						}, 8000);			
+					}else{
+						var fieldMap = [];
+						fieldMap["R186881"] = parseInt($("#R186881").val());
+						fieldMap["R76436965"] = jnc;
+						fieldMap["R76435693"] = allocIds.cp_id;
+						fieldMap["R77202623"] = uid;
+						fieldMap["R77152204"] = commod;
+						fieldMap["R77152181"] = grade;
+						fieldMap["price"] = theAmount*parseFloat($("#weight").val()).toFixed(2);
+						fieldMap["unshrunk"] = parseFloat($("#weight").val()).toFixed(3);
+						fieldMap["R76435416"] = parseInt("{!id}");
+						var percentage = parseFloat($("#weight").val()).toFixed(3) * (shrinkval/100).toFixed(3);
+						fieldMap["shrink_value"] = percentage;
+						fieldMap["weight"] = parseFloat($("#weight").val()).toFixed(3);
+						rbf_createRecord("allocation", fieldMap);
+						$("#error").attr("class","alert alert-success").html("Cash Price Allocation Successful!").show();
+						setTimeout(function(){
+							$("#error").hide();
+						}, 8000);
+						var net_mass = parseFloat(unalloc)-parseFloat($("#weight").val().replace(",",""));
+						var talloc = parseFloat("{!total_allocation_weight#value}".replace(",","")) + parseFloat($("#weight").val().replace(",",""));
+						$.ajax({
+							url: createUrl,
+							type: "GET",
+							data: "objName=inbound_ticket"+
+								"&sessionId="+sessionId+
+								"&id="+tick_id+
+								"&total_net_mass="+net_mass+
+								"&total_allocation_weight="+talloc
+						}).done(function(data){
+							$("#rbi_F_total_net_mass").html(parseFloat($("#rbi_F_total_net_mass").html().replace(",","")) - parseFloat($("#weight").val().replace(",","")));
+							$("#rbi_F_total_allocation_weight").html(parseFloat($("#rbi_F_total_allocation_weight").html().replace(",","")) + parseFloat($("#weight").val().replace(",","")));
+							$("#hidenuser").val("");
+							$("#R186881").val("");
+							$("#rtable_R186881").hide();
+							$("#amount").html("").hide();
+							$("tr.objectListHeader a:contains(Grain Account)").click();
+							$("tr.objectListHeader a:contains(Grain Account)").click();
+							if(global_mod == 1){
+								var cnt_id = $("#R972574").val();
+								var subtractWeight = parseFloat(maxWeight) - parseFloat($("#weight").val());
+								$.ajax({
+									url: createUrl,
+									type: "GET",
+									data: "objName=contract2"+
+										"&sessionId="+sessionId+
+										"&id="+cnt_id+
+										"&weight="+subtractWeight
+								}).done(function(data){
+									console.log(data);
+									hideMask();
+									$("#cpbutton").hide();
+									$("#cntbutton").hide();
+								});
+							}else{
+								hideMask();
+								$("#cpbutton").hide();
+								$("#cntbutton").hide();
+							}
+							$("#weight").val("");
+						});
+						//rbf_setField("inbound_ticket", parseInt("{!id}"), "total_net_mass", parseFloat(unalloc)-parseFloat($("#weight").val().replace(",","")));
+						//rbf_setField("inbound_ticket", parseInt("{!id}"), "total_allocation_weight", parseFloat("{!total_allocation_weight#value}".replace(",","")) + parseFloat($("#weight").val().replace(",","")));
+					}
+				}else{
+					$(logstat).find("resp").attr("status");
+				}
+			});
+		}
+		if(jid>0){
+			cRecs(jid);
+		}else{
+			cRecs(junc_id);
+			console.log("JID 0");
+		}
+	});
+}
+function createShrink(sid,uid,sval,fieldMap){
+	fieldMap["R99851"] = sid;
+	fieldMap["R76435693"] = allocIds.sh_id;
+	fieldMap["R77202623"] = uid;
+	fieldMap["R76435416"] = parseInt("{!id}");
+	fieldMap["shrink_value"] = sval;
+	rbf_createRecord("allocation", fieldMap);
+}
+
+var allocIds = {
+	cp_id: 0,
+	sh_id: 0
+};
+function getAllocTypes(){
+	rbf_selectQuery("SELECT id,name FROM allocation_type",3, function(aid){
+		if(aid.length>0){
+			for(var i in aid){
+				if(aid[i][1] == "Buyer"){
+					allocIds.cp_id = parseInt(aid[i][0]);
+				}else if(aid[i][1] == "Shrinkage"){
+					allocIds.sh_id = parseInt(aid[i][0]);
+				}
+			}
+			console.log(allocIds.cp_id);
+		}
+	});
+}
+var theAmount = 0;
+var maxWeight = 0;
+var junc_id = 0;
+function setDetails(uid,amount,mWeight,jid){
+	$("#hidenuser").val(uid);
+	maxWeight = mWeight;
+	if(global_mod == 0){
+		theAmount = ( parseFloat( String( amount.replace("$","") ) ) > 0 ? parseFloat( String( amount.replace("$","") ) ) : 0.00 );
+		$("#amount").html(amount).show();
+		$("#weight").val(parseFloat(mWeight).toFixed(2));
+	}else{
+		var unalloc = parseFloat( String( $("#unalloc").html() ).replace(",","") );
+		junc_id = jid;
+		if(parseFloat(mWeight) <= unalloc){
+			$("#weight").val(mWeight);
+		}else{
+			$("#weight").val(unalloc);
+		}
+		$("#amount").html(amount).show();
+	}
+	$("#theButton").show();
+}
+
+function computeAmount(){
+	var weight = parseFloat( $("#weight").val() );
+	if(maxWeight>0){
+		if(weight > maxWeight){
+			$("#weight").val("");
+			$("#amount").html( "$" + String( parseFloat(theAmount).toFixed(2) ) );
+			$("#error").attr("class","alert alert-danger").html("Weight entered exceeds max weight.").show();
+			setTimeout(function(){
+				$("#error").hide();
+			}, 8000);	
+		}else{
+			if($("#weight").val() !== ""){
+				var totalPrice = theAmount*weight;
+				$("#amount").html("$"+parseFloat( totalPrice.toFixed(2) ));
+			}else{
+				$("#amount").html( "$"+parseFloat( theAmount.toFixed(2) ) ).show();
+			}
+		}
+	}else{
+		if($("#weight").val() !== ""){
+			var totalPrice = theAmount*weight;
+			$("#amount").html("$"+parseFloat( totalPrice.toFixed(2) ));
+		}else{
+			$("#amount").html( "$"+parseFloat( theAmount.toFixed(2) ) ).show();
+		}
+	}	
+}
+
+function validateW(){
+	if($("#R186881").val() !== ""){
+		$("#weight").show();
+		$("#amount").show();
+	}else{
+		$("#weight").hide();
+		$("#amount").hide();
+	}
+}
+
+
+function setContent(mod){
+	$("table.table.table-striped.table-hover > thead").html("");
+	$("table.table.table-striped.table-hover > tbody").html("");
+	global_mod = mod;
+	switch(mod){
+		case 0:
+			$("#titlepanel > h1").html("<i class='icon-money'></i>&nbsp;Cash Price Allocation");
+			$("#titlepanel > p").html("Browse through posted prices of buyers for this site and start allocating your ticket.");
+			var formContent = '<input type="hidden" hidenchange="validateW()" id="R186881" name="R186881" value>'+
+			'<input type="hidden" id="hidenuser" name="hidenuser" value>'+
+			'<table>'+
+				'<tbody>'+
+					'<tr>'+
+						'<td><label for="unalloc">Warehouse Weight &nbsp;&nbsp;</label></td>'+
+						'<td>'+
+						'<span id = "unalloc" class="label label-info" style="padding:10px;color:rgb(255,255,255)">{!total_net_mass}'+
+						'</span>'+
+						'</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td><label for="rtable_R186881" style="color:rgb(255,0,0)">Cash Price &nbsp;&nbsp;</label></td>'+
+						'<td><div class = "inline-block" style="padding:2px;display:none;" id="rtable_R186881"></div></td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td><label for="weight" style="color:rgb(255,0,0)">Weight &nbsp;&nbsp;</label></td>'+
+						'<td><input type="text" value="{!total_net_mass}" readonly="readonly" style="border:none;background:rgb(255,255,255);" name="weight" id="weight" class="form-control"></td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td><label for="amount">Amount &nbsp;&nbsp;</label></td>'+
+						'<td>'+
+						'<span id = "amount" class="label label-info" style="display:none;padding:10px;color:rgb(255,255,255)">'+
+						'</span>'+
+						'</td>'+
+					'</tr>'+
+				'</tbody>'+
+			'</table>'+
+			'<input type = "button" onclick="createGrainAcc()" class="btn btn-small btn-primary" id = "theButton" value="Allocate">';
+			$("#myform").html(formContent);
+			$("table.table.table-striped.table-hover > thead").html(cpHeader());
+			$("table.table.table-striped.table-hover > tbody").html(cpTable());
+			$("#tlabel").html("Price Lists");
+		break;
+		case 1:
+			$("#titlepanel > h1").html("<i class='icon-certificate'></i>&nbsp;Contract");
+			$("#titlepanel > p").html("Select contracts of buyers for this site and start allocating your ticket.");
+			var formContent = '<input type="hidden" hidenchange="validateW()" id="R972574" name="R972574" value>'+
+			'<input type="hidden" id="hidenuser" name="hidenuser" value>'+
+			'<table>'+
+				'<tbody>'+
+					'<tr>'+
+						'<td><label for="unalloc">Warehouse Weight &nbsp;&nbsp;</label></td>'+
+						'<td>'+
+						'<span id = "unalloc" class="label label-info" style="padding:10px;color:rgb(255,255,255)">{!total_net_mass}'+
+						'</span>'+
+						'</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td><label for="rtable_R972574" style="color:rgb(255,0,0)">Contract &nbsp;&nbsp;</label></td>'+
+						'<td><div class = "inline-block" style="padding:2px;display:none;" id="rtable_R972574"></div></td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td><label for="weight" style="color:rgb(255,0,0)">Weight &nbsp;&nbsp;</label></td>'+
+						'<td><input type="text" value="{!total_net_mass}" readonly="readonly" style="border:none;background:rgb(255,255,255);" name="weight" id="weight" class="form-control"></td>'+
+					'</tr>'+
+				'</tbody>'+
+			'</table>'+
+			'<input type = "button" onclick="createGrainAcc()" class="btn btn-small btn-primary" id = "theButton" value="Allocate">';
+			$("#myform").html(formContent);
+			$("table.table.table-striped.table-hover > thead").html(cntHeader());
+			$("table.table.table-striped.table-hover > tbody").html(cntTable());
+			$("#tlabel").html("Contracts");
+		break;
+	}
+	$("#theButton").hide();
+	mask().show();
+}
+
+function mask(){
+	return $("#mask");
+}
+function hideMask(){
+	mask().hide();
+}
+function cpHeader(){
+	var tHeader = "<tr>"+
+		"<th>Name</th>"+
+		"<th>Site</th>"+
+		"<th>Buyer</th>"+
+		"<th>Crop Year</th>"+
+		"<th>Weight</th>"+
+		"<th>Amount</th>"+
+		"<th>Valid From</th>"+
+		"<th>Valid Until</th>"+
+	"</tr>";
+	return tHeader;
+}
+function cntHeader(){
+	var tHeader = "<tr>"+
+		"<th>Name</th>"+
+		"<th>Grade</th>"+
+		"<th>Weight</th>"+
+		"<th>Valid From</th>"+
+		"<th>Valid Until</th>"+
+	"</tr>";
+	return tHeader;
+}
+function cpTable(){
+	var tContent = "";
+	//{!#LOOP_BEGIN.all#841002}
+		var nameLink="{!price_list.name}".split(">");
+		var theName=nameLink[1].split("<");
+		var theGrade=parseInt("{!R76086207#id}");
+		var pid = parseInt("{!price_list.id}");
+		var pinteg = "R186881";
+		var site = "{!price_list.site}";
+		var grower = "{!price_list.grower_text}";
+		var crop_year = "{!price_list.crop_year_text}";
+		var weight = "{!price_list.weight}".replace(",","");
+		var amount = "{!price_list.amount}";
+		var valid_from = "{!price_list.valid_from}";
+		var valid_until = "{!price_list.valid_until}";
+		var relUID = parseInt("{!price_list.user_id_text}");
+		console.log();
+		if(theGrade == parseInt("{!price_list.grade_id_text}")){
+			tContent += '<tr>';
+			tContent += '<td><a href = "javascript:rbf_selectObject('+pid+',\''+theName[0]+'\',0,\''+pinteg+'\',false)" onclick="setDetails('+relUID+',\''+amount+'\','+weight+')">{!price_list.grade_text} - {!price_list.grower_text}</a></td>';
+			tContent += '<td>'+site+'</td>';
+			tContent += '<td>'+grower+'</td>';
+			tContent += '<td>'+crop_year+'</td>';
+			tContent += '<td>'+weight+'</td>';
+			tContent += '<td>'+amount+'</td>';
+			tContent += '<td>'+valid_from+'</td>';
+			tContent += '<td>'+valid_until+'</td>';
+			tContent += '</tr>';
+		}
+	//{!#LOOP_END.all}
+	return tContent;
+}
+function cntTable(){
+	var tContent = "";
+	//{!#LOOP_BEGIN.all#759314}
+		var isValid = 0;
+		var nameLink="{!contract2.name}".split(">");
+		var theName=nameLink[1].split("<");
+		var theGrade=parseInt("{!R76086207#id}");
+		var theGrower=parseInt("{!R77357021#id}");
+		var gid_text = "{!contract2.grade_id_text}".split(",");
+		var gbid_text = "{!contract2.gb_id_text}";
+		var weight = "{!contract2.weight}".replace(",","");
+		var pid = parseInt("{!contract2.id}");
+		var cnt_num = parseInt("{!contract2.contract_number}");
+		var pinteg = "R972574";
+		var valid_from = "{!contract2.start_date}";
+		var valid_until = "{!contract2.end_date}";
+		var gradeDesc = "{!contract2.grade_desc_text#value}";
+		var amount = 0;
+		for(var i = 0; i < gid_text.length; i++){
+			if(theGrade == parseInt(gid_text[i])){
+				if(theGrower == parseInt(gbid_text) && parseFloat(weight) > 0){
+					isValid++;
+				}
+			}
+		}
+		if(isValid>0){
+			tContent += '<tr>';
+			tContent += '<td><a href = "javascript:rbf_selectObject('+pid+',\''+theName[0]+'\',0,\''+pinteg+'\',false)" onclick="setDetails('+theGrower+',\''+amount+'\','+weight+','+gbid_text+')">'+theName[0]+'</a></td>';
+			tContent += '<td>'+gradeDesc+'</td>';
+			tContent += '<td>'+weight+'</td>';
+			tContent += '<td>'+valid_from+'</td>';
+			tContent += '<td>'+valid_until+'</td>';
+			tContent += '</tr>';
+		}
+	//{!#LOOP_END.all}
+	return tContent;
+}
+</script>
+<div id = "mask">
+	<div id = "mainform">
+		<button type="button" class="close" onclick="hideMask()" aria-hidden="true">&times;</button>
+		<div id="titlepanel" class="jumbotron">
+			<h1></h1>
+			<p></p>
+		</div>
+		<form onsubmit="rbf_disableAllButtons()" enctype="multipart/form-data" action="../servlet/Object" name="myform" id = "myform" method="POST">
+			
+		</form>
+		<div id = "error" class="alert alert-danger" style="display:none"></div>
+		<div id="mainpanel" class="panel panel-default">
+			<div id = "pheader" class="panel-heading">
+				<span class="label label-default" id = "tlabel"></span>
+			</div>
+			<table class="table table-striped table-hover">
+				<thead>
+					
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

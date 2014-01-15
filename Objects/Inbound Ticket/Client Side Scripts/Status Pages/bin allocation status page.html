@@ -1,0 +1,434 @@
+<script src = "{!#HOSTED_FILE.76088162}"></script>
+<script src = "{!#HOSTED_FILE.76096436}"></script>
+<script>
+$(document).ready(function(){
+	loader();
+	prePopulate();
+});
+
+var sections = {
+	ticket: {icon: "{!#HOSTED_FILE.76279132}", title: "Inbound Ticket Information"},
+	client: {icon: "{!#HOSTED_FILE.76278993}", title: "Client Information"},
+	goods: {icon: "{!#HOSTED_FILE.76279172}", title: "Details of Goods"},
+	test: {icon: "{!#HOSTED_FILE.76279192}", title: "Test Results"},
+	weight: {icon: "{!#HOSTED_FILE.76279193}", title: "Weight Information"},
+	allocation: {icon: "{!#HOSTED_FILE.76711871}", title: "Allocation Details"},
+	bin: {icon: "{!#HOSTED_FILE.76851038}", title: "Bin Allocation Details"}
+};
+
+var junctionFields = {
+	allocType: {name: "Allocation Type", integ: "R76436708"},
+	buyer: {name: "Buyer", integ: "R76436684"},
+	location: {name: "Location", integ: "R76436689"}
+};
+
+var globalIndex, theCurrentGrade;
+var hasAllocated = false;
+function loader(){
+	$("a:contains('Add Bin Allocation')").attr("onclick","validateRowCreation()");
+	setIcons(sections.bin.title,sections.bin.icon);
+	$("#warning").hide();
+	getCurrentGrade();
+	hideField("isbinalloc");
+	$('#rbi_L_Pinbound_ticket, #rbi_F_Pinbound_ticket, input[type="submit"]').css('display','none');
+	toReadOnlyField("total_weight",false);
+	setExistingValues("total_weight");
+	$("#rbi_F_total_weight").append("<div id = 'errmsg' class='alert alert-danger' style='display:none;text-align:center'></div>");
+	$("td.left.xlarge.top:nth-child(1)").html("Inbound Ticket - Bin Allocation").css("padding-top","25px");
+	$("div[name='Page End'] > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr:nth-child(1)").html("");
+	
+	hideColumns(0, binAllocFields.commodity.name, binAllocFields.commodity.integ);
+	hideColumns(0, binAllocFields.variety.name, binAllocFields.variety.integ);
+	hideColumns(0, binAllocFields.grade.name, binAllocFields.grade.integ);
+	hideColumns(0, binAllocFields.cy.name, binAllocFields.cy.integ);
+	hideColumns(0, "Temp Ticket Id", "temp_ticket_id");
+	rbf_setFieldValue("isbinalloc",1);	
+}
+
+var binAllocFields = {
+	bin: {name: "Bin", integ: "R76846409"},
+	capacity: {name: "Capacity", integ: "capacity"},
+	avail: {name: "Available Capacity", integ: "available_capacity"},
+	allot: {name: "Allotted Weight", integ: "allotted_weight_"},
+	inboundTicket: {name: "Inbound Ticket", integ: "R76846412"},
+	allocations: {name: "Allocations", integ: "R76859550"},
+	commodity: {name: "Commodity", integ: "R230432"},
+	variety: {name: "Variety", integ: "R230439"},
+	grade: {name: "Grade", integ: "R230245"},
+	cy: {name: "Crop Year", integ: "R230838"},
+	name: {name: "Bin Allocation", integ: "name"}
+};
+
+var binFields = {
+	capacity: {name: "Capacity", integ: "capacity"},
+	avail: {name: "Available Capacity", integ: "available_capacity"}
+};
+
+function setCapacity(index){
+	var bin_id = rbf_getGridValue2(0, binAllocFields.bin.integ, index);
+	var getCapacity = new queryBuilder("bin1",new Array(binFields.capacity.integ,binFields.avail.integ));
+	getCapacity.argSetup("id", OPERATOR_EQ(), bin_id, DATATYPE_INT());
+	rbf_selectQuery(getCapacity.constructQuery(), 1, function(capacity){
+		$('#rbi_grid_0_'+index+'_allotted_weight_ input').keypress(function(){		//restricts user from typing letters/special characters in the allocated weight - Yap
+			return isNumberKey(event);
+		});
+		$('#rbi_grid_0_'+index+'_allotted_weight_ input').attr('maxlength','20');
+		
+		if(capacity.length > 0){
+			var b_capacity = parseFloat(capacity[0][0]);
+			var a_capacity = parseFloat(capacity[0][1]);
+			var alloted_weight = $("#total_weight").val();
+			rbf_setGridValue2(0, binAllocFields.capacity.integ, index, b_capacity);
+			rbf_setGridValue2(0, binAllocFields.avail.integ, index, a_capacity);
+			if  ($("#total_weight").val() != 0 && $("#total_weight").val() > 0 && $('#rbi_grid_0_'+index+'_allotted_weight_ input').val() == 0.000){
+				$('#rbi_grid_0_'+index+'_allotted_weight_ input').val(alloted_weight);		//set alloted weight = net mass // 11/12/2013 - Yap
+				rbf_setFieldValue("total_weight",0.00);
+				$('#rbi_grid_0_'+index+'_allotted_weight_ input').removeAttr("readonly");
+				$("i.icon-remove").click(function(){ 
+					$('#rbi_grid_0_'+index+'_allotted_weight_ input').val(0);
+					//$("#rb_infoMessageContainer").hide();	//There's an error in SQL if it is in show
+				});
+			}
+		}	
+	});
+	
+}
+
+function validateRowCreation(){
+	var hasRowValue = false;
+	var maxRows = rbf_getMaxRowIndex2(0);
+	for(var i = 0; i < maxRows; i++){
+		if(parseFloat(rbf_getGridValue2(0,"allotted_weight_",i)) > 0){
+			hasRowValue = true;
+		}
+	}
+	if(hasRowValue && parseInt(rbf_getFieldValue("total_weight")) == 0){
+		$("div#errmsg").hide();
+		$("div#errmsg").html("Weight has already been fully allocated.");
+		$("div#errmsg").show();
+		return false;
+	}else{
+		return rbf_addGridRow(0);
+	}
+}
+
+var allBins = [];
+function getAllBins(gid){
+	rbf_selectQuery("SELECT id, name, available_capacity, stringified_grades, grades_temp FROM bin1", 1000, function(rows){
+		if(rows.length > 0){
+			for(var i = 0; i < rows.length; i++){
+				var binCounter = 0;
+				var sgrades = rows[i][3].split(",");
+				for(var x = 0; x < sgrades.length; x++){
+					if(sgrades[x] == gid){
+						binCounter++;
+					}
+				}
+				
+				if(binCounter > 0){
+					allBins.push({
+						id: rows[i][0],
+						name: rows[i][1],
+						capacity: rows[i][2],
+						grades: rows[i][4]
+					});
+				}
+			}
+		}
+	});
+}
+
+function getCurrentGrade(){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getGrade = new queryBuilder("inbound_ticket",new Array("R76086207"));
+	getGrade.argSetup("id",OPERATOR_EQ(),pinbound,DATATYPE_INT());
+	rbf_selectNumber(getGrade.constructQuery(),function(gid){
+		if(gid > 0){
+			console.log(gid);
+			getAllBins(gid);
+			//var dpGrades = new dependentParent("rbi_grid_0_"+index+"_R76846409", gid, false, false);
+			//var dpGrades = new dependentParent("R99896", "R76085584", false, true, "", "theFrame");
+		}
+	});
+}
+
+function setGrade(index){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getGrade = new queryBuilder("inbound_ticket",new Array("R76085584","R99896","R76086207","R77270359"));
+	getGrade.argSetup("id",OPERATOR_EQ(),pinbound,DATATYPE_INT());
+	rbf_selectQuery(getGrade.constructQuery(),1,function(rows){
+		if(rows.length>0){
+			rbf_setGridValue2(0,binAllocFields.commodity.integ,index,rows[0][0]);
+			rbf_setGridValue2(0,binAllocFields.variety.integ,index,rows[0][1]);
+			rbf_setGridValue2(0,binAllocFields.grade.integ,index,rows[0][2]);
+			rbf_setGridValue2(0,binAllocFields.cy.integ,index,rows[0][3]);
+			rbf_setGridValue2(0,"temp_ticket_id",index,pinbound);
+		}
+	});
+}
+var binDetails = [];
+function appendBinList(index){
+	var dataTable = '<div class="panel panel-default" style="margin:10px;border:1px dashed rgb(212,212,212);padding:10px;"><div class="panel-heading">Bins</div><table class="table"><tr><th>Bin Name</th><th>Available Capacity</th><th>Grades</th></tr>';
+	var gridInp = 'R76846409_0_'+index;
+	var maxRow = rbf_getMaxRowIndex2(0);
+	for(var i = 0; i < allBins.length; i++){
+		var isdup = 0;
+		for(var z = 0; z < maxRow; z++){
+			console.log('(rbf_getGridValue2(0,"R76846409",z)): '+rbf_getGridValue2(0,"R76846409",z));
+			if(parseInt(rbf_getGridValue2(0,"R76846409",z)) == parseInt(allBins[i].id)){
+				isdup++;
+			}
+		}
+		if(isdup==0){
+			dataTable+='<tr><td><a href = "javascript:rbf_selectObject('+allBins[i].id+',\''+allBins[i].name+'\',0,\''+gridInp+'\',false)">'+allBins[i].name+'</a></td><td>'+allBins[i].capacity+'</td><td>'+allBins[i].grades+'</td></tr>';
+		}
+	}
+	dataTable+='</table></div>';
+	$("#rbi_grid_0_"+index+"_R76846409").append(dataTable);
+	toReadOnlyGridSelector("R76846409",0,index);
+	$("input[name='txtR76846409_0_"+index+"']").val("Select Bin From List");
+}
+
+function readOnlyField(index){
+	hideCols(index);
+	hideColumns(0, binAllocFields.commodity.name, binAllocFields.commodity.integ);
+	hideColumns(0, binAllocFields.variety.name, binAllocFields.variety.integ);
+	hideColumns(0, binAllocFields.grade.name, binAllocFields.grade.integ);
+	hideColumns(0, binAllocFields.cy.name, binAllocFields.cy.integ);
+	hideColumns(0, "Temp Ticket Id", "temp_ticket_id");
+	$("#rbi_gridTable_0 > thead > tr > th:contains(Allocations)").hide();
+	$('#rbi_grid_0_'+index+'_allotted_weight_ input').attr("readonly","readonly");
+	
+	if(!hasAllocated){
+		if(parseInt(rbf_getFieldValue("total_weight")) == 0){
+			$("#rbi_gridTable_0 > thead > tr > th:contains(Allotted Weight)").hide();
+			$("input[name='allotted_weight__0_"+index+"']").hide();
+		}
+	}
+	toReadOnlyGridField(0, binAllocFields.capacity.integ, index, false);
+	toReadOnlyGridField(0, binAllocFields.avail.integ, index, false);
+	var maxRow = rbf_getMaxRowIndex2(0);
+	$("#rbi_gridTable_0 > thead > tr > th:contains(Allocations)").hide();
+	for(var i = 0; i < maxRow; i++){
+		$('td#rbi_grid_0_'+i+'_R76859550').hide();
+	}
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getTotalWeight = new queryBuilder("allocation", new Array("id"));
+	getTotalWeight.argSetup("R76435416", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectQuery(getTotalWeight.constructQuery(), 1000, function(rows){
+		if(rows.length > 0){
+			var allocationIds = "";
+			for(var i = 0; i < rows.length; i++){
+				if(i != rows.length-1){
+					allocationIds+=rows[i][0]+",";
+				}else{
+					allocationIds+=rows[i][0];
+				}
+			}
+			rbf_setGridValue2(0,"R76859550",index,allocationIds);
+		}
+		appendBinList(index);
+	});
+}
+
+
+function hideCols(index){
+	$("#rbi_gridTable_0 > thead > tr > th:contains(Allocations)").hide();
+	$("#rbi_gridTable_0 > thead > tr > th:contains(Allotted Weight)").hide();
+	$("input[name='allotted_weight__0_"+index+"']").hide();
+	console.log($("#rbi_gridTable_0 > thead > tr > th:contains(Allocations)").html());
+	hideColumns(0, "Allocations", "R76859550");
+	
+	if(!hasAllocated){
+		
+		if(parseInt(rbf_getFieldValue("total_weight")) == 0){
+			
+			hideColumns(0, "Allotted Weight", "allotted_weight_");
+		}
+	}
+}
+
+function setIcons(title, icon){
+	var section_id = rbf_getSectionIdByTitle(title);
+	$("#rbi_S_"+section_id).css({
+		"margin-bottom":"25px"
+	});
+	var theInnerSection = $("#rbi_S_"+section_id+" > div.wide.lightbottom.bold > div.bold.gray");
+	theInnerSection.html("<img src = '"+icon+"'>&nbsp;"+title);
+	theInnerSection.find("img").css({
+		"height":"50px",
+		"width":"auto"
+	});
+}
+
+function setExistingValues(field){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getValue = new queryBuilder("inbound_ticket", new Array(field));
+	getValue.argSetup("id", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectValue(getValue.constructQuery(), function(val){
+		var floated = parseFloat(val).toFixed(2);
+		if(floated > 0){
+			rbf_setFieldValue(field,floated);
+		}
+	});
+}
+
+function maxRowIndex(){
+	return rbf_getMaxRowIndex2(0);
+}
+
+var gridFields = new Array(binAllocFields.bin.integ,binAllocFields.capacity.integ,binAllocFields.avail.integ,binAllocFields.allot.integ,binAllocFields.allocations.integ,binAllocFields.name.integ,binAllocFields.commodity.integ,binAllocFields.variety.integ,binAllocFields.grade.integ,binAllocFields.cy.integ);
+var gridQueryFields = new Array(binAllocFields.bin.integ,binAllocFields.capacity.integ,binAllocFields.avail.integ,binAllocFields.allot.integ,binAllocFields.allocations.integ,binAllocFields.name.integ,binAllocFields.commodity.integ,binAllocFields.variety.integ,binAllocFields.grade.integ,binAllocFields.cy.integ);
+function prePopulate(){	
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	rbf_selectNumber("SELECT COUNT(id) FROM bin_allocation WHERE "+binAllocFields.inboundTicket.integ+" ="+pinbound,function(rows){
+		if(rows > 0){
+			hasAllocated=true;
+			var getExisting = new queryBuilder("bin_allocation",gridQueryFields);
+			//var total_purch = 0;
+			getExisting.argSetup(binAllocFields.inboundTicket.integ, OPERATOR_EQ(), pinbound, DATATYPE_INT());
+			rbf_selectQuery(getExisting.constructQuery(), 1000, function(resultset){
+				if(resultset.length > 0){
+					maxRowIndex = rbf_getMaxRowIndex2(0);
+					var dataCtr = 0;
+					for(var i = maxRowIndex; i < (maxRowIndex + resultset.length); i++){
+						rbf_addGridRow(0);
+						for(var x = 0; x < gridFields.length; x++){
+							debug("RESULTSET",resultset[dataCtr][x]);
+							rbf_setGridValue2(0, gridFields[x], i, resultset[dataCtr][x]);
+						}
+						var input = binAllocFields.bin.integ+"_0_"+i;
+						showGridLookupValueCOM(input, parseInt(resultset[i][0]), resultset[i][5], input);
+						//total_purch+=parseFloat(resultset[i][1]);
+						dataCtr++;
+					}
+					//rbf_setFieldValue("total_allocation_weight",total_purch);
+				}
+			});
+		}else{
+			hasAllocated = false;
+		}
+	});
+}
+
+function hideCols(){
+	/*hideColumns(0, allocFields.buyers.name, allocFields.buyers.integ, allocFields.junction.name);
+	hideColumns(0, allocFields.locations.name, allocFields.locations.integ);
+	hideColumns(0, allocFields.allocType.name, allocFields.allocType.integ);*/
+}
+
+function validateWeight(index){
+	var capacity = parseFloat(rbf_getGridValue2(0, binAllocFields.capacity.integ,index));
+	var avail = parseFloat(rbf_getGridValue2(0, binAllocFields.avail.integ,index));
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getTotalWeight = new queryBuilder("inbound_ticket", new Array("total_weight"));
+	getTotalWeight.argSetup("id", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	if(avail > capacity){
+		$("div#errmsg").hide();
+		$("div#errmsg").html("Weight allocation exceeds bin capacity.");
+		$("div#errmsg").show();
+		rbf_setGridValue2(0,binAllocFields.allot.integ,index,0.00);
+		rbf_selectValue(getTotalWeight.constructQuery(), function(val){
+			var total_weight = parseFloat(val);
+			if(total_weight > 0){
+				rbf_setFieldValue("total_weight",total_weight);
+			}
+		});
+	}else{
+		rbf_selectValue(getTotalWeight.constructQuery(), function(val){
+			var total_weight = parseFloat(val);
+			if(total_weight > 0){
+				var total_aweight = 0;
+				for(var i = 0; i < rbf_getMaxRowIndex2(0); i++){
+					total_aweight += parseFloat(rbf_getGridValue2(0,binAllocFields.allot.integ,i));
+				}
+				if(total_aweight > total_weight){
+					$("div#errmsg").hide();
+					$("div#errmsg").html("Weight allocation exceeds Net Mass.");
+					$("div#errmsg").show();
+					rbf_setGridValue2(0,binAllocFields.allot.integ,index,0.00);
+					total_aweight=0;
+					for(var i = 0; i < rbf_getMaxRowIndex2(0); i++){
+						total_aweight += parseFloat(rbf_getGridValue2(0,binAllocFields.allot.integ,i));
+					}
+					rbf_setFieldValue("total_weight",total_weight - total_aweight);
+				}else{
+					$("div#errmsg").hide();
+					rbf_setFieldValue("total_weight",total_weight - total_aweight);
+				}
+				rbf_setGridValue2(0,binAllocFields.avail.integ,index,parseFloat(rbf_getGridValue2(0,binAllocFields.avail.integ,index))-parseFloat(rbf_getGridValue2(0,binAllocFields.allot.integ,index)));
+			}
+		});
+	}
+}
+
+function validateValues(){	
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getTotalWeight = new queryBuilder("inbound_ticket", new Array("total_weight"));
+	getTotalWeight.argSetup("id", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectValue(getTotalWeight.constructQuery(), function(val){
+		var total_net_mass = parseFloat(val);
+		if(total_net_mass > 0){
+			var total_aweight = 0;
+			for(var i = 0; i < rbf_getMaxRowIndex2(0); i++){
+				total_aweight += parseFloat(rbf_getGridValue2(0,binAllocFields.allot.integ,i));
+			}
+			if(total_aweight > total_net_mass){
+				$("div#warning").hide();
+				$("div#warning").show();
+				$("div#warning").html("*Total allocation weight exceeds net mass.");
+			}else if(total_aweight < total_net_mass){
+				$("div#warning").hide();
+				$("div#warning").show();
+				$("div#warning").html("*Total allocation weight must add up to net mass.");
+			}else{
+				validateGridValues();
+			}
+		}else{
+			validateGridValues();
+		}
+	});
+	
+}
+
+function validateGridValues(){
+	var hasZero = 0;
+	for(var i = 0; i < rbf_getMaxRowIndex2(0); i++){
+		if(parseFloat(rbf_getGridValue2(0,binAllocFields.allot.integ,i)) <= 0 || rbf_getGridValue2(0,binAllocFields.allot.integ,i) == ""){
+			hasZero++;
+		}
+	}
+	
+	if(hasZero > 0){
+		if(parseInt($("#total_weight").val()) > 0){
+			$("div#warning").hide();
+			$("div#warning").show();
+			$("div#warning").html("*One of your allocations is invalid.");
+		}else{
+			$("td.center.wide > input[value=' Save ']").click();
+		}
+		
+	}else{
+		$("td.center.wide > input[value=' Save ']").click();
+	}
+}
+
+function cancel(){
+	$("td.center.wide > input[value=' Cancel ']").click();
+}
+
+function updateIndex(index){
+	globalIndex = index;
+}
+
+function isNumberKey(evt)
+       {
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+       }
+	   
+</script>

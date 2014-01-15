@@ -1,0 +1,412 @@
+<script src = "{!#HOSTED_FILE.76088162}"></script>
+<script src = "{!#HOSTED_FILE.76096436}"></script>
+<style>
+tr.grades:hover{
+	background:rgb(245,245,245);
+	cursor:pointer;
+}
+</style>
+<script>
+/******************************************************************
+GRADE MATCHING
+JC PRADEL
+10/02/2013
+*******************************************************************/
+$(document).ready(function(){
+	loader();
+//Custom select 2
+	$('[name=theForm] select').each(function(index, element) {
+		$(this).width( $(this).innerWidth() + 30 ).select2();
+	});
+	window.setInterval(function() {
+		$('[name=theForm] select').each(function(index, element) {
+			$(this).select2("val", $(this).select2("val") );
+		});
+	},250);
+});
+function loader(){
+	var sec1 = rbf_getSectionIdByTitle("HiddenSection");
+	$("#rbi_S_"+sec1).hide();
+    $("#rbi_L_reason").css("color","red");
+	setIcons(sections.test.title,sections.test.icon);
+    $("#rbi_F_reason").hide();
+	$("#rbi_L_reason").hide();
+	$("#rbi_F_results").hide();
+	$("#rbi_L_results").hide();
+	$('#rbi_L_Pinbound_ticket').css('display','none');
+	$('#rbi_F_Pinbound_ticket').css('display','none');
+	$('#rbi_L_istesting').css('display','none');
+	$('#rbi_F_istesting').css('display','none');
+	$('input[type="submit"]').css("display","none");
+	$("td.left.xlarge.top:nth-child(1)").html("Inbound Ticket - Testing and Grading").css("padding-top","25px");;
+	$("div[name='Page End'] > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr:nth-child(1)").html("");
+	toReadOnlySelector(ticketTestFields.grade.field);
+	toReadOnlySelector(ticketTestFields.commodity.field);
+	//var dpGrades = new dependentParent(ticketTestFields.grade.field, ticketTestFields.commodity.field, false, false);
+	getCommodity();
+	setExistingValues(ticketTestFields.grade.field, false, ticketTestFields.grade.objname);
+	$("#istesting").val(1);
+	$("R76085584").attr("onkeyup","setGrade()");
+	toReadOnlySelector("R99896");
+}
+
+function setVar(){
+	var commod = rbf_getFieldValue("R76085584");
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	rbf_selectNumber("SELECT R99896 FROM inbound_ticket WHERE id = "+pinbound, function(vid){
+		if(vid>0){
+			console.log(vid);
+			rbf_setFieldValue("R99896",vid);
+			setLookupField("R99896","variety",vid);
+		}
+	});
+}
+
+var sections = {
+	ticket: {icon: "{!#HOSTED_FILE.76279132}", title: "Inbound Ticket Information"},
+	client: {icon: "{!#HOSTED_FILE.76278993}", title: "Client Information"},
+	goods: {icon: "{!#HOSTED_FILE.76279172}", title: "Details of Goods"},
+	test: {icon: "{!#HOSTED_FILE.379462}", title: "Testing and Grading Information"},
+	weight: {icon: "{!#HOSTED_FILE.76279193}", title: "Weight Details"},
+};
+
+var ticketTestFields = {
+	protein_min: "protein_min____",
+	protein_max: "protein_max____",
+	moisture_max: "moisture_max____",
+	above_screen_max: "above_screen_max____by_weight_",
+	screenings_below_screen_max: "screeningsbelowscreen",
+	test_weight_min__kg_hl_: "test_weight_min__kg_hl_",
+	grade: {objname: "grade2", field: "R76086207"},
+	commodity: {objname: "commodity", field: "R76085584"}
+};
+
+var customFields = [];
+
+function checkGradingType(){
+	var customSection = "#rbi_S_"+rbf_getSectionIdByTitle("Custom");
+	var standardSection = "#rbi_S_"+rbf_getSectionIdByTitle("Standard");
+	var commod = rbf_getFieldValue("R76085584");
+	rbf_selectQuery("SELECT id, name, min_field, max_field FROM grading_field WHERE R458250 = "+parseInt(commod), 1000, function(cgrows){
+		if(cgrows.length > 0){
+			var cfields = "<table class='wide'><tbody>";
+			$(customSection).show();
+			$(standardSection).hide();
+			for(var i = 0; i < cgrows.length; i++){
+				cfields+="<tr><td class = 'rbs_rightLabel'><label for='"+cgrows[i][0]+"'>"+cgrows[i][1]+"</label></td>";
+				cfields+="<td class = 'rbs_leftDataCol'><input type='text' id='"+cgrows[i][0]+"' name='"+cgrows[i][0]+"'></td></tr>";
+				customFields.push({
+					fieldId:cgrows[i][0],
+					fieldName:cgrows[i][1],
+					valueField:cgrows[i][2]
+				});
+				console.log("cgrows[i][2]: "+cgrows[i][2]);
+				console.log("cgrows[i][3]: "+cgrows[i][3]);
+			}
+			cfields+="</tbody></table>";
+			$("#cfieldholder").html(cfields);
+		}else{
+			$(customSection).hide();
+			$(standardSection).show();
+		}
+	});
+}
+
+function setExistingValues(field, isFloated, relName){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getValue = new queryBuilder("inbound_ticket", new Array(field));
+	getValue.argSetup("id", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectValue(getValue.constructQuery(), function(val){
+		if(isFloated){
+			val = parseFloat(val).toFixed(2);
+			if(val > 0){
+				rbf_setFieldValue(field,val);
+			}
+		}else{
+			if(parseInt(val) > 0){
+				setLookupField(field, relName, val);
+			}
+		}
+	});
+}
+
+function setIcons(title, icon){ //SETS THE ICON FOR THE SECTION 
+	var section_id = rbf_getSectionIdByTitle(title);
+	$("#rbi_S_"+section_id).css({
+		"margin-bottom":"25px"
+	});
+	var theInnerSection = $("#rbi_S_"+section_id+" > div.wide.lightbottom.bold > div.bold.gray");
+	theInnerSection.html("<img src = '"+icon+"'>&nbsp;"+title);
+	theInnerSection.find("img").css({
+		"height":"50px",
+		"width":"auto"
+	});
+}
+
+var theResult = "";
+
+function getGrade(){
+	var tradingStandards = [], matchedGrades = [], standards = [];
+	var commod = rbf_getFieldValue("R76085584");
+	var query = "SELECT id, name, grading_fields, stringified_varieties FROM grade2 WHERE R76081223="+parseFloat(commod);
+	theResult = "<p>Trading Standards</p><table id = 'standards'>"+
+		"<tr><th>Grade</th>";
+	rbf_selectQuery(query, 1000, function(datacheck){
+		if(datacheck.length>0){
+			var tick_variety = rbf_getFieldValue("R99896");
+			for(var i = 0; i < datacheck.length; i++){
+				var validate = 0;
+				var datafields = datacheck[i][2].split("~");
+				var datavarieties = datacheck[i][3].split(",") || datacheck[i][3];
+				var approvedVariety = 0;
+				for(var v = 0; v < datavarieties.length; v++){
+					if(parseInt(tick_variety) == parseInt(datavarieties[v])){
+						approvedVariety++;
+					}
+				}
+				if(approvedVariety > 0){
+					for(var x = 0; x < datafields.length;x++){
+						var spl2 = datafields[x].split("*");
+						for(var cf=0;cf<customFields.length;cf++){
+							var cvalue = $("#"+customFields[cf].fieldId.toString()).val();
+							if(spl2[0] == customFields[cf].valueField.toString()){
+								if(spl2[1] !== "none" && spl2[2] !== "none"){
+									if(parseFloat(cvalue) >= parseFloat(spl2[1]) && parseFloat(cvalue) <= parseFloat(spl2[2])){
+										console.log(parseFloat(cvalue)+" <= >= "+parseFloat(spl2[1])+" AND "+parseFloat(spl2[2]));
+										validate++;
+									}
+								}else if(spl2[1] == "none" && spl2[2] == "none"){
+									validate++;
+								}else{
+									if(spl2[1] !== "none"){
+										if(parseFloat(cvalue) >= parseFloat(spl2[1])){
+											validate++;
+										}
+									}else{
+										if(spl2[2] !== "none"){
+											if(parseFloat(cvalue) <= parseFloat(spl2[2])){
+												validate++;
+											}
+										}
+									}
+								}
+							}else{
+								
+								console.log("NO MATCH");
+							}
+						}
+					}
+				}
+				if($("input[name='show_all_grades']").is(":checked")){
+					if(approvedVariety > 0){
+						tradingStandards.push({
+							id:datacheck[i][0],
+							name:datacheck[i][1],
+							fields:datacheck[i][2]
+						});
+					}
+				}else{
+					if(validate == customFields.length){
+						tradingStandards.push({
+							id:datacheck[i][0],
+							name:datacheck[i][1],
+							fields:datacheck[i][2]
+						});
+					}
+				}
+			}
+			if(tradingStandards.length>0){
+				$("#warning").hide();
+				$("#rbi_F_reason").hide();
+				$("#rbi_L_reason").hide();
+				for(var i = 0; i < tradingStandards.length;i++){
+					var theId = tradingStandards[i].id;
+					var theName = tradingStandards[i].name;
+					var theFields = tradingStandards[i].fields.split("~");
+					if(i==0){
+						for(var x = 0; x < theFields.length;x++){
+							var spl2 = theFields[x].split("*");
+							theResult+="<th>"+spl2[0]+"</th>";
+						}
+						theResult+="</tr>";
+					}
+					theResult+="<tr id = '"+theId+"' class='grades' onclick='setGrade("+theId+",\""+theName+"\")'><td>"+theName+"</td>";
+					for(var x = 0; x < theFields.length;x++){
+						var spl2 = theFields[x].split("*");
+						theResult+="<td id='"+spl2[0]+"'>"+spl2[1]+" - "+spl2[2]+"</td>";
+					}
+					theResult+="</tr>";
+					console.log("theResult: "+theResult);
+				}
+				theResult+="</table>";
+				$("#bigDiv").html(theResult);
+				$("#bigDiv").show();
+			}else{
+				theResult+="<tr>No Grades Matched Your Testing Results</tr></table>";
+				$("#bigDiv").html(theResult);
+				$("#bigDiv").show();
+				validateValues();
+			}
+		}else{
+			theResult+="<tr>No Grades Matched Your Testing Results</tr></table>";
+			$("#bigDiv").html(theResult);
+			$("#bigDiv").show();
+		}
+		
+		showField("show_all_grades");
+		setGrade(0,"Select grade below");
+	});
+}
+
+function getMatchedGrades(matched){
+	theResult+="<tr>";
+	for(var i = 0; i < matched.length; i++){
+		theResult+="<td>"+matched[i]+"</td>";
+	}
+	theResult+="</tr>";
+}
+
+function setGrade(id, name){
+	rbf_setFieldValue("R76086207",parseInt(id));
+	$("#txtR76086207").val(name);
+	var viewTable = "<table style='width:100%;padding:4px;border:1px solid rgb(250,250,250)'><tr><th style='padding:4px;border:1px solid rgb(250,250,250)'><b>Grade</b>";
+	for(var cf=0;cf<customFields.length;cf++){
+		viewTable+="<th style='padding:4px;border:1px solid rgb(250,250,250)'><b>"+customFields[cf].fieldName+"</b></th>";
+	}
+	viewTable+="</tr><tr><td style='padding:4px;border:1px solid rgb(250,250,250)'>"+name+"</td>";
+	for(var cf=0;cf<customFields.length;cf++){
+		var cvalue = $("#"+customFields[cf].fieldId.toString()).val() || 0;
+		viewTable+="<td style='padding:4px;border:1px solid rgb(250,250,250)'>"+cvalue+"</td>";
+	}
+	viewTable+="</tr></table>";
+	$("#results_ifr").contents().find("p").html(viewTable);
+	rbf_setFieldValue("results",viewTable);
+	console.log(viewTable);
+}
+
+function getCommodity(){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	console.log(pinbound);
+	var getCommod = new queryBuilder("inbound_ticket", new Array(ticketTestFields.commodity.field));
+	getCommod.argSetup("id", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectValue(getCommod.constructQuery(), function(val){
+		if(parseInt(val) > 0){
+			rbf_setFieldValue("R76085584",val);
+			checkGradingType();
+			setLookupField(ticketTestFields.commodity.field, ticketTestFields.commodity.objname, val);
+			getVariety(val);
+		}
+	});
+}
+
+
+function getVariety(commod){
+	$("#R99896").html("<option value='0'>-- Please Select --</option>");
+	rbf_selectQuery("SELECT id, name FROM variety WHERE R76081378="+parseInt(commod),1000,function(crows){
+		if(crows.length>0){
+			for(var i = 0; i < crows.length; i++){
+				$("#R99896").append("<option value='"+crows[i][0]+"'>"+crows[i][1]+"</option>");
+			}
+		}
+	});
+}
+
+function setLookupField(integ, relName, id){
+	rbf_setFieldValue(integ,id);
+	var getValueName = new queryBuilder(relName, new Array("name"));
+	getValueName.argSetup("id", OPERATOR_EQ(), id, DATATYPE_INT());
+	rbf_selectValue(getValueName.constructQuery(), function(name){
+		if(name){
+			$("#txt"+integ).val(name);
+		}
+	});
+}
+
+function getGradeDetails(theGrade, r0,r1,r2,r3,r4,r5,r6){
+	r0 = r0 == null ? "N/A" : r0;
+	r1 = r1 == null ? "N/A" : r1;
+	r2 = r2 == null ? "N/A" : r2;
+	r3 = r3 == null ? "N/A" : r3;
+	r4 = r4 == null ? "N/A" : r4;
+	r5 = r5 == null ? "N/A" : r5;
+	r6 = r6 == null ? "N/A" : r6;
+	theResult += "<tr class = 'grades' onclick='setGrade("+theGrade+",\""+r0+"\",\""+r1+"\",\""+r2+"\",\""+r3+"\",\""+r4+"\")'>"+
+			"<td>"+r0+"</td>"+
+			"<td>"+r1+"</td>"+
+			"<td>"+r2+"</td>"+
+			"<td>"+r3+"</td>"+
+			"<td>"+r4+"</td>"+
+			"<td>"+r5+"</td>"+
+			"<td>"+r6+"</td>"+
+		"</tr>";
+}
+
+function validateValues(){
+	if(!allowSave()){
+		var warningMsgs = "This grain did not pass the Trading Standards. Saving this test result will automatically reject the ticket.";
+		$("#rbi_F_reason").fadeIn();
+		$("#rbi_L_reason").fadeIn();
+		if($('input.thechk')){
+			if($('input.thechk').is(':checked')){
+				if(rbf_getFieldValue("reason") && rbf_getFieldValue("reason") !== ""){
+					$("td.center.wide > input[value=' Save ']").click();
+				}else{
+					warningMsgs = "Please provide a reason before proceeding.";
+					$("#warning").hide();
+					$("#warning").show();
+					$("#warning").html("<input type = 'checkbox' checked='true' class = 'thechk' style = 'margin-right:5px'>Continue?: </p>\n"+warningMsgs);
+					$("#warning > p").css({
+						"color":"rgb(115,15,0)",
+						"font-size":"12px"
+					});
+				}
+			}else{
+				$("#warning").hide();
+				$("#warning").show();
+				$("#warning").html("<p><input type = 'checkbox' class = 'thechk' style = 'margin-right:5px'>Continue?: </p>"+warningMsgs);
+				$("#warning > p").css({
+					"color":"rgb(115,15,0)",
+					"font-size":"12px"
+				});
+			}
+		}else{
+			
+			$("#warning").hide();
+			$("#warning").show();
+			$("#warning").html("<input type = 'checkbox' class = 'thechk' style = 'margin-right:5px'>Continue?: </p>\n"+warningMsgs);
+			$("#warning > p").css({
+				"color":"rgb(115,15,0)",
+				"font-size":"12px"
+			});
+		}
+	}else{
+		$("td.center.wide > input[value=' Save ']").click();
+	}
+}
+
+function allowSave(){
+	console.log(rbf_getFieldValue("R76086207"));
+	if(parseInt(rbf_getFieldValue("R76086207")) > 0){
+		console.log("passed");
+		return true;
+	 }else{
+		return false;
+	 }
+}
+
+function checkTestValue(field, counterpart, fieldTitle){
+	field = parseFloat(rbf_getFieldValue(field)).toFixed(2);
+	counterpart = parseFloat(counterpart).toFixed(2);
+	var msg = "";
+	if(field > 0){
+		if(field != counterpart){
+			msg = fieldTitle + " does not comply with the Trading Standards.\n";
+		}
+	}
+	return msg;
+}
+
+function cancel(){
+	$("td.center.wide > input[value=' Cancel ']").click();
+}
+</script> 

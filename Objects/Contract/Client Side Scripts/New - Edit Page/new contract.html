@@ -1,0 +1,45 @@
+<script src = "{!#HOSTED_FILE.76088162}"></script>
+<script src = "{!#HOSTED_FILE.76096436}"></script>
+<script>
+$(document).ready(function(){
+    loader();
+});
+
+function loader(){
+	setPortalHeader();
+	var contactSection = "#rbi_S_"+rbf_getSectionIdByTitle("Contact Information");
+	$(contactSection).hide();
+	$("div[name='Page Begin']").hide();
+	setContactOwner();
+}
+
+function setContactOwner(){
+	rbf_setFieldValue("contactOwner",currentUserID());
+	rbf_setFieldValue("contract_owner",currentUserName());
+}
+
+function currentUserID(){
+	return parseInt("{!#CURR_USER.id}");
+}
+
+function currentUserName(){
+	return "{!#CURR_USER.firstName#value}" + " " + "{!#CURR_USER.lastName#value}";
+}
+function goBack(){
+	window.history.back();
+}
+function setPortalHeader(){
+	var mod = "";
+	if(parseInt("{!id}") > 0){
+		mod = "Edit Contract";
+	}else{
+		mod = "Post Contract";
+	}
+	if("{!#CURR_USER.role#code}" == "user_clien" || "{!#CURR_USER.role#code}" == "$thebuyer"){
+		var crumbs = "<li><a href='javascript:goBack()'>&nbsp;/&nbsp;<i class='icon-certificate'></i> Contracts /</a></li>"+
+					"<li class='active'>&nbsp;"+mod+"</li>";
+		$(".breadcrumb").append(crumbs);
+$("#newmenu").hide();
+	}
+}
+</script>

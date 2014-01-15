@@ -1,0 +1,21 @@
+<script>
+$(document).ready(function() {
+	//Custom select 2
+	$('[name=theForm] select').each(function(index, element) {
+		$(this).width( $(this).innerWidth() + 30 ).select2();
+	});	
+	window.setInterval(function() {
+		$('[name=theForm] select').each(function(index, element) {
+			$(this).select2("val", $(this).select2("val") );
+		});
+	},250);
+	$('#hotkey').keypress(function(event){
+		if (event.shiftKey) return false;
+		else if (event.keyCode > 31 && (event.keyCode < 65 || event.keyCode > 90) && (event.keyCode < 97 || event.keyCode > 122)) {
+			return false;
+		} else {			
+			return true;
+		}
+	});
+});
+</script>

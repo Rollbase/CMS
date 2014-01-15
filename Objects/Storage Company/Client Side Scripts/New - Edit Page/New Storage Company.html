@@ -1,0 +1,25 @@
+<script src = "{!#HOSTED_FILE.76088162}"></script>
+<script src = "{!#HOSTED_FILE.76096436}"></script>
+<script>
+$(document).ready(function(){
+loader();
+});
+function loader(){
+var sec1 = rbf_getSectionIdByTitle("Organization");
+$("#rbi_S_"+sec1).hide();
+setDefaultLocation();
+$("input[name='zip']").attr("onkeypress","return restrictInput(event)")
+}
+function setDefaultLocation(){
+	rbf_selectNumber("SELECT id FROM $ORG_LOCN WHERE name='All Access'", function(lid){
+		if(lid > 0){
+			console.log(lid);
+			rbf_setFieldValue("locationId",lid);
+		}
+	});
+}
+
+function setDefaultEvent(index){
+	$("input[name='zip_0_"+index+"']").attr("onkeypress","return restrictInput(event)")
+}
+</script>

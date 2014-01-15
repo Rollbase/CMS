@@ -1,0 +1,234 @@
+<style>
+
+	#newmenu{
+		width:100%;
+		padding: 10px;
+		margin: auto;
+		border-bottom: 1px solid rgba(97,123,136,0.2);
+	}
+	#panel1{
+		padding: 10px;
+		margin-left: -80px;
+		margin-top: 15px;
+		width:35%;
+	}
+	#panel1, #panel2{
+		text-align:left;
+		display:inline-block;
+	}
+	#panel2{
+		text-align:center;
+		height:75px;
+	}
+	
+	#panel1 h1 span{
+		color: rgb(0,91,171);
+	}
+	
+	#panel1 p{
+		color: rgb(255,255,255);
+		margin-left:55px;
+	}
+	
+	#panel2 > div{
+		display:inline-block
+	}
+	div.shapes{
+		/*-webkit-border-radius: 999px;
+		-moz-border-radius: 999px;
+		border-radius: 999px;
+		padding:28px 22px 28px 22px;*/
+		padding:20px;
+		/*background:rgba(254,165,0,0.8);*/
+		color:rgba(254,165,0,0.8);
+		margin:10px;
+		width:100px;
+		height:75px;
+	}
+	p.infoval{
+		font-size: 26px;
+		color:rgb(255,255,255);
+	}
+	p.infotitle{
+		font-size:12px;
+		color:rgb(55,55,55);
+		font-weight:bold;
+		text-shadow:1px 1px 1px rgba(255,255,255,0.6);
+	}
+	#mt{
+		color:rgba(48,173,227,0.8);
+	}
+	#amt{
+		color:rgba(15,115,0,0.8);
+	}
+	#mt,#amt,#amt2,#amt3{
+		/*color:rgba(254,165,0,0.8);*/
+		color:rgba(48,173,227,0.8);
+	}
+	.img{
+		height:45px;
+		width:auto;
+		margin:5px;
+	}
+	
+	#jumbotron h1 img, #jumbotron h1 span{
+		
+		text-shadow:1px 1px 1px rgb(255,255,255);
+	}
+	h1, h2, h3, h4, h5, h6 {
+		margin:0px;
+	}
+	i.icon-user{
+		color:rgb(88,88,88);
+	}
+	i.icon-dashboard, i.icon-tag, i.icon-exchange{
+		color:rgb(97,123,136);
+	}
+	.breadcrumb{
+		text-align:left;
+		
+	}
+</style>
+<script src = "{!#HOSTED_FILE.76276899}"></script>
+<script>
+	$(document).ready(function(){
+		$("span.hey-user.d2c-header-username").append("&nbsp;("+"{!#CURR_USER.role#value}"+")");
+		if("{!#CURR_USER.role#code}" == "user_clien" || "{!#CURR_USER.role#code}" == "$thebuyer"){
+			var crumbs = ""
+			var menus = "<div id = 'newmenu'>"+
+				"<div id = 'panel1' class='jumbotron'>"+
+					"<h1><i class='icon-user'></i>&nbsp;&nbsp;<span>{!#CURR_USER.company_name}</span>"+
+					"</h1>"+
+					"<p class='label label-success'>Logged in as {!#CURR_USER.role#value}</p>"+
+					
+				"</div>";
+			if("{!#CURR_USER.role#code}" == "$thebuyer"){
+				crumbs+="<ol class='breadcrumb'>"+
+							"<li><a href='{!#LINK.843080#tab}'><i class = 'icon-home'></i> Dashboard </a></li>"+
+						"</ol>";
+				menus+="<div id = 'panel2'>"+
+						"<div id='c1' class='shapes'>"+
+							"<p id='mt' class='infoval'>{!#SETTINGS.total_weight_pl#value}MT</p>"+
+							"<p class='infotitle'><i class='icon-dashboard'></i> Weight Posted</p>"+
+							
+						"</div>"+
+						"<div id='c2' class='shapes'>"+
+							"<p id='amt' class='infoval'>${!#SETTINGS.total_amount_price_list_#value}</p>"+
+							"<p class='infotitle'><i class='icon-tag'></i> Price Posted</p>"+
+							
+						"</div>"+
+						"<div id='c3' class='shapes'>"+
+							"<p id='amt2' class='infoval'>{!#SETTINGS.total_weight_grain_account_#value}MT</p>"+
+							"<p class='infotitle'><i class='icon-shopping-cart'></i> Weight Bought</p>"+
+							
+						"</div>"+
+						"<div id='c4' class='shapes'>"+
+							"<p id='amt3' class='infoval'>${!#SETTINGS.total_price_grain_account_#value}</p>"+
+							"<p class='infotitle'><i class='icon-exchange'></i> Amount Paid</p>"+
+						"</div>"+
+					"</div>";
+			}else{
+				crumbs+="<ol class='breadcrumb' id='thecrumb'>"+
+							"<li><a href='{!#LINK.928425#tab}'><i class = 'icon-home'></i> Dashboard </a></li>"+
+						"</ol>";
+				menus+="<div id = 'panel2'>"+
+					"<div id='c1' class='shapes'>"+
+						"<p id='mt' class='infoval'></p>"+
+						"<p class='infotitle'></p>"+
+						
+					"</div>"+
+					"<div id='c2' class='shapes'>"+
+						"<p id='amt' class='infoval'></p>"+
+						"<p class='infotitle'></p>"+
+						
+					"</div>"+
+					"<div id='c3' class='shapes'>"+
+						"<p id='mt' class='infoval'>{!#SETTINGS.completed_tickets#value}</p>"+
+						"<p class='infotitle'><i class='icon-credit-card' style='color:rgb(0,91,171)'></i> Completed Tickets</p>"+
+						
+					"</div>"+
+					"<div id='c4' class='shapes'>"+
+						"<p id='amt' class='infoval'>{!#SETTINGS.active_tickets#value}</p>"+
+						"<p class='infotitle'><i class='icon-credit-card' style='color:rgb(15,115,0)'></i> Current Active Tickets</p>"+
+						
+					"</div>"+
+				"</div>";
+			}
+			menus+="</div>";
+			$("#rbe_tabs").parent().css({
+				"text-align":"center"
+			}).children().first().css({
+				"margin":"auto"
+			});
+			$("#rbe_tabs").children().each(function(){
+				if($(this).attr("class") !== "rbs_tab_extension"){
+					$(this).remove();
+				}
+			});
+			$(".nav-tabs").css("border","none");
+			$("#jumbotron h1").css({
+				"margin":"0px",
+				"padding":"0px"
+			});
+			if("{!#CURR_USER.role#code}" == "user_clien" || "{!#CURR_USER.role#code}" == "$thebuyer"){
+				$("div.rbs_tab_extension").hide();
+			}else{
+				$("div.rbs_tab_extension").css({
+					"position":"absolute",
+					"top":"20%",
+					"left":"15%"
+				});
+			}
+			$("#rbe_tabs").css({
+				"width":"90%"
+			}).append(crumbs+menus);
+			if("{!#CURR_USER.role#code}" == "$thebuyer"){
+				$(".breadcrumb").css({"margin-bottom":"-10px"});
+			}else{
+				$(".breadcrumb").css({"margin-bottom":"-50px"});
+			}
+			$(".rbs_menu").hide();
+		}else{
+			if("{!#CURR_USER.role#code}" !== "$admin"){
+				$("div.rbs_tab_extension").hide();
+				$("#rbe_tabs > div > a:contains(Dashboard)").parent().prepend("<p><i class='icon-home' style='font-size:32px;color:rgb(97,123,136)'></i></p>").find("a").css({
+					"font-weight":"bold",
+					"color":"rgb(97,123,136)"
+				});
+				$("#rbe_tabs > div > a:contains(Tickets)").parent().prepend("<p><i class='icon-tags' style='font-size:32px;color:rgb(97,123,136)'></i></p>").find("a").css({
+					"font-weight":"bold",
+					"color":"rgb(97,123,136)"
+				});
+				$("#rbe_tabs > div > a:contains(Users)").parent().prepend("<p><i class='icon-user' style='font-size:32px;color:rgb(97,123,136)'></i></p>").find("a").css({
+					"font-weight":"bold",
+					"color":"rgb(97,123,136)"
+				});
+				$("#rbe_tabs > div > a:contains(Maintenance)").parent().prepend("<p><i class='icon-cog' style='font-size:32px;color:rgb(97,123,136)'></i></p>").find("a").css({
+					"font-weight":"bold",
+					"color":"rgb(97,123,136)"
+				});
+				$("#rbe_selectedTab").attr("class","sel").css({
+					"border-top":"none"
+				}).children().css({
+					"color":"rgb(0,91,171)"
+				});
+				$("#rbe_selectedTab i").css({
+					"color":"rgb(0,91,171)"
+				});
+				$("#rbe_tabs").addClass("rbcmenu").children().each(function(){
+					$(this).addClass("tabs").css({
+						"margin":"10px",
+						"float":"none",
+						"padding-top": "40px",
+						"padding-bottom": "40px"
+					}).removeAttr("onmouseover").removeAttr("onmouseout");
+				}).css({
+					"padding":"20px",
+					"text-align":"center"
+				});
+				$("#rbe_tabs").parent().css("text-align","center");
+				$("ul.dropdown-menu").css("text-align","left");
+			}
+		}
+	});
+</script>

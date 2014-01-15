@@ -1,0 +1,277 @@
+<script src = "{!#HOSTED_FILE.76088162}"></script>
+<script src = "{!#HOSTED_FILE.76096436}"></script>
+<style>
+#tickinfo{
+	width:350px;
+	padding:5px;
+	color:rgb(255,255,255);
+	font-size:18px;
+}
+#rbi_F_actions{
+	width:100%;
+}
+#rbi_F_actions a{
+	padding:10px;
+	border:1px solid rgb(245,245,245);
+	background:rgba(0,91,171,0.8);
+	color:rgb(255,255,255);
+	width:150px;
+	overflow:hidden;
+	height:50px;
+	margin:5px;
+}
+#rbi_F_actions a img{
+	width: 40px;
+	height:auto;
+	margin:0px;
+}
+#rbi_F_actions a:hover{
+	text-decoration:none;
+	background:rgb(0,91,171);
+}
+
+#rbi_L_actions{
+	display:none;
+}
+
+#rbi_L_results{
+display:none;
+}
+
+a.dropdown-toggle{
+display:none;
+}
+
+.label.label-success:hover{
+	cursor:pointer;
+}
+</style>
+<script>
+var isactive = false;
+$(document).ready(function(){
+$("#rb_infoMessage").css('background-color', '#996600');
+$("#rb_infoMessageText").css('color', 'white');
+$("td.listItemRight:contains('0.000')").text("");
+getAllocTypes();
+$('[id*=rbi_I_]').hide();
+if("{!status#code}"=="$cancelled" || "{!status#code}" == "$hold"){
+	showField("reason_code");
+}else{
+	hideField("reason_code");
+}
+	if ("{!#CURR_USER.role#code}" == "$admin" || "{!#CURR_USER.role#code}" == "$BA" || "{!#CURR_USER.role#code}" == "$A")
+		$("a:contains('Cancel Ticket')").show();
+	else
+		$("a:contains('Cancel Ticket')").hide();
+		
+	
+	if ($("#rbi_C_status").val() == "$completed" || $("#rbi_C_status").val() == "$cancelled" || $("#rbi_C_status").val() == "$rejected"){
+			if ("{!#CURR_USER.role#code}" == "$BA" ||"{!#CURR_USER.role#code}" == "$admin" || "{!#CURR_USER.role#code}" == "$A"){
+				$("input[value=' Edit ']").show();
+				$("input[value=' Delete ']").show();
+			}
+			else {
+				$("input[value=' Edit ']").hide();
+				$("input[value=' Delete ']").hide();
+			}
+		}	
+	loader();
+	$("td.rbs_rightLabelWide").css({
+		"text-align":"left"
+	});
+	
+});
+
+function loader(){
+if({!weighed#value} && {!tested#value} && parseFloat("{!total_net_mass#value}") > 0){
+	if("{!#CURR_USER.role#code}" == "$A" || "{!#CURR_USER.role#code}" == "$TO" || "{!#CURR_USER.role#code}" == "$WB" || "{!#CURR_USER.role#code}" == "$admin"){
+		if($("#rbi_C_status").val() == "$cancelled"){
+			$("#cpbutton, #cntbutton").hide();
+		}else{
+			$("#rbi_F_actions").append('<span id="cpbutton" class="label label-success" style="padding:12px;margin-left:25px" onclick="setContent(0)"><i class="icon-money"></i>&nbsp;Cash Price</span>');
+			$("#rbi_F_actions").append('<span id="cntbutton" class="label label-success" style="padding:12px;margin-left:25px" onclick="setContent(1)"><i class="icon-certificate"></i>&nbsp;Contract</span>');
+			$("#cpbutton, #cntbutton").show();
+		}
+	}else{
+		$("#cpbutton, #cntbutton").hide();
+	}
+}else{
+	$("#cpbutton, #cntbutton").hide();
+}
+if(parseInt($("#rbi_F_total_net_mass").text()) > 0){
+	isactive = true;
+}else{
+	isactive = false;
+}
+setCrumbs();
+	//rbf_setFieldValue('capacity', {!capacity})
+	actionIcons();
+	showHideSections();
+	if("{!#CURR_USER.role#code}" == "user_clien"){
+		$("#rbe_viewTabSpan1").hide();
+	}
+	setIcons(sections.allocation.title,sections.allocation.icon, true);
+	/*var icontimer = setInterval(function(){
+		console.log(rbf_getSectionIdByTitle(sections.test.title));
+		setIcons(sections.ticket.title,sections.ticket.icon, false);
+		setIcons(sections.goods.title,sections.goods.icon, false);
+		setIcons(sections.test.title,sections.test.icon, false);
+		setIcons(sections.weight.title,sections.weight.icon, false);
+		setIcons(sections.allocation.title,sections.allocation.icon, true);
+		setIcons(sections.bin.title,sections.bin.icon, true);
+		if("{!#CURR_USER.role#code}" == "user_clien"){
+			$("body").find("a").each(function(){
+				if($(this).html() !== "Allocate" && $(this).parent().attr("class") !== "pager" && $(this).parent().parent().attr("class") !== "pager"){
+					$(this).attr("href","#");
+				}
+				console.log($(this).html());
+			});
+			if($("td.listItemValue > a")){
+				$("td.listItemValue > a").attr("href","#");
+			}
+		}
+		if(rbf_getSectionIdByTitle(sections.ticket.title) && 
+			rbf_getSectionIdByTitle(sections.goods.title) && 
+			rbf_getSectionIdByTitle(sections.test.title) && 
+			rbf_getSectionIdByTitle(sections.weight.title) && 
+			rbf_getSectionIdByTitle(sections.allocation.title) && 
+			rbf_getSectionIdByTitle(sections.bin.title)){
+			clearInterval(icontimer);
+		}
+	},500);*/
+	hideDefaultButtons();
+	$("#rbe_viewTab0 > table > tbody > tr > td > table > tbody > tr:nth-child(2) > td > div > div:nth-child(2) > table > tbody > tr > td > table > tbody > tr").each(function(){
+		$(this).find("td.rbs_rightLabel").css({
+			"text-align":"left"
+		});
+		$(this).find("td.rbs_leftDataCol").css({
+			//"border-bottom":"1px solid rgb(235,235,235)",
+		});
+	});
+	$("#rbe_viewTab0 > table > tbody > tr > td > table > tbody > tr:nth-child(3) > td > div > div:nth-child(2) > table > tbody > tr > td > table > tbody > tr").each(function(){
+		$(this).find("td.rbs_rightLabel").css({
+			"text-align":"left"
+			//"border-bottom":"1px solid rgb(235,235,235)",
+		});
+		$(this).find("td.rbs_leftDataCol").css({
+			//"border-bottom":"1px solid rgb(235,235,235)",
+		});
+	});
+}
+function goBack(){
+	window.history.back();
+}
+function setCrumbs(){
+	if("{!#CURR_USER.role#code}" == "user_clien" || "{!#CURR_USER.role#code}" == "$thebuyer"){
+		var mod = "";
+		if(isactive){
+			mod = "Active Tickets";
+		}else{
+			mod = "Ticket History";
+		}
+		$("div[name='Page Begin']").hide();
+		$("div[name='Page End']").hide();
+		var crumbs = "<li><a href='javascript: goBack()'>&nbsp;/&nbsp;<i class='icon-credit-card'></i> "+mod+" /</a></li>"+
+					"<li class='active'>&nbsp;Ticket Details</li>";
+		$(".breadcrumb").append(crumbs).css({"margin-bottom": "20px"});
+		$("#newmenu").hide();
+	}
+}
+
+function setIcons(title, icon ,isLv){
+	var section_id = rbf_getSectionIdByTitle(title);
+	$("#rbi_S_"+section_id).css({
+		"margin-bottom":"25px"
+	});
+	if(isLv){
+		var theInnerSection = $("#rbi_S_"+section_id+" > table > tbody > tr > td > div.roundedSectionBorder.rbsilverbg > div.wide.bold > div.bold");
+		var lvButtons = $("#rbi_S_"+section_id+" > table > tbody > tr > td > div.roundedSectionBorder.rbsilverbg > div.wide.bold > div.bold > span").html();
+		theInnerSection.html("<img src = '"+icon+"'>&nbsp;"+title+"<span>"+lvButtons+"</span>");
+	}else{
+		var theInnerSection = $("#rbi_S_"+section_id+" > div.wide.lightbottom.bold > div.bold.gray");
+		theInnerSection.html("<img src = '"+icon+"'>&nbsp;"+title);
+	}
+	theInnerSection.find("img").css({
+		"height":"50px",
+		"width":"auto"
+	});
+}
+
+function showHideSections(){
+	var testid = rbf_getSectionIdByTitle(sections.test.title);
+	var weightid = rbf_getSectionIdByTitle(sections.weight.title);
+	$("#rbi_S_"+weightid).css("display","none");
+	$("#rbi_S_"+testid).css("display","none");
+	if(parseFloat("{!tare_mass#value}") > 0 && parseFloat("{!gross_mass_uom_#value}")){
+		$("#rbi_S_"+weightid).show();
+	}
+	
+	if(parseInt("{!protein}") > 0 && parseInt("{!moisture}") > 0){
+		$("#rbi_S_"+testid).show();
+	}
+
+}
+
+function hideDefaultButtons(){
+	var topbuttons = $("#rbi_S_"+rbf_getSectionIdByTitle("Page Begin")+" > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr:nth-child(2) > td:nth-child(2) > input");
+	var bottombuttons = $("#rbi_S_"+rbf_getSectionIdByTitle("Page End")+" > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr:nth-child(2) > td:nth-child(2) > input");
+	var moreactions = $("#rbi_S_"+rbf_getSectionIdByTitle("Page End")+" > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr:nth-child(2) > td:nth-child(2) > div.left.btn-group.inline-block");
+	moreactions.hide();
+	var sectionbuttons = $("#rbi_S_"+rbf_getSectionIdByTitle("BUTTON"));// || "{!#CURR_USER.role#code}" !== "$BA"
+	if("{!#CURR_USER.role#code}" !== "$admin"){
+		topbuttons.hide();
+		bottombuttons.hide();
+		sectionbuttons.css({
+			"text-align":"center"
+		});
+		if("{!#CURR_USER.role#code}" == "$BA"){
+			sectionbuttons.html("<div id = 'btnholder' style = 'margin:auto;text-align:center'>"+
+					"<input type = 'button' style = 'margin:5px' onclick='editTicket()' class='btn btn-small btn-primary' value = 'Edit Ticket Information'>"+
+					"<input type = 'button' style = 'margin:5px' onclick='deleteTicket()' class='btn btn-small btn-primary' value = 'Delete This Ticket'>"+
+				"</div>");
+		}
+		
+	}
+	
+}
+
+function editTicket(){
+	$("input[value=' Edit ']").click();
+}
+
+function deleteTicket(){
+	$("input[value=' Delete ']").click();
+}
+
+function actionIcons(){
+	$("#rbi_L_actions").html("");
+	var actions = $("#rbi_F_actions").html();
+	$("#rbi_F_actions").html(actions.toString().replace("&nbsp;| ","").replace("&nbsp;| ","").replace("&nbsp;| ","").replace("&nbsp;| ","").replace("&nbsp;| ","").replace("&nbsp;| ",""));
+	$("#rbi_F_actions > a:contains(Weigh)").html("<span><img src = '"+sections.weight.icon+"'></span><span>Weighing</span>");
+	$("#rbi_F_actions > a:contains(Testing and Grading)").html("<span><img src = '"+sections.test.icon+"'></span><span>Grading</span>");
+	$("#rbi_F_actions > a:contains(Allocate)").html("<span><img src = '"+sections.allocation2.icon+"'></span><span>Allocate</span>");	
+	$("#rbi_F_actions > a:contains(Cash Price)").html("<span><img src = '"+sections.price.icon+"'></span><span>Cash Price</span>");
+	$("#rbi_F_actions > a:contains(Bin Assignment)").html("<span><img src = '"+sections.bin2.icon+"'></span><span>Bin Assignment</span>");
+	$("#rbi_F_actions > a:contains(Send Ticket to Email)").html("<span><img src = '"+sections.mail.icon+"'></span><span>Email Ticket</span>");
+	$("#rbi_F_actions > a:contains(Cancel Ticket)").html("<span><img src = '"+sections.cancel.icon+"'></span><span>Cancel</span>");
+	$("#rbi_F_actions").css({
+		"padding":"15px"
+	});
+}
+
+var sections = {
+	ticket: {icon: "{!#HOSTED_FILE.76279132}", title: "Inbound Ticket Information"},
+	client: {icon: "{!#HOSTED_FILE.76278993}", title: "Client Information"},
+	goods: {icon: "{!#HOSTED_FILE.76279172}", title: "Details of Goods"},
+	test: {icon: "{!#HOSTED_FILE.76279192}", title: "Test Results"},
+	weight: {icon: "{!#HOSTED_FILE.76279193}", title: "Weight Details"},
+	allocation: {icon: "{!#HOSTED_FILE.76711871}", title: "Allocations"},
+	allocation2: {icon: "{!#HOSTED_FILE.386921}", title: "Allocations"},
+	price: {icon: "{!#HOSTED_FILE.187502}", title: "Price"},
+	cancel: {icon: "{!#HOSTED_FILE.386922}", title: "Cancel"},
+	mail: {icon: "{!#HOSTED_FILE.386923}", title: "Mail"},
+	bin: {icon: "{!#HOSTED_FILE.76851038}", title: "Bin Assignment"},
+	bin2: {icon: "{!#HOSTED_FILE.386952}", title: "Bin Assignment"}
+};
+
+</script>

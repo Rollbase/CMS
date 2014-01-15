@@ -1,0 +1,398 @@
+<script src = "{!#HOSTED_FILE.76088162}"></script>
+<script src = "{!#HOSTED_FILE.76096436}"></script>
+<script>
+$(document).ready(function(){
+	loader();
+});
+
+
+var allocFields = {
+	buyers: {name: "User", integ: "R77202623"},
+	locations: {name: "Locations", integ: "R76435457"},
+	allocType: {name: "Allocation Type", integ: "R76435693"},
+	junction: {name: "Buyer", integ: "R76436965"},
+	transTicket: {name: "Transaction Ticket",integ:"R76435416"},
+	weight: {name: "Weight",integ:"weight"},
+	name: {name: "name",integ:"name"},
+	commodity: {name: "Commodity", integ: "R77152204"},
+	grade: {name: "Grade", integ: "R77152181"},
+	grower: {name: "Grower", integ: "R77202633"}
+};
+
+var sections = {
+	ticket: {icon: "{!#HOSTED_FILE.76279132}", title: "Inbound Ticket Information"},
+	client: {icon: "{!#HOSTED_FILE.76278993}", title: "Client Information"},
+	goods: {icon: "{!#HOSTED_FILE.76279172}", title: "Details of Goods"},
+	test: {icon: "{!#HOSTED_FILE.76279192}", title: "Test Results"},
+	weight: {icon: "{!#HOSTED_FILE.76279193}", title: "Weight Information"},
+	allocation: {icon: "{!#HOSTED_FILE.76711871}", title: "Allocation Details"}
+	
+};
+
+var junctionFields = {
+	allocType: {name: "Allocation Type", integ: "R76436708"},
+	buyer: {name: "Buyer", integ: "R77202641"},
+	location: {name: "Location", integ: "R76436689"},
+	commodity: {name: "Commodity", integ: "R77152204"},
+	grade: {name: "Grade", integ: "R77152181"},
+};
+
+var buyerValues = {
+	buyer: 0,
+	location: 0,
+	type: 0
+};
+var timeOutSec = 8000;
+var gridFields = new Array(allocFields.junction.integ,allocFields.weight.integ,allocFields.allocType.integ,allocFields.buyers.integ,allocFields.locations.integ,"Grain Account",allocFields.commodity.integ,allocFields.grade.integ);
+var gridQueryFields = new Array(allocFields.junction.integ,allocFields.weight.integ,allocFields.allocType.integ,allocFields.buyers.integ,allocFields.locations.integ,allocFields.name.integ,allocFields.commodity.integ,allocFields.grade.integ);
+var globalIndex;
+var shrinkage = 0;
+function loader(){
+	/*$("a:contains('Add Grain Account')").click(function(){
+		var werehouse_weight = $("#total_net_mass").val();
+		$('#rbi_grid_0_0_weight input').val(werehouse_weight);
+		$('#total_net_mass').val('0');
+		$('#total_allocation_weight').val($('#rbi_grid_0_0_weight input').val());
+	});*/ // for default set of total weight in allocation
+	setIcons(sections.allocation.title,sections.allocation.icon);
+	$('#rbi_L_Pinbound_ticket, #rbi_F_Pinbound_ticket, input[type="submit"]').css('display','none');
+	$('#rbi_L_isprealloc, #rbi_F_isprealloc').css('display','none');
+	$('#rbi_L_'+allocFields.grower.integ).css('display','none');
+	$('#rbi_F_'+allocFields.grower.integ).css('display','none');
+	$("td.left.xlarge.top:nth-child(1)").html("Inbound Ticket - Allocation").css("padding-top","25px");
+	$("div[name='Page End'] > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr:nth-child(1)").html("");
+	rbf_setFieldValue("isprealloc",1);
+	toReadOnlyField("total_net_mass",false);
+	toReadOnlyField("total_allocation_weight",false);
+	$("#rbi_F_total_net_mass").append("<div id = 'errholder' class='alert alert-danger' style='text-align:center;display:none;'></div>");
+	getParentGrower();
+	//prePopulate();
+	hideCols();
+	getUnallocated();
+	getAllocTypes();
+}
+var allocIds = {
+	cp_id: 0,
+	sh_id: 0,
+	al_id:0
+};
+function getAllocTypes(){
+	rbf_selectQuery("SELECT id,name FROM allocation_type",3, function(aid){
+		if(aid.length>0){
+			for(var i in aid){
+				if(aid[i][1] == "Buyer"){
+					allocIds.cp_id = parseInt(aid[i][0]);
+				}else if(aid[i][1] == "Shrinkage"){
+					allocIds.sh_id = parseInt(aid[i][0]);
+				}else{
+					allocIds.al_id = parseInt(aid[i][0]);
+				}
+			}
+		}
+	});
+}
+var sid, sval;
+function createShrink(){
+	var pinbound = parseInt(rbf_getFieldValue("Pinbound_ticket"));
+	console.log(pinbound);
+	rbf_selectNumber("SELECT id FROM allocation WHERE R99851 = "+sid+" AND R76435416 = "+pinbound, function(acount){
+		if(acount <= 0){
+			var fieldMap=[];
+			fieldMap["R99851"] = sid;
+			fieldMap["R76435693"] = allocIds.al_id;
+			fieldMap["R76435416"] = parseInt(pinbound);
+			fieldMap["shrink_value"] = sval;
+			rbf_createRecord("allocation", fieldMap);
+			validateValues();
+		}else{
+			validateValues();
+		}
+	});	
+	
+}
+function getUnallocated(){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	rbf_selectQuery("SELECT total_net_mass, maximum_weight_to_be_allocated, total_weight FROM inbound_ticket WHERE id = "+pinbound, 1, function(net){
+		if(net.length > 0){
+			if(parseFloat(net[0][0]) > 0){
+				rbf_setFieldValue("total_net_mass",parseFloat(net[0][0]));
+			}else if(parseFloat(net[0][1]) > 0){
+				rbf_setFieldValue("total_net_mass",parseFloat(net[0][1]));
+			}else{
+				rbf_setFieldValue("total_net_mass",parseFloat(net[0][2]));
+			}
+		}
+	});
+}
+
+function getParentGrower(){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getGrower = new queryBuilder("inbound_ticket",new Array(allocFields.grower.integ));
+	getGrower.argSetup("id",OPERATOR_EQ(),pinbound,DATATYPE_INT());
+	rbf_selectNumber(getGrower.constructQuery(),function(g_id){
+		if(g_id > 0){
+			rbf_setFieldValue(allocFields.grower.integ,g_id);
+		}
+	});
+}
+
+function prePopulate(){	
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	rbf_selectNumber("SELECT COUNT(id) FROM allocation WHERE "+allocFields.transTicket.integ+" ="+pinbound,function(rows){
+		if(rows > 0){
+			var getExisting = new queryBuilder("allocation",gridQueryFields);
+			var total_purch = 0;
+			var g_id = parseInt(rbf_getFieldValue(allocFields.grower.integ));
+			getExisting.argSetup(allocFields.transTicket.integ, OPERATOR_EQ(), pinbound, DATATYPE_INT(), SQL_OPERATOR_AND());
+			getExisting.argSetup(allocFields.buyers.integ, OPERATOR_NOT_EQ(), g_id, DATATYPE_INT());
+			rbf_selectQuery(getExisting.constructQuery(), 1000, function(resultset){
+				if(resultset.length > 0){
+					maxRowIndex = rbf_getMaxRowIndex2(0);
+					var dataCtr = 0;
+					for(var i = maxRowIndex; i < (maxRowIndex + resultset.length); i++){
+							rbf_addGridRow(0);
+							for(var x = 0; x < gridFields.length; x++){
+								debug("RESULTSET",resultset[dataCtr][x]);
+								rbf_setGridValue2(0, gridFields[x], i, resultset[dataCtr][x]);
+							}
+							var input = allocFields.junction.integ+"_0_"+i;
+							showGridLookupValueCOM(input, parseInt(resultset[i][0]), resultset[i][5], input);
+							total_purch+=parseFloat(resultset[i][1]);
+						dataCtr++;
+					}
+					rbf_setFieldValue("total_allocation_weight",total_purch);
+					setExistingValues("maximum_weight_to_be_allocated");
+				}
+			});
+		}
+	});
+}
+
+function setDependentParent(index){
+	/*var g_id = parseInt(rbf_getFieldValue(allocFields.grower.integ));
+	console.log(g_id);
+	var getJunction = new queryBuilder("junction_buyer",new Array("id"));
+	getJunction.argSetup("R77202641",OPERATOR_EQ(),g_id,DATATYPE_INT());
+	rbf_selectNumber(getJunction.constructQuery(), function(jid){
+		if(jid > 0){
+			var pinbound = rbf_getFieldValue("Pinbound_ticket");
+			rbf_selectNumber("SELECT R76086207 FROM inbound_ticket WHERE id ="+pinbound, function(gradeId){
+				if(gradeId > 0){
+					var dpContract = new dependentParent("rbi_grid_0_"+index+"_R959128", jid, false, false,gradeId);
+					rbf_setViewSelector("rbi_grid_0_"+index+"_"+allocFields.junction.integ, 77150908);
+				}
+			});
+		}
+	});*/
+	//rbf_setViewSelector("rbi_grid_0_"+index+"_"+allocFields.junction.integ, 77150908);
+}
+
+function getBuyerDetails(index){
+	var junctionId = parseInt($('#'+allocFields.junction.integ+"_0_"+index).val());
+	var getJunctionDetails = new queryBuilder("junction_buyer",new Array(junctionFields.allocType.integ,junctionFields.buyer.integ,junctionFields.location.integ));
+	getJunctionDetails.argSetup("id",OPERATOR_EQ(),junctionId,DATATYPE_INT());
+	
+	rbf_selectQuery(getJunctionDetails.constructQuery(), 1, function(rows){
+		if(rows.length > 0){
+			buyerValues.type = parseInt(rows[0][0]);
+			buyerValues.buyer = parseInt(rows[0][1]);
+			buyerValues.location = parseInt(rows[0][2]);
+			console.log(rows[0][0]+"\n");
+			console.log(rows[0][1]+"\n");
+			console.log(rows[0][2]+"\n");
+			
+			if(buyerValues.buyer > 0){
+				rbf_setGridValue2(0, allocFields.buyers.integ, index, 0);
+				rbf_setGridValue2(0, allocFields.buyers.integ, index, buyerValues.buyer);
+				rbf_setGridValue2(0, allocFields.allocType.integ, index, buyerValues.type);
+			}else{
+				rbf_setGridValue2(0, allocFields.locations.integ, index, 0);
+				rbf_setGridValue2(0, allocFields.buyers.integ, index, 0);
+				rbf_setGridValue2(0, allocFields.locations.integ, index, buyerValues.location);
+				rbf_setGridValue2(0, allocFields.allocType.integ, index, buyerValues.type);
+			}
+		}
+	});
+	
+	$('#rbi_grid_0_'+index+'_weight input').keypress(function(){		//restricts user from typing letters/special characters in the allocated weight - Yap
+		return isNumberKey(event);
+		});
+	
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	rbf_selectQuery("SELECT R76085584, R76086207 FROM inbound_ticket WHERE id ="+pinbound, 1, function(rows){
+		if(rows.length > 0){
+			rbf_setGridValue2(0, allocFields.commodity.integ, index, parseInt(rows[0][0]));
+			rbf_setGridValue2(0, allocFields.grade.integ, index, parseInt(rows[0][1]));
+		}
+	});
+	
+}
+
+function hideCols(){
+	hideColumns(0, allocFields.buyers.name, allocFields.buyers.integ);
+	hideColumns(0, allocFields.locations.name, allocFields.locations.integ);
+	hideColumns(0, allocFields.allocType.name, allocFields.allocType.integ);
+	hideColumns(0, allocFields.commodity.name, allocFields.commodity.integ);
+	hideColumns(0, allocFields.grade.name, allocFields.grade.integ);
+	hideColumns(0, "Grain Account", allocFields.name.integ);
+	hideColumns(0, "Shrink Percentage", "R99851");
+	hideColumns(0, "Shrink Value", "shrink_value");
+	hideColumns(0, "Unshrunk", "unshrunk");
+}
+
+function setIcons(title, icon){
+	var section_id = rbf_getSectionIdByTitle(title);
+	$("#rbi_S_"+section_id).css({
+		"margin-bottom":"25px"
+	});
+	var theInnerSection = $("#rbi_S_"+section_id+" > div.wide.lightbottom.bold > div.bold.gray");
+	theInnerSection.html("<img src = '"+icon+"'>&nbsp;"+title);
+	theInnerSection.find("img").css({
+		"height":"50px",
+		"width":"auto"
+	});
+}
+
+function setExistingValues(field){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getValue = new queryBuilder("inbound_ticket", new Array(field));
+	getValue.argSetup("id", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectValue(getValue.constructQuery(), function(val){
+		var floated = parseFloat(val);
+		var allocated = 0;
+		if(floated > 0){
+			maxRowIndex = rbf_getMaxRowIndex2(0);
+			for(var i = 0; i < maxRowIndex; i++){
+				allocated+=parseFloat(rbf_getGridValue2(0,"weight",i));
+				console.log("allocated: "+allocated+"\n");
+			}
+			var total = floated - allocated;
+			rbf_setFieldValue("total_net_mass",(total >= 0 ? total : ""));
+			console.log(allocated);
+		}
+	});
+}
+
+function setEvent(index){
+	$("#"+allocFields.junction.integ+"_0_"+index).attr("hidenchange","getBuyerDetails("+index+")");
+	$("input[name='"+allocFields.weight.integ+"_0_"+index+"']").attr("onkeyup","validateWeight("+index+")");
+	rbf_selectQuery("SELECT id, shrink_percentage FROM shrink_percentage",1,function(rows){
+		if(rows.length > 0){
+			//rbf_setGridValue2(0, "R99851", index, parseInt(rows[0][0]));
+			sid = parseInt(rows[0][0]);
+			sval = parseFloat(rows[0][1]);
+			shrinkage = parseFloat(rows[0][1]);
+		}
+	});
+}
+
+function validateWeight(index){
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getTotalWeight = new queryBuilder("inbound_ticket", new Array("maximum_weight_to_be_allocated,total_net_mass,total_weight"));
+	getTotalWeight.argSetup("id", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectQuery(getTotalWeight.constructQuery(), 1, function(rows){
+		var total_net_mass = parseFloat(rows[0][1]) > 0 ? parseFloat(rows[0][1]) : parseFloat(rows[0][0]) > 0 ? parseFloat(rows[0][0]) : parseFloat(rows[0][2]);
+		if(total_net_mass > 0){
+			var total_purch = 0;
+			for(var i = 0; i < rbf_getMaxRowIndex2(0); i++){
+				total_purch += parseFloat(rbf_getGridValue2(0,"weight",i));
+			}
+			if(total_purch > total_net_mass){
+				$("div#errholder").hide();
+				$("div#errholder").html("Weight allocation exceeds total mass.").css("color","rgb(117,15,0)");
+				$("div#errholder").show();
+				setTimeout(function(){
+					$("div#errholder").fadeOut("fast");
+				}, timeOutSec);
+				rbf_setGridValue2(0,"weight",index,0.00);
+				total_purch=0;
+				rbf_setGridValue2(0, "shrink_value", index, 0.00);
+				//setExistingValues("total_weight");
+				for(var i = 0; i < rbf_getMaxRowIndex2(0); i++){
+					total_purch += parseFloat(rbf_getGridValue2(0,"weight",i));
+				}
+				rbf_setFieldValue("total_net_mass",(total_net_mass - total_purch < 0 ? "":total_net_mass - total_purch));
+				rbf_setFieldValue("total_allocation_weight",total_purch);
+			}else{
+				rbf_setFieldValue("total_net_mass",total_net_mass - total_purch);
+				rbf_setFieldValue("total_allocation_weight",total_purch);
+				var theWeight = parseFloat(rbf_getGridValue2(0,"weight",index));
+				rbf_setGridValue2(0, "shrink_value", index, theWeight * (shrinkage/100));
+				rbf_setGridValue2(0, "unshrunk", index, theWeight);
+			}
+		}
+	});
+}
+
+function validateValues(){	
+	var pinbound = rbf_getFieldValue("Pinbound_ticket");
+	var getTotalWeight = new queryBuilder("inbound_ticket", new Array("maximum_weight_to_be_allocated"));
+	getTotalWeight.argSetup("id", OPERATOR_EQ(), pinbound, DATATYPE_INT());
+	rbf_selectValue(getTotalWeight.constructQuery(), function(val){
+		var total_net_mass = parseFloat(val);
+		if(total_net_mass > 0){
+			var total_aweight = 0;
+			for(var i = 0; i < rbf_getMaxRowIndex2(0); i++){
+				total_aweight += parseFloat(rbf_getGridValue2(0,"weight",i));
+			}
+			if(parseFloat(rbf_getFieldValue("total_allocation_weight")) > total_net_mass){
+				$("div#warning").show();
+				$("div#warning").html("*Total allocation weight exceeds net mass.");
+				setTimeout(function(){
+					$("div#warning").fadeOut("fast");
+				}, timeOutSec);
+			}else{ 
+				if(parseFloat(total_aweight) < total_net_mass){
+					$("div#warning").show();
+					$("div#warning").html("*Total allocation weight must add up to Net Mass.");
+					setTimeout(function(){
+						$("div#warning").fadeOut("fast");
+					}, timeOutSec);
+				}else{
+					validateGridValues();
+				}
+			}
+		}else{
+			validateGridValues();
+		}
+	});
+	
+}
+
+function validateGridValues(){
+	var hasZero = 0;
+	for(var i = 0; i < rbf_getMaxRowIndex2(0); i++){
+		if(parseFloat(rbf_getGridValue2(0,"weight",i)) <= 0 || rbf_getGridValue2(0,"weight",i) == ""){
+			hasZero++;
+		}
+	}
+	if(hasZero > 0){
+		$("div#warning").show();
+		$("div#warning").html("*One of your allocations is invalid.");
+		setTimeout(function(){
+			$("div#warning").fadeOut("fast");
+		}, timeOutSec);
+	}else{
+		$("td.center.wide > input[value=' Save ']").click();
+	}
+}
+
+function cancel(){
+	$("td.center.wide > input[value=' Cancel ']").click();
+}
+
+function updateIndex(index){
+	globalIndex = index;
+}
+
+function isNumberKey(evt)
+       {
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+       }
+	   
+</script>
