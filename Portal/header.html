@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<HTML PUBLIC "-//IETF//DTD HTML 3.0//EN">
+<html lang="en">
+<head>
+	<link rel="shortcut icon" href="{!#HOSTED_FILE.77524760}">
+	<title>CMS Transport Systems</title>
+	<!--[if lte IE 9]>
+   		<script src="{!#HOSTED_FILE.1653617}"></script>
+    <![endif]-->
+	<!--[if (gte IE 6)&(lte IE 9)]>
+      <script type="text/javascript" src="{!#HOSTED_FILE.1653622}"></script>
+    <![endif]-->
+	<!--[if IE]>
+		<script type="text/javascript" src="{!#HOSTED_FILE.1653616}"></script>
+	<![endif]-->
+	<style>
+	html, body{ 
+		/*background: url("{!#HOSTED_FILE.1759107}") no-repeat center center fixed; 
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='{!#HOSTED_FILE.1759107}', sizingMethod='scale');
+		-ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='{!#HOSTED_FILE.1759107}', sizingMethod='scale')";
+		*/
+		font-family: Segoe UI,Arial,Verdana,Tahoma,sans-serif;
+	}
+	
+	#overlay{
+		width:100%;
+		height:100%;
+		background: url("{!#HOSTED_FILE.1759108}") repeat;
+		margin:0px;
+	}
+	#headline{
+		padding:0px;
+		background: url("{!#HOSTED_FILE.1759107}") no-repeat center center fixed; 
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='{!#HOSTED_FILE.1759107}', sizingMethod='scale');
+		-ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='{!#HOSTED_FILE.1759107}', sizingMethod='scale')";
+		height:350px;
+	}
+	#container{
+		background:rgb(252,252,252);
+		box-shadow:0px 0px 2px 2px rgba(255,255,255,0.2);
+	}
+	header{
+		padding:10px;
+		background:rgb(66,66,66);
+		box-shadow:0px 0px 2px 2px rgba(255,255,255,0.2);
+		/*border-bottom: 8px solid rgb(97,123,136);*/
+	}
+	header img{
+		height: 35px;
+		width:auto;
+	}
+	article.login-strip{
+		display:box;
+		display:-o-box;
+		display:-ms-box;
+		display:-moz-box;
+		display:-webkit-box;
+		box-orient: horizontal;
+		box-orient: -o-horizontal;
+		box-orient: -ms-horizontal;
+		box-orient: -moz-horizontal;
+		box-orient: -webkit-horizontal;
+		padding: 5px;
+		background: rgb(97,123,136);
+		color: rgb(255,255,255);
+	}
+	article.login-strip p{
+		margin: 10px;
+		flex:1;
+		-o-box-flex:1;
+		-ms-box-flex:1;
+		-moz-box-flex:1;
+		-webkit-box-flex:1;
+	}
+	span.welcome-msg{
+		font-size:16px;
+		font-weight:bold;
+	}
+	.log-controls{
+		text-align:right;
+	}
+	.input-group, .log-controls > button{
+		margin:10px;
+	}
+	#txtuname, #txtpass{
+		padding: 8px;
+		width: 225px;
+		background: rgb(192,192,192);
+		border: none;
+		color: rgb(255,255,255);
+	}
+	.btn.btn-default{
+		padding: 8px;
+		width: 150px;
+	}
+	input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+	  color: rgb(252,252,252);
+	}
+	</style>
+	<script>
+		$(document).ready(function(){
+			loader();
+		});
+		
+		function loader(){
+			$("body > table:nth-child(1)").remove();
+		}
+	</script>
+</head>
+<body>
+	<header>
+		<img src = "{!#HOSTED_FILE.1759140}">
+	</header>
+	<section id = "headline">
+		<section id = "overlay"></section>
+	</section>
+	<section id = "container">
+		<article class = "login-strip">
+			<p><span class="welcome-msg">Welcome to CMS Transport System.</span> </br>As leading technology providers to the road transport industry since 1978, our reputation speaks for itself.</p>
+			<p class="log-controls">
+				<span class="input-group">
+					<input type="text" id="txtuname" class="form-control" placeholder="Username">
+				</span>
+				<span class="input-group">
+					<input type="password" id="txtpass" class="form-control" placeholder="Password">
+				</span>
+				<button type="button" class="btn btn-default">Login</button>
+			</p>
+		</article>
+		<article>
+		
+		</article>
+	</section>
